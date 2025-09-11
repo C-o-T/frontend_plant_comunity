@@ -1,0 +1,40 @@
+.modal_overlay {
+  position: fixed;
+  /* 전체 다 지정해야 화면이 꽉 차게 position 됨 */
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: start;
+}
+
+.modal_content {
+  margin-top: 10px;
+  background-color: whitesmoke;
+  border-radius: 5px;
+  padding: 20px;
+  position: relative;
+}
+
+.close_btn {
+  position: absolute;
+  top: 5px;
+  right: 3px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: rgb(143, 188, 143);
+  font-weight: 700;
+}
+
+.close_btn:hover {
+  cursor: pointer;
+}
+
+.content_div {
+  margin-top: 20px;
+}
