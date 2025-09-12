@@ -1,6 +1,7 @@
 .container {
   width: 1280px;
   margin: 30px auto;
+  margin-bottom: 0px;
 }
 
 .login_div {

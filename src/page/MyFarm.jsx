@@ -2,7 +2,7 @@ import React from 'react'
 
 const MyFarm = () => {
   return (
-    <div>MyFarm(내농장관리)</div>
+    <div className='container'>MyFarm(내농장관리)</div>
   )
 }
 
