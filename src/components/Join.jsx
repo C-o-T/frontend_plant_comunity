@@ -99,6 +99,7 @@ const Join = ({isOpenJoin, onClose}) => {
         <div className={styles.btn_div}>
           <Button
             title='회원가입'
+            color='disable'
           />
         </div>
       </Modal>

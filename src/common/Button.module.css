@@ -41,5 +41,6 @@
 
 .disable {
    background-color: #d1d1d1;
-   cursor:none;
+   color: #f4f4f4;
+   cursor:not-allowed;
 }
