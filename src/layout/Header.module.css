@@ -16,6 +16,7 @@
   font-size: 2rem;
   font-weight: bolder;
   letter-spacing: 10px;
+  background: linear-gradient(to right, #b7e1ac 70%, #fffee8 );
 }
 
 .banner_div > span:first-child {
