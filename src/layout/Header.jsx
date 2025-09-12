@@ -1,12 +1,13 @@
 import React from 'react'
 import styles from './Header.module.css'
+import Join from '../components/Join'
 
 const Header = () => {
   return (
     <div className={styles.container}>
       <div className={styles.login_div}>
         <p>login</p>
-        <p>join</p>
+        <p><Join /></p>
       </div>
 
       <div className={styles.banner_div}>

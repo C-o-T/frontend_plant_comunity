@@ -1,0 +1,14 @@
+.display_div {
+  display: flex;
+  margin-bottom: 6px;
+}
+
+.display_div > p:first-child {
+  width: 120px;
+}
+
+.btn_div {
+  text-align: center;
+  width: 100%;
+  margin: 40px 0px auto;
+}

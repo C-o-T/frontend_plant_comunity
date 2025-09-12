@@ -2,7 +2,44 @@
    border: none;
    cursor: pointer;
    border-radius: 4px;
-   color: #48BD61;
    padding: 4px 8px;
-   background-color: #BD4861;
+}
+
+
+.primary {
+   color: #f4f4f4;
+   background-color: #61bd48;
+}
+.primary:hover{
+   color: #f4f4f4;
+   background-color: #5aad42;
+}
+.primary:active{
+   color: #f4f4f4;
+   background-color: #6fc359;
+}
+
+.secondary {
+   background-color: #e0e976;
+}
+.secondary:hover{
+   background-color: #dce663;
+}
+.secondary:active{
+   background-color: #e5ec8a;
+}
+
+.tertiary {
+   background-color: #fffaa3;
+}
+.secondary:hover{
+   background-color: #fff98c;
+}
+.secondary:active{
+   background-color: #fffbba;
+}
+
+.disable {
+   background-color: #d1d1d1;
+   cursor:none;
 }

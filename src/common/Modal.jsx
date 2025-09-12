@@ -21,9 +21,7 @@ const Modal = ({size='500px', title='title', isOpen=false,  children, onClose=op
       >
         <div className={styles.modal_title}>
           <button type="button"  className={styles.close_btn} onClick={onClose}>X</button>
-          <Title 
-            title='제목'
-          />
+          <p>{title}</p>
         </div>
       <div className={styles.content_div}>
         {children}
