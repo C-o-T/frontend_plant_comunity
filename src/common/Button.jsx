@@ -6,9 +6,7 @@ import styles from './Button.module.css'
 
 const Button = ({title, size = '100px', ...props}) => {
   return (
-    <div>
-      <button className = {styles.btn} type='button' style={{width : `${size}`}} {...props}>{title}</button>
-    </div>
+    <button className = {styles.btn} type='button' style={{width : `${size}`}} {...props}>{title}</button>
   )
 }
 
