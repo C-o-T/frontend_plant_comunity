@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './Modal.module.css'
+import Title from './Title'
 
 //1.size 모달의 크기 지정
 //2.title 모달의 제목 지정
@@ -20,7 +21,9 @@ const Modal = ({size='500px', title='title', isOpen=false,  children, onClose=op
       >
         <div className={styles.modal_title}>
           <button type="button"  className={styles.close_btn} onClick={onClose}>X</button>
-          <p>{title}</p>
+          <Title 
+            title='제목'
+          />
         </div>
       <div className={styles.content_div}>
         {children}
