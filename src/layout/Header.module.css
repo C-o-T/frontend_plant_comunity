@@ -1,0 +1,41 @@
+.container {
+  width: 1280px;
+  margin: 30px auto;
+}
+
+.login_div {
+  display: flex;
+  justify-content: end;
+  gap: 12px;
+}
+
+.banner_div {
+  height: 80px;
+  padding-left: 150px;
+  padding-top: 30px;
+  font-size: 2rem;
+  font-weight: bolder;
+  letter-spacing: 10px;
+  background: linear-gradient(to right, #b7e1ac 70%, #fffee8 );
+}
+
+.banner_div > span:first-child {
+  color: #61bd48;
+}
+
+.menu_div {
+  height: 40px;
+}
+
+.menu_div > ul {
+  display: flex;
+  justify-content: space-around;
+  height: 100%;
+  align-items: center;
+}
+
+.menu_div li {
+  font-size: 1.05rem;
+  font-weight: bolder;
+
+}
