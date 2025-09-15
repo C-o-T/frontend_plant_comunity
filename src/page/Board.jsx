@@ -2,10 +2,14 @@ import React, { useState } from 'react'
 import styles from './Board.module.css'
 import Button from '../common/Button'
 import Input from '../common/Input';
+import { useNavigate } from 'react-router-dom';
 
 const Board = () => {
   //조회한 글 목록 
   const [boardList, setBoardList] =useState([]);
+
+  //페이지 이동하기
+  const nav = useNavigate();
 
   return (
     <div className='container'>
@@ -24,7 +28,7 @@ const Board = () => {
       </div>
       <div className = {styles.board}>
         <div>
-          <Button title = '글쓰기'/>
+          <Button title = '글쓰기' onClick = {e => {nav('/write-board')}}/>
         </div>
         <table className = {styles.table}>
           <colgroup>
