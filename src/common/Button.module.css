@@ -32,14 +32,24 @@
 .tertiary {
    background-color: #fffaa3;
 }
-.secondary:hover{
+.tertiary:hover{
    background-color: #fff98c;
 }
-.secondary:active{
+.tertiary:active{
    background-color: #fffbba;
 }
 
-.disable {
+.disabled {
+   background-color: #d1d1d1;
+   color: #f4f4f4;
+   cursor:not-allowed;
+}
+.disabled:hover {
+   background-color: #d1d1d1;
+   color: #f4f4f4;
+   cursor:not-allowed;
+}
+.disabled:active {
    background-color: #d1d1d1;
    color: #f4f4f4;
    cursor:not-allowed;

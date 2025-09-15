@@ -4,6 +4,8 @@ import Select from '../common/Select'
 import Input from '../common/Input'
 import Button from '../common/Button'
 import styles from './Join.module.css'
+import { handleErrorMsg } from '../validate/joinValidate'
+import axios from 'axios'
 
 const Join = ({isOpenJoin, onClose}) => {
   //회원가입시 입력한 내용을 저장할 useState 변수
@@ -25,7 +27,6 @@ const Join = ({isOpenJoin, onClose}) => {
   const [isDisable, setIsDisable] = useState(true)
 
   //닫기버튼 또는 회원가입 완료 시 입력한 내용을 전체 지우는 함수
-
   const resetJoinData = () => {
     setJoinData({
       'memId' : '',
@@ -40,66 +41,279 @@ const Join = ({isOpenJoin, onClose}) => {
       'memBusinessName' :'' 
     })
   }
+
+  //유효성 검사 결과 에러메세지를 저장할 변수
+  const [errorMsg, setErrorMsg] = useState({
+    'memId' : '',
+    'memPw' : '',
+    'memPwConfirm' : '',
+    'memName' : '',
+    'memTell' : '',
+    'memBusinessNum' : '',
+    'memBusinessName' :'' 
+  });
+
+  //인풋 태그 안에 내용이 바뀌면 실행할 함수
+  const handleJoin = (e) => {
+    //이메일을 변경한 경우
+    if (e.target.name === 'firstEmail' || e.target.name === 'secondEmail') {
+      setJoinData({
+        ...joinData,
+        [e.target.name] : e.target.value,
+        'memEmail' :
+        e.target.name === 'firstEmail'
+        ?
+        e.target.value + joinData.secondEmail
+        :
+        joinData.firstEmail + e.target.value
+      })
+    } else {
+      //이메일을 제외한 다른 값을 변경 했을 경우
+      setJoinData({
+        ...joinData,
+        [e.target.name] : e.target.value
+      })
+    }
+  }
+
+  // ID 중복확인을 했을 때 실행할 함수
+  const checkId = () => {
+    axios.get()
+    .then()
+    .catch(e=>console.log(e))
+  }
+
+  //사업자번호 중복확인을 했을 때 실행할 함수
+  const checkNum = () => {
+    axios.get()
+    .then()
+    .catch(e=>console.log(e))
+  }
+
+  //회원가입 버튼을 누르면 실행할 함수
+  const join = () => {
+    axios.post()
+    .then()
+    .catch(e=>console.log(e))
+  }
     
-  
+  console.log(joinData)
 
   return (
     <div>
       <Modal
-        isOpen={open}
+        isOpen={isOpenJoin}
+        size='423px'
         title='회원가입'
         onClose={()=>{
           onClose();
           resetJoinData();
           setIsDisable(true);
-          setErrorMsg({
-            //에러메세지 작성
-          })
+          setErrorMsg({ //에러메세지 지우기
+            'memId' : '',
+            'memPw' : '',
+            'memPwConfirm' : '',
+            'memName' : '',
+            'memTell' : '',
+            'memBusinessNum' : '',
+            'memBusinessName' :'' 
+          });
         }}
       >
-        <div className={styles.display_div}>
-          <p>아이디</p>
-          <Input type="text" />
+        <div className={styles.width}>
+          <div className={`${styles.display_div} ${styles.input_size}`}>
+            <p>아이디<span>*</span></p>
+            <Input type="text" 
+              name='memId'
+              value={joinData.memId}
+              onChange={(e)=>{
+                handleJoin(e)
+              }}
+              onBlur={e=>{
+                setErrorMsg({
+                  ...errorMsg,
+                  memId : handleErrorMsg(e)
+                })
+              }}
+            />
+            <Button 
+              title='중복확인'
+              color='secondary'
+              onClick={e=>checkId()}
+            />
+          </div>
+          <p className={styles.errMsg}>{errorMsg.memId}</p>
+          <div className={styles.display_div}>
+            <p>비밀번호<span>*</span></p>
+            <Input type="password" 
+              name='memPw'
+              value={joinData.memPw}
+              onChange={(e)=>{
+                handleJoin(e)
+              }}
+              onBlur={e=>{
+                setErrorMsg({
+                  ...errorMsg,
+                  memPw : handleErrorMsg(e, joinData)
+                })
+              }}
+            />
+          </div>
+          <p className={styles.errMsg}>{errorMsg.memPw}</p>
+          <div className={styles.display_div}>
+            <p>비밀번호확인<span>*</span></p>
+            <Input type="password" 
+              name='memPwConfirm'
+              value={joinData.memPwConfirm}
+              onChange={(e)=>{
+                handleJoin(e)
+              }}
+              onBlur={e=>{
+                setErrorMsg({
+                  ...errorMsg,
+                  memPwConfirm : handleErrorMsg(e, joinData)
+                })
+              }}
+            />
+          </div>
+          <p className={styles.errMsg}>{errorMsg.memPwConfirm}</p>
+          <div className={styles.display_div}>
+            <p>이름<span>*</span></p>
+            <Input type="text"
+              name='memName'
+              value={joinData.memName}
+              onChange={(e)=>{
+                handleJoin(e)
+              }}
+              onBlur={e=>{
+                setErrorMsg({
+                  ...errorMsg,
+                  memName : handleErrorMsg(e, joinData)
+                })
+              }}
+            />
+          </div>
+          <p className={styles.errMsg}>{errorMsg.memName}</p>
+          <div className={styles.display_div}>
+            <p>주소</p>
+            <Input type="text"
+              name='memAddr'
+              value={joinData.memAddr}
+              onChange={(e)=>{handleJoin(e)}}
+            />
+          </div>
+          <p className={styles.errMsg}></p>
+           <div className={styles.display_div}>
+            <p>상세 주소</p>
+            <Input type="text"
+              name='memDetailAddr'
+              value={joinData.memDetailAddr}
+              onChange={(e)=>{handleJoin(e)}}
+            />
+          </div>
+          <p className={styles.errMsg}></p>
+          <div className={styles.display_div}>
+            <p>연락처<span>*</span></p>
+            <Input type="text"
+              name='memTell'
+              value={joinData.memTell}
+              onChange={(e)=>{
+                handleJoin(e)
+              }}
+              onBlur={e=>{
+                setErrorMsg({
+                  ...errorMsg,
+                  memTell : handleErrorMsg(e, joinData)
+                })
+              }}
+            />
+          </div>
+          <p className={styles.errMsg}>{errorMsg.memTell}</p>
+          <div className={`${styles.display_div} ${styles.input_size}`}>
+            <p>이메일</p>
+            <Input type="text"
+              name='firstEmail'
+              value={joinData.firstEmail}
+              onChange={(e)=>{handleJoin(e)}}
+            />
+            <Select
+              name='secondEmail'
+              value={joinData.secondEmail}
+              onChange={(e)=>{handleJoin(e)}}
+            >
+              <option value="">선택</option>
+              <option value="@google.com">@google.com</option>
+              <option value="@naver.com">@naver.com</option>
+              <option value="@kakao.com">@kakao.com</option>
+              <option value="@nate.com">@nate.com</option>
+            </Select>
+          </div>
+          <p className={styles.errMsg}></p>
+          <div className={`${styles.display_div} ${styles.input_size}`}>
+            <p>사업자등록번호</p>
+            <Input type="text"
+              name='memBusinessNum'
+              value={joinData.memBusinessNum}
+              onChange={(e)=>{
+                handleJoin(e)
+              }}
+              onBlur={(e)=>{
+                const businessNumError = handleErrorMsg(e, joinData);
+                const businessNameError = handleErrorMsg({
+                  target : {
+                    name : 'memBusinessName',
+                    value : joinData.memBusinessName
+                  }
+                }, joinData)
+                setErrorMsg({
+                  ...errorMsg,
+                  memBusinessNum : businessNumError,
+                  memBusinessName : businessNameError
+                })
+              }}
+            />
+            <Button 
+              title='중복확인'
+              color='secondary'
+              onClick={e=>checkNum()}
+            />
+          </div>
+          <p className={styles.errMsg}>{errorMsg.memBusinessNum}</p>
+          <div className={styles.display_div}>
+            <p>상호명</p>
+            <Input type="text"
+              name='memBusinessName'
+              value={joinData.memBusinessName}
+              onChange={(e)=>{
+                handleJoin(e)
+              }}
+              onBlur={(e)=>{
+                const businessNameError = handleErrorMsg(e, joinData);
+                const businessNumError = handleErrorMsg({
+                  target : {
+                    name : 'memBusinessNum',
+                    value : joinData.memBusinessNum
+                  }
+                }, joinData)
+                setErrorMsg({
+                  ...errorMsg,
+                  memBusinessNum : businessNumError,
+                  memBusinessName : businessNameError
+                })
+              }}
+            />
+          </div>
         </div>
-        <div className={styles.display_div}>
-          <p>비밀번호</p>
-          <Input type="password" />
-        </div>
-        <div className={styles.display_div}>
-          <p>비밀번호확인</p>
-          <Input type="password" />
-        </div>
-        <div className={styles.display_div}>
-          <p>주소</p>
-          <Input />
-        </div>
-        <div className={styles.display_div}>
-          <p>연락처</p>
-          <Input />
-        </div>
-        <div className={styles.display_div}>
-          <p>이메일</p>
-          <Input />
-          <Select>
-            <option value="">선택</option>
-            <option value="">@google.com</option>
-            <option value="">@naver.com</option>
-            <option value="">@kakao.com</option>
-            <option value="">@nate.com</option>
-          </Select>
-        </div>
-        <div className={styles.display_div}>
-          <p>사업자등록번호</p>
-          <Input />
-        </div>
-        <div className={styles.display_div}>
-          <p>상호명</p>
-          <Input />
-        </div>
+          <p className={styles.errMsg}>{errorMsg.memBusinessName}</p>
         <div className={styles.btn_div}>
           <Button
             title='회원가입'
-            color='disable'
+            onClick={()=>{
+              join()
+              onClose()
+              resetJoinData()
+            }}
+            disabled={isDisable}
           />
         </div>
       </Modal>

@@ -1,14 +1,45 @@
+.width {
+  width: 100%;
+}
+
 .display_div {
   display: flex;
-  margin-bottom: 6px;
+  gap: 8px;
 }
 
 .display_div > p:first-child {
   width: 120px;
 }
 
+.display_div input {
+  width: 250px;
+}
+
 .btn_div {
   text-align: center;
   width: 100%;
   margin: 40px 0px auto;
+}
+
+.input_size input {
+  width: 142px;
+}
+
+
+.input_size select {
+  font-size: 0.65rem;
+}
+
+.display_div > p > span {
+  color: red;
+  font-weight: bold;
+}
+
+.errMsg {
+  height: 15px;
+  color: red;
+  font-size: 0.7rem;
+  margin-left: 128px;
+  margin-bottom: 6px;
+  margin-top: 1px;
 }
