@@ -23,8 +23,11 @@ const Join = ({isOpenJoin, onClose}) => {
   })
 
   //회원가입 버튼 사용 가능 여부를 저장하는 state 변수 
-  //(아이디 중복확인 여부)
-  const [isDisable, setIsDisable] = useState(true)
+  //(아이디,사업자번호 중복확인 여부)
+  const [isDisable, setIsDisable] = useState({
+    memId : false,
+    memBusinessNum : false
+  })
 
   //닫기버튼 또는 회원가입 완료 시 입력한 내용을 전체 지우는 함수
   const resetJoinData = () => {
@@ -79,14 +82,25 @@ const Join = ({isOpenJoin, onClose}) => {
   // ID 중복확인을 했을 때 실행할 함수
   const checkId = () => {
     axios.get()
-    .then()
+    .then(
+      setIsDisable({
+        ...isDisable,
+        memId : false
+      }) // 회원가입 버튼 활성화
+    )
     .catch(e=>console.log(e))
+    
   }
 
   //사업자번호 중복확인을 했을 때 실행할 함수
   const checkNum = () => {
     axios.get()
-    .then()
+    .then(
+      setIsDisable({
+        ...isDisable,
+        memBusinessNum : false
+      }) // 회원가입 버튼 활성화
+    )
     .catch(e=>console.log(e))
   }
 
@@ -128,6 +142,7 @@ const Join = ({isOpenJoin, onClose}) => {
               value={joinData.memId}
               onChange={(e)=>{
                 handleJoin(e)
+                setIsDisable(true)
               }}
               onBlur={e=>{
                 setErrorMsg({
@@ -256,6 +271,7 @@ const Join = ({isOpenJoin, onClose}) => {
               value={joinData.memBusinessNum}
               onChange={(e)=>{
                 handleJoin(e)
+                setIsDisable(true)
               }}
               onBlur={(e)=>{
                 const businessNumError = handleErrorMsg(e, joinData);
