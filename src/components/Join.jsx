@@ -22,12 +22,6 @@ const Join = ({isOpenJoin, onClose}) => {
     'memBusinessName' :''  //상호명
   })
 
-  //회원가입 버튼 사용 가능 여부를 저장하는 state 변수 
-  //(아이디,사업자번호 중복확인 여부)
-  const [isDisable, setIsDisable] = useState({
-    memId : false,
-    memBusinessNum : false
-  })
 
   //닫기버튼 또는 회원가입 완료 시 입력한 내용을 전체 지우는 함수
   const resetJoinData = () => {
@@ -85,7 +79,7 @@ const Join = ({isOpenJoin, onClose}) => {
     .then(
       setIsDisable({
         ...isDisable,
-        memId : false
+        memId : true
       }) // 회원가입 버튼 활성화
     )
     .catch(e=>console.log(e))
@@ -98,11 +92,21 @@ const Join = ({isOpenJoin, onClose}) => {
     .then(
       setIsDisable({
         ...isDisable,
-        memBusinessNum : false
+        memBusinessNum : true
       }) // 회원가입 버튼 활성화
     )
     .catch(e=>console.log(e))
   }
+  
+  //회원가입 버튼 사용 가능 여부를 저장하는 state 변수 
+  //(아이디,사업자번호 중복확인 여부)
+  const [isDisable, setIsDisable] = useState({
+    memId : false,
+    memBusinessNum : true
+  })
+
+  //중복확인 버튼을 모두 누른 경우
+  const isAllVerified = Object.values(isDisable).every(Boolean);
 
   //회원가입 버튼을 누르면 실행할 함수
   const join = () => {
@@ -110,8 +114,10 @@ const Join = ({isOpenJoin, onClose}) => {
     .then()
     .catch(e=>console.log(e))
   }
-    
-  console.log(joinData)
+  
+  console.log(isDisable)
+  console.log(isAllVerified)
+  //console.log(joinData)
 
   return (
     <div>
@@ -142,7 +148,10 @@ const Join = ({isOpenJoin, onClose}) => {
               value={joinData.memId}
               onChange={(e)=>{
                 handleJoin(e)
-                setIsDisable(true)
+                setIsDisable({
+                  ...isDisable,
+                  memId : false
+                })
               }}
               onBlur={e=>{
                 setErrorMsg({
@@ -271,7 +280,10 @@ const Join = ({isOpenJoin, onClose}) => {
               value={joinData.memBusinessNum}
               onChange={(e)=>{
                 handleJoin(e)
-                setIsDisable(true)
+                setIsDisable({
+                  ...isDisable,
+                  memBusinessNum : false
+                })
               }}
               onBlur={(e)=>{
                 const businessNumError = handleErrorMsg(e, joinData);
@@ -329,7 +341,7 @@ const Join = ({isOpenJoin, onClose}) => {
               onClose()
               resetJoinData()
             }}
-            disabled={isDisable}
+            disabled={!isAllVerified}
           />
         </div>
       </Modal>
