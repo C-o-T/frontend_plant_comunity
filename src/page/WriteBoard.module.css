@@ -33,6 +33,10 @@
    margin-top: 15px;
 }
 
+.content > div:first-child >input{
+   display: none;
+}
+
 .textarea{
    width: 100%;
    margin : auto;
@@ -40,6 +44,11 @@
    margin-top: 15px;
    border: none;
    outline: none;
+   min-height: 300px;
+   border: 1px solid #ccc;
+   padding: 10px;
+   border-radius: 4px;
+   overflow-y: auto;
 }
 
 
