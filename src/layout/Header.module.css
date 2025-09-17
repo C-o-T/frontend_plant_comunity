@@ -2,12 +2,17 @@
   width: 1280px;
   margin: 30px auto;
   margin-bottom: 0px;
+  cursor: default;
 }
 
 .login_div {
   display: flex;
   justify-content: end;
   gap: 12px;
+}
+
+.login_div > p:hover {
+  cursor: pointer;
 }
 
 .banner_div {

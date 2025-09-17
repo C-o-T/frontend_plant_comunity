@@ -223,7 +223,6 @@ const Join = ({isOpenJoin, onClose}) => {
     <div className={styles.container}>
       <Modal
         isOpen={isOpenJoin}
-        size='423px'
         title='회원가입'
         onClose={()=>{
           onClose();
