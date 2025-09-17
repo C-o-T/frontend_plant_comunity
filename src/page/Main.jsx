@@ -3,18 +3,14 @@ import styles from './Main.module.css'
 import axios from 'axios';
 
 const Main = () => {
-  //게시글 조회를 위한 state 변수
-  const [boardList, setBoardList] = useState([]);
-
   //인기글 조회를 위한 state 변수
   const [popularBoardList, setPopularBoardList] = useState([]);
 
-  useEffect(() => {
-    axios.get()
-    .then(res => setBoardList(res.data))
-    .catch(e => console.log(e))
+  console.log(popularBoardList)
 
-    axios.get()
+  //마운트 시 인기글 리스트 조회
+  useEffect(() => {
+    axios.get('/api/boards/popular')
     .then(res => setPopularBoardList(res.data))
     .catch(e => console.log(e))
 
@@ -22,15 +18,30 @@ const Main = () => {
 
 
   return (
-    <div className='container'>Main(로그인X 첫화면 사이트소개, 최신글, 인기글 클릭시: 로그인하세요 안내
-      로그인O 첫화면 내농장요약, 최신글, 인기글)
-      <div>
+    <div className={styles.container}>
+      <div className={styles.img_div}>
         <div>이미지</div>
-        <div>정보</div>
+        <div>스마트팜 정보</div>
       </div>
-      <div>
-        인기글
-      </div>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <td>인기글 제목</td>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            popularBoardList.map((board, i) => {
+              return(
+                <tr key={i}>
+                  <td>{board.title}</td>
+                  <td>{board.read}</td>
+                </tr>
+              )
+            })
+          }
+        </tbody>
+      </table>
     </div>
   )
 }

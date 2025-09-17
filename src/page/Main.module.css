@@ -1,0 +1,16 @@
+.container{
+  display: flex;
+  width: 1280px;
+  margin: auto;
+	padding: 20px;
+}
+
+.img_div{
+  width: 70%;
+  display: flex;
+  gap: 20px;
+}
+
+.table{
+  width: 30%;
+}
