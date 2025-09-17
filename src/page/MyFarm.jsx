@@ -153,6 +153,14 @@ const MyFarm = () => {
           </thead>
           <tbody>
             {
+              getWrite.length === 0
+              ?
+              <tr>
+                <td colSpan={6}>
+                  작성된 게시글이 없습니다.
+                </td>
+              </tr>
+              :
               getWrite.map((write, i) => {
                 return (
                   <tr key={i}
