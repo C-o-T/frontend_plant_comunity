@@ -38,5 +38,8 @@
 .menu_div li {
   font-size: 1.05rem;
   font-weight: bolder;
+}
 
+.menu_div li:hover{
+  cursor: pointer;
 }

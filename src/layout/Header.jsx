@@ -1,7 +1,10 @@
 import React from 'react'
 import styles from './Header.module.css'
+import { useNavigate } from 'react-router-dom'
 
 const Header = () => {
+  const nav = useNavigate();
+
   return (
     <div className={styles.container}>
       <div className={styles.login_div}>
@@ -15,9 +18,9 @@ const Header = () => {
 
       <div className={styles.menu_div}>
         <ul>
-          <li>My Farm</li>
-          <li>Community</li>
-          <li>My Page</li>
+          <li onClick={e => nav('/myfarm')}>My Farm</li>
+          <li onClick={e => nav('/board')}>Community</li>
+          <li onClick={e => nav('/mypage')}>My Page</li>
         </ul>
       </div>
     </div>
