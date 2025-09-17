@@ -10,6 +10,7 @@ import axios from 'axios'
 const Join = ({isOpenJoin, onClose}) => {
   //회원가입시 입력한 내용을 저장할 useState 변수
   const [joinData, setJoinData] = useState({
+    'memGrade' : 'user',
     'memId' : '',
     'memPw' : '',
     'memPwConfirm' : '',
@@ -26,6 +27,7 @@ const Join = ({isOpenJoin, onClose}) => {
   //닫기버튼 또는 회원가입 완료 시 입력한 내용을 전체 지우는 함수
   const resetJoinData = () => {
     setJoinData({
+      'memGrade' : 'user',
       'memId' : '',
       'memPw' : '',
       'memPwConfirm' : '',
@@ -178,7 +180,7 @@ const Join = ({isOpenJoin, onClose}) => {
   console.log(isAllDuplicated)
   //console.log(isDisable)
   //console.log(isAllVerified)
-  //console.log(joinData)
+  console.log(joinData)
 
   return (
     <div>
@@ -202,6 +204,26 @@ const Join = ({isOpenJoin, onClose}) => {
         }}
       >
         <div className={styles.width}>
+          <div className={`${styles.display_div} ${styles.input_margin}`}>
+            <input type='radio' 
+              name='memGrade' 
+              value='user' 
+              checked={joinData.memGrade==='user'}
+              onChange={e=>{
+                handleJoin(e)
+              }}
+            /> 
+            <p>일반회원</p>
+            <input type='radio' 
+              name='memGrade' 
+              value='business'
+              checked={joinData.memGrade==='business'} 
+              onChange={e=>{
+                handleJoin(e)
+              }}
+            /> 
+            <p>사업자회원</p>
+          </div>
           <div className={`${styles.display_div} ${styles.input_size}`}>
             <p>아이디<span>*</span></p>
             <Input type="text" 
