@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Modal from '../common/Modal'
 import Select from '../common/Select'
 import Input from '../common/Input'
@@ -127,22 +127,55 @@ const Join = ({isOpenJoin, onClose}) => {
   const handleBlur = e => {
     const {name, value} = e.target
     const error = handleErrorMsg(e, joinData)
-    setIsValid ({
-      ...isValid,
+    setIsUserValid ({
+      ...isUserValid,
       [name] : !error
     })
   }
 
+  //일반유저와 비즈니스유저를 구분
+  const isBusinessMember = joinData.memGrade === 'business'
+
+  //일반유저 선택시 input태그 안의 내용을 초기화
+  useEffect(()=>{
+    if (joinData.memGrade === 'user') {
+      setJoinData({
+        ...joinData,
+        memBusinessNum : '',
+        memBusinessName : ''
+      })
+      setErrorMsg({
+        ...errorMsg,
+        memBusinessNum : '',
+        memBusinessName : ''
+      })
+      setIsBusinessValid({
+        ...isBusinessValid,
+        'memBusinessNum' : true,
+        'memBusinessName' : true
+      })
+    } else if (joinData.memGrade === 'business') {
+      setIsBusinessValid({
+        ...isBusinessValid,
+        'memBusinessNum' : false,
+        'memBusinessName' : false
+      })
+    }
+  },[joinData.memGrade])
+
   //유효성 검사 필드 통과 여부를 저장하는 변수
-  const [isValid,setIsValid] = useState({
+  const [isUserValid,setIsUserValid] = useState({
     'memId' : false,
     'memPw' : false,
     'memPwConfirm' : false,
     'memName' : false,
-    'memTell' : false,
-    'memBusinessNum' : true,
-    'memBusinessName' : true
+    'memTell' : false
   });
+
+  const [isBusinessValid, setIsBusinessValid] = useState({
+    'memBusinessNum' : false,
+    'memBusinessName' : false
+  })
 
   //중복 확인 검사 통과 여부
   const [isDuplicated, setIsDuplicated] = useState({
@@ -151,12 +184,15 @@ const Join = ({isOpenJoin, onClose}) => {
   });
 
   //모든 필드의 유효성 검사가 통과했는지 확인
-  const isAllValid = isValid.memId 
-                    && isValid.memPw 
-                    && isValid.memPwConfirm 
-                    && isValid.memName
-                    && (joinData.memBusinessNum === '' || isValid.memBusinessNum)
-                    && (joinData.memBusinessName === '' || isValid.memBusinessName)
+  const isAllValid = isUserValid.memId 
+                    && isUserValid.memPw 
+                    && isUserValid.memPwConfirm 
+                    && isUserValid.memName
+                    && isUserValid.memTell
+                    && (//joinData.memBusinessNum === '' || 
+                      isBusinessValid.memBusinessNum)
+                    && (//joinData.memBusinessName === '' || 
+                       isBusinessValid.memBusinessName)
 
   //모든 중복 확인이 통과했는지 확인
   const isAllDuplicated = isDuplicated.memId && (joinData.memBusinessNum === '' || isDuplicated.memBusinessNum)
@@ -174,10 +210,11 @@ const Join = ({isOpenJoin, onClose}) => {
     .catch(e=>console.log(e))
   }
   
-  console.log(isValid)
-  console.log(isDuplicated)
-  console.log(isAllValid)
-  console.log(isAllDuplicated)
+  console.log('일반회원유효성검사',isUserValid)
+  console.log('사업자회원유효성검사',isBusinessValid)
+  console.log('중복확인검사',isDuplicated)
+  console.log('모든유효성검사통과?',isAllValid)
+  console.log('모든중복확인검사통과',isAllDuplicated)
   //console.log(isDisable)
   //console.log(isAllVerified)
   console.log(joinData)
@@ -243,8 +280,8 @@ const Join = ({isOpenJoin, onClose}) => {
                   ...errorMsg,
                   memId : handleErrorMsg(e)
                 })
-                setIsValid({
-                  ...isValid,
+                setIsUserValid({
+                  ...isUserValid,
                   memId:!error
                 })
               }}
@@ -253,7 +290,7 @@ const Join = ({isOpenJoin, onClose}) => {
               title='중복확인'
               color='secondary'
               onClick={e=>checkId()}
-              disabled={!isValid.memId}
+              disabled={!isUserValid.memId}
             />
           </div>
           <p className={styles.errMsg}>{errorMsg.memId}</p>
@@ -368,10 +405,11 @@ const Join = ({isOpenJoin, onClose}) => {
           </div>
           <p className={styles.errMsg}></p>
           <div className={`${styles.display_div} ${styles.input_size}`}>
-            <p>사업자등록번호</p>
+            <p>사업자등록번호<span style={{display: joinData.memGrade === 'business' ? 'inline' : 'none'}}>*</span></p>
             <Input type="text"
               name='memBusinessNum'
               value={joinData.memBusinessNum}
+              disabled={!isBusinessMember}
               onChange={(e)=>{
                 handleJoin(e)
                 setIsDisable({
@@ -393,8 +431,8 @@ const Join = ({isOpenJoin, onClose}) => {
                   memBusinessNum : businessNumError,
                   memBusinessName : businessNameError
                 })
-                setIsValid({
-                  ...isValid,
+                setIsBusinessValid({
+                  ...isBusinessValid,
                   memBusinessNum:!error
                 })
               }}
@@ -403,19 +441,21 @@ const Join = ({isOpenJoin, onClose}) => {
               title='중복확인'
               color='secondary'
               onClick={e=>checkNum()}
-              disabled={!isValid.memBusinessNum}
+              disabled={!isBusinessValid.memBusinessNum || !isBusinessMember}
             />
           </div>
           <p className={styles.errMsg}>{errorMsg.memBusinessNum}</p>
           <div className={styles.display_div}>
-            <p>상호명</p>
+            <p>상호명<span style={{display: joinData.memGrade === 'business' ? 'inline' : 'none'}}>*</span></p>
             <Input type="text"
               name='memBusinessName'
               value={joinData.memBusinessName}
+              disabled={!isBusinessMember}
               onChange={(e)=>{
                 handleJoin(e)
               }}
               onBlur={(e)=>{
+                const error = handleErrorMsg(e,joinData)
                 const businessNameError = handleErrorMsg(e, joinData);
                 const businessNumError = handleErrorMsg({
                   target : {
@@ -427,6 +467,10 @@ const Join = ({isOpenJoin, onClose}) => {
                   ...errorMsg,
                   memBusinessNum : businessNumError,
                   memBusinessName : businessNameError
+                })
+                setIsBusinessValid({
+                  ...isBusinessValid,
+                  memBusinessName:!error
                 })
               }}
             />
