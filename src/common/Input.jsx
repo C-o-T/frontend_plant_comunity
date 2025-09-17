@@ -5,9 +5,7 @@ import styles from './Input.module.css'
 
 const Input = ({size, ...props}) => {
   return (
-    <div>
-      <input className = {styles.input} style={{width : `${size}`}} {...props}/>
-    </div>
+    <input className = {styles.input} style={{width : `${size}`}} {...props}/>
   )
 }
 

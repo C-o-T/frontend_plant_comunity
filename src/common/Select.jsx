@@ -5,11 +5,9 @@ import styles from './Select.module.css'
 //props = onChange value name 기타 등등
 const Select = ({children, size = '100px', ...props}) => {
   return (
-    <div>
-      <select className = {styles.select} style={{width : `${size}`}} {...props}>
-         {children}
-      </select>
-    </div>
+    <select className = {styles.select} style={{width : `${size}`}} {...props}>
+        {children}
+    </select>
   )
 }
 

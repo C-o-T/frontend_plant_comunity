@@ -8,6 +8,7 @@ import Main from './page/Main'
 import MyFarm from './page/MyFarm'
 import Board from './page/Board'
 import MyPage from './page/MyPage'
+import WriteBoard from './page/WriteBoard'
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path='myfarm' element={<MyFarm />} />
           <Route path='board' element={<Board />} />
           <Route path='mypage' element={<MyPage />} />
+          <Route path='write-board' element = {<WriteBoard/>}/>
       </Routes>
     </>
   )
