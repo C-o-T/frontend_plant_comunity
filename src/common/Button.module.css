@@ -2,6 +2,56 @@
    border: none;
    cursor: pointer;
    border-radius: 4px;
-   color: #666666;
    padding: 4px 8px;
 }
+
+
+.primary {
+   color: #f4f4f4;
+   background-color: #61bd48;
+}
+.primary:hover{
+   color: #f4f4f4;
+   background-color: #5aad42;
+}
+.primary:active{
+   color: #f4f4f4;
+   background-color: #6fc359;
+}
+
+.secondary {
+   background-color: #e0e976;
+}
+.secondary:hover{
+   background-color: #dce663;
+}
+.secondary:active{
+   background-color: #e5ec8a;
+}
+
+.tertiary {
+   background-color: #fffaa3;
+}
+.tertiary:hover{
+   background-color: #fff98c;
+}
+.tertiary:active{
+   background-color: #fffbba;
+}
+
+.disabled {
+   background-color: #d1d1d1;
+   color: #f4f4f4;
+   cursor:not-allowed;
+}
+.disabled:hover {
+   background-color: #d1d1d1;
+   color: #f4f4f4;
+   cursor:not-allowed;
+}
+.disabled:active {
+   background-color: #d1d1d1;
+   color: #f4f4f4;
+   cursor:not-allowed;
+}
+
