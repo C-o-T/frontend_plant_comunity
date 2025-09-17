@@ -1,15 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './Board.module.css'
 import Button from '../common/Button'
 import Input from '../common/Input';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Board = () => {
+
   //조회한 글 목록 
   const [boardList, setBoardList] =useState([]);
 
   //페이지 이동하기
   const nav = useNavigate();
+
+  useEffect(() => {
+    axios.get('/api/boards')
+    .then(res => setBoardList(res.data))
+    .catch(e => console.log(e))
+  }, [])
 
   return (
     <div className='container'>
@@ -62,10 +70,10 @@ const Board = () => {
                   <tr key={i}>
                     <td>{board.boardNum}</td>
                     <td>{board.cateName}</td>
-                    <td>{board.content}</td>
+                    <td>{board.title}</td>
                     <td>{board.readCnt}</td>
                     <td>{board.likeCnt}</td>
-                    <td>{board.disLike}</td>
+                    <td>{board.disLikeCnt}</td>
                   </tr>
                 )
               })
