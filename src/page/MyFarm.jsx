@@ -40,7 +40,7 @@ const MyFarm = () => {
     // 처음 마운트될 때 데이터 가져오기
     fetchSensorData();
 
-    // 10분(600000ms)마다 데이터 갱신
+    // 1시간 마다 데이터 갱신
     const interval = setInterval(fetchSensorData, TIME.HOUR);
 
     // 언마운트 시 interval 제거
@@ -59,26 +59,26 @@ const MyFarm = () => {
       {
         label: '온도 (℃)',
         data: sortedData.map(d => d.temperature),
-        borderColor: 'rgb(75, 192, 192)',
+        borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         tension: 0.4
       },
       {
         label: '습도 (%)',
         data: sortedData.map(d => d.humidity),
-        borderColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(75, 192, 192)',
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         tension: 0.4
       },
       {
-        label: '조도',
+        label: '조도 (Lux)',
         data: sortedData.map(d => d.illuminance),
         borderColor: 'rgb(255, 206, 86)',
         backgroundColor: 'rgba(255, 206, 86, 0.2)',
         tension: 0.4
       },
       {
-        label: '토양습도',
+        label: '토양습도 (%)',
         data: sortedData.map(d => d.soilMoisture),
         borderColor: 'rgba(70, 62, 41, 1)',
         backgroundColor: 'rgba(255, 206, 86, 0.2)',
@@ -89,9 +89,30 @@ const MyFarm = () => {
   
 
   return (
-    <div className="container">
-      <h2>Sensor Data (실시간 1시간 간격)</h2>
-      <div className={styles.graph_div}><Line data={chartData} className={styles.graph}/></div>
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <div className={styles.herb_info}>
+          <h2>내 식물 정보</h2>
+          <div className={styles.img_div}>
+            <div>이미지</div>
+            <div className={styles.env}>
+              <div>온도</div>
+              <div>습도</div>
+            </div>
+            <div className={styles.env}>
+              <div>조도</div>
+              <div>토양습도</div>
+            </div>
+          </div>
+        </div>
+        <div  className={styles.graph_div}>
+          <h2>환경 데이터 (실시간 1시간 간격)</h2>
+          <div><Line data={chartData} className={styles.graph}/></div>
+        </div>
+      </div>
+      <div className={styles.board}>
+        <h2>게시글</h2>
+      </div>
     </div>
   );
 };
