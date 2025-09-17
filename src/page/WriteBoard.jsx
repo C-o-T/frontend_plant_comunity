@@ -12,7 +12,7 @@ const WriteBoard = () => {
         title : ''
       , content : ''
       , cateNum : ''
-      , memId : 'java'
+      , memId : 'aaaa'
    });
 
    //
