@@ -16,6 +16,7 @@ const Button = ({title, size = '100px', color='primary', onClick, ...props}) => 
         {title}
       </button>
     </div>
+
   )
 }
 

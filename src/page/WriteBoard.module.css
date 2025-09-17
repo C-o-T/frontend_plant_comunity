@@ -1,0 +1,55 @@
+.main{
+   margin : auto;
+   border: 1px solid black;
+   width: 90%;
+}
+
+.tag{
+   width: 90%;
+   margin: auto;
+   margin-bottom: 15px;
+   border-bottom: 1px solid black;
+}
+
+.head{
+   padding: 20px;
+   border: 1px solid black;
+   width: 90%;
+   margin: auto;
+   border-radius: 5px;
+}
+
+.head > div:first-child{
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding-top: 10px;
+   padding-bottom: 10px;
+}
+
+.content{
+   width: 90%;
+   margin: auto;
+   margin-top: 15px;
+}
+
+.content > div:first-child >input{
+   display: none;
+}
+
+.textarea{
+   width: 100%;
+   margin : auto;
+   resize: none;
+   margin-top: 15px;
+   margin-bottom: 30px;
+   border: none;
+   outline: none;
+   min-height: 300px;
+   border: 1px solid #ccc;
+   padding: 10px;
+   border-radius: 4px;
+   overflow-y: auto;
+}
+
+
