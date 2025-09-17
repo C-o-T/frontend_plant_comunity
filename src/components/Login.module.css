@@ -1,0 +1,37 @@
+.container {
+  cursor: default;
+}
+
+.display_div {
+  display: flex;
+  gap: 8px;
+}
+
+.display_div > p:first-child {
+  width: 80px;
+}
+
+.display_div input {
+  width: 250px;
+  margin-bottom: 20px;
+}
+
+.btn_div {
+  text-align: center;
+  width: 100%;
+}
+
+.find_div {
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 2px;
+  color: #818181;
+}
+
+.find_div > p:hover {
+  cursor: pointer;
+}
