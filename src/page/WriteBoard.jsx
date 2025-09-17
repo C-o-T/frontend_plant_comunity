@@ -47,7 +47,7 @@ const WriteBoard = () => {
       console.log(formData.getAll('img'));
       axios
          .post('/api/boards',formData,fileConfig)
-         .then()
+         .then(response => {alert('등록')})
          .catch(error => console.log(error))
    }
 
@@ -59,6 +59,7 @@ const WriteBoard = () => {
       });
    }
    console.log(insertBoard.content.length)
+   console.log(insertBoard.content)
    //
    const handleInput = e => {
       setInsertBoard(prev => ({
@@ -66,6 +67,7 @@ const WriteBoard = () => {
          content : editableRef.current.innerHTML
       }))
    }
+   
    //커서 위치에 HTML 삽입 함수
    const insertHtmlAtCursor = (html) => {
       let sel, range
@@ -175,8 +177,8 @@ const WriteBoard = () => {
   };
 }, []);
    //데이터 확인
-   console.log(insertBoard);
-   
+   //console.log(insertBoard);
+   //console.log(img)
    return (
     <div className = 'container'>
       <h2 className = {styles.tag}>글쓰기</h2>
@@ -200,7 +202,7 @@ const WriteBoard = () => {
       </div>
       <div className={styles.content}>
          <div>
-            <Input type = 'file' id = 'fileInput' accept = "image/*" multiple = {true} onChange = {e => {handleFileChange(e)}}/>
+            <Input type = 'file' id = 'fileInput' accept = "image/jpeg" multiple = {true} onChange = {e => {handleFileChange(e)}}/>
             <label htmlFor='fileInput' className={styles.fileLabel}>
                <span><i className ="bi bi-image" style={{fontSize : '2rem'}}></i></span><p style={{fontSize : '0.7rem', fontWeight : 'bold'}}>이미지</p>
             </label>
