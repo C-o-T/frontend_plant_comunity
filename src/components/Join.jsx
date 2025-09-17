@@ -210,17 +210,17 @@ const Join = ({isOpenJoin, onClose}) => {
     .catch(e=>console.log(e))
   }
   
-  console.log('일반회원유효성검사',isUserValid)
-  console.log('사업자회원유효성검사',isBusinessValid)
-  console.log('중복확인검사',isDuplicated)
-  console.log('모든유효성검사통과?',isAllValid)
-  console.log('모든중복확인검사통과',isAllDuplicated)
+  //console.log('일반회원유효성검사',isUserValid)
+  //console.log('사업자회원유효성검사',isBusinessValid)
+  //console.log('중복확인검사',isDuplicated)
+  //console.log('모든유효성검사통과?',isAllValid)
+  //console.log('모든중복확인검사통과',isAllDuplicated)
   //console.log(isDisable)
   //console.log(isAllVerified)
-  console.log(joinData)
+  //console.log(joinData)
 
   return (
-    <div>
+    <div className={styles.container}>
       <Modal
         isOpen={isOpenJoin}
         size='423px'

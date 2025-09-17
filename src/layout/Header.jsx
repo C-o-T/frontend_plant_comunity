@@ -2,15 +2,25 @@ import React, { useState } from 'react'
 import styles from './Header.module.css'
 import Join from '../components/Join'
 import { useNavigate } from 'react-router-dom'
+import Login from '../components/Login'
 
 const Header = () => {
   const nav = useNavigate();
   const [isOpenJoin, setIsOpenJoin] = useState(false);
+  const [isOpenLogin, setIsOpenLogin] = useState(false);
 
   return (
     <div className={styles.container}>
       <div className={styles.login_div}>
-        <p>login</p>
+        <p
+          onClick={()=>setIsOpenLogin(true)}
+        >
+          login
+        </p>
+        <Login 
+          isOpenLogin={isOpenLogin}
+          onClose={()=>setIsOpenLogin(false)}
+        />
         <p
           onClick={()=>{setIsOpenJoin(true)}}
         >
