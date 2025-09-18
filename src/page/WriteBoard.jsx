@@ -15,6 +15,7 @@ const WriteBoard = () => {
       , memId : 'aaaa'
    });
 
+   console.log(insertBoard)
    //
    const editableRef = useRef(null);
 
