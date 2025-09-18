@@ -1,10 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import styles from './WriteBoard.module.css'
 import Select from '../common/Select'
 import Input from '../common/Input'
 import Button from '../common/Button'
 import axios from 'axios'
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'react-quill/dist/quill.snow.css'; // 기본 테마
+import ReactQuill from 'react-quill'
+//import ImageResize from 'quill-image-resize-module';
+
+//Quill.register('modules/imageResize', ImageResize);
 
 const WriteBoard = () => {
    //글쓰기 등록할때 저장 할 변수
@@ -16,13 +21,15 @@ const WriteBoard = () => {
    });
 
    //
-   const editableRef = useRef(null);
+   //const editableRef = useRef(null);
+   const quillRef = useRef(null);
+   const fileInsert = useRef(null);
 
-   useEffect(() => {
-      if(editableRef.current){
-         editableRef.current.innerHTML = insertBoard.content
-      }
-   },[])
+   // useEffect(() => {
+   //    if(editableRef.current){
+   //       editableRef.current.innerHTML = insertBoard.content
+   //    }
+   // },[])
 
    //선택한 이미지 저장하는 변수
    const [img, setImg] = useState([]);
@@ -61,124 +68,144 @@ const WriteBoard = () => {
    console.log(insertBoard.content.length)
    console.log(insertBoard.content)
    //
-   const handleInput = e => {
+   // const handleInput = e => {
+   //    setInsertBoard(prev => ({
+   //       ...prev,
+   //       content : editableRef.current.innerHTML
+   //    }))
+   // }
+   //quill 에디터로만든 내용 저장 
+   const handleContentChange = (value) => {
       setInsertBoard(prev => ({
          ...prev,
-         content : editableRef.current.innerHTML
+         content : value
       }))
    }
-   
-   //커서 위치에 HTML 삽입 함수
-   const insertHtmlAtCursor = (html) => {
-      let sel, range
-      if(window.getSelection){
-         sel = window.getSelection()
-         if(sel.getRangeAt && sel.rangeCount){
-            range = sel.getRangeAt(0)
-            range.deleteContents()
 
-            const el = document.createElement('div')
-            el.innerHTML = html + '<div><br></div>'
-            const frag = document.createDocumentFragment()
-            let node, lastNode
-
-            while((node = el.firstChild)){
-               lastNode = frag.appendChild(node)
-            }
-            range.insertNode(frag)
-
-            if(lastNode){
-               range = range.cloneRange()
-               range.setStartAfter(lastNode)
-               range.collapse(true)
-               sel.removeAllRanges()
-               sel.addRange(range)
-            }
-         }
+   //이미지 아이콘 클릭시 어떻게할지 함수
+   const handleImgIcon = () => {
+      if(fileInsert.current){
+         fileInsert.current.click();
       }
+      
    }
+   //파일 오류안나게 하기
+   const MyFile = forwardRef((props, ref) => {
+      <Input ref = {ref} {...props}/>
+   })
+   //커서 위치에 HTML 삽입 함수
+   // const insertHtmlAtCursor = (html) => {
+   //    let sel, range
+   //    if(window.getSelection){
+   //       sel = window.getSelection()
+   //       if(sel.getRangeAt && sel.rangeCount){
+   //          range = sel.getRangeAt(0)
+   //          range.deleteContents()
+
+   //          const el = document.createElement('div')
+   //          el.innerHTML = html + '<div><br></div>'
+   //          const frag = document.createDocumentFragment()
+   //          let node, lastNode
+
+   //          while((node = el.firstChild)){
+   //             lastNode = frag.appendChild(node)
+   //          }
+   //          range.insertNode(frag)
+
+   //          if(lastNode){
+   //             range = range.cloneRange()
+   //             range.setStartAfter(lastNode)
+   //             range.collapse(true)
+   //             sel.removeAllRanges()
+   //             sel.addRange(range)
+   //          }
+   //       }
+   //    }
+   // }
    const handleFileChange = e => {
       const files = Array.from(e.target.files)
 
-      files.forEach((file) => {
-         const reader = new FileReader()
-         reader.onload = (event) => {
-            const imgHtml = `<img src = "${event.target.result}" draggable = "true" style ="max-width : 150px; margin 5px 0;"/>`
-            editableRef.current.focus();
-            insertHtmlAtCursor(imgHtml)
+      // files.forEach((file) => {
+      //    const reader = new FileReader()
+      //    reader.onload = (event) => {
+      //       const imgHtml = `<img src = "${event.target.result}" draggable = "true" style ="max-width : 150px; margin 5px 0;"/>`
+      //       editableRef.current.focus();
+      //       insertHtmlAtCursor(imgHtml)
 
-            setInsertBoard((prev) => ({
-               ...prev,
-               content: editableRef.current.innerHTML
-            }))
-         }
-         reader.readAsDataURL(file)
-      })
+      //       setInsertBoard((prev) => ({
+      //          ...prev,
+      //          content: editableRef.current.innerHTML
+      //       }))
+      //    }
+      //    reader.readAsDataURL(file)
+      // })
       setImg((prev) => [...prev, ...files])
 
       e.target.value = '';
    }
 
-   useEffect(() => {
-  const editor = editableRef.current;
+//    useEffect(() => {
+//   //const editor = editableRef.current;
 
-  if (!editor) return;
+//   //if (!editor) return;
 
-  // Drag start: store dragged element
-  editor.addEventListener('dragstart', (e) => {
-    if (e.target.tagName === 'IMG') {
-      e.dataTransfer.setData('text/html', e.target.outerHTML);
-      e.dataTransfer.effectAllowed = 'move';
-      e.target.classList.add('dragging');
-    }
-  });
+//   // Drag start: store dragged element
+//   editor.addEventListener('dragstart', (e) => {
+//     if (e.target.tagName === 'IMG') {
+//       e.dataTransfer.setData('text/html', e.target.outerHTML);
+//       e.dataTransfer.effectAllowed = 'move';
+//       e.target.classList.add('dragging');
+//     }
+//   });
 
-  // Drag over: allow drop
-  editor.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  });
+//   // Drag over: allow drop
+//   editor.addEventListener('dragover', (e) => {
+//     e.preventDefault();
+//     e.dataTransfer.dropEffect = 'move';
+//   });
 
-  // Drop: insert image at cursor
-  editor.addEventListener('drop', (e) => {
-    e.preventDefault();
+//   // Drop: insert image at cursor
+//   editor.addEventListener('drop', (e) => {
+//     e.preventDefault();
 
-    const data = e.dataTransfer.getData('text/html');
-    if (data) {
-      const dragging = editor.querySelector('.dragging');
-      if (dragging) {
-        dragging.remove(); // remove original image
-      }
+//     const data = e.dataTransfer.getData('text/html');
+//     if (data) {
+//       const dragging = editor.querySelector('.dragging');
+//       if (dragging) {
+//         dragging.remove(); // remove original image
+//       }
 
-      // insert at cursor
-      const range = document.caretRangeFromPoint(e.clientX, e.clientY);
-      if (range) {
-        range.deleteContents();
-        const el = document.createElement('div');
-        el.innerHTML = data;
-        const frag = document.createDocumentFragment();
-        let node;
-        while ((node = el.firstChild)) {
-          frag.appendChild(node);
-        }
-        range.insertNode(frag);
-      }
+//       // insert at cursor
+//       const range = document.caretRangeFromPoint(e.clientX, e.clientY);
+//       if (range) {
+//         range.deleteContents();
+//         const el = document.createElement('div');
+//         el.innerHTML = data;
+//         const frag = document.createDocumentFragment();
+//         let node;
+//         while ((node = el.firstChild)) {
+//           frag.appendChild(node);
+//         }
+//         range.insertNode(frag);
+//       }
 
-      // cleanup
-      const imgs = editor.querySelectorAll('img');
-      imgs.forEach(img => img.classList.remove('dragging'));
-    }
-  });
+//       // cleanup
+//       const imgs = editor.querySelectorAll('img');
+//       imgs.forEach(img => img.classList.remove('dragging'));
+//     }
+//   });
 
-  return () => {
-    editor.removeEventListener('dragstart', () => {});
-    editor.removeEventListener('dragover', () => {});
-    editor.removeEventListener('drop', () => {});
-  };
-}, []);
+//   return () => {
+//     editor.removeEventListener('dragstart', () => {});
+//     editor.removeEventListener('dragover', () => {});
+//     editor.removeEventListener('drop', () => {});
+//    };
+//    }, []);
+   
+
    //데이터 확인
    //console.log(insertBoard);
-   //console.log(img)
+   console.log(img)
    return (
     <div className = 'container'>
       <h2 className = {styles.tag}>글쓰기</h2>
@@ -201,7 +228,7 @@ const WriteBoard = () => {
          </div>
       </div>
       <div className={styles.content}>
-         <div>
+         {/* <div>
             <Input type = 'file' id = 'fileInput' accept = "image/jpeg" multiple = {true} onChange = {e => {handleFileChange(e)}}/>
             <label htmlFor='fileInput' className={styles.fileLabel}>
                <span><i className ="bi bi-image" style={{fontSize : '2rem'}}></i></span><p style={{fontSize : '0.7rem', fontWeight : 'bold'}}>이미지</p>
@@ -225,8 +252,33 @@ const WriteBoard = () => {
                   </div>
                )
             }
-         </div>
-         <div ref={editableRef} className = {styles.textarea} contentEditable spellCheck ={false} onInput={e => handleInput(e)} suppressContentEditableWarning={true} ></div>
+         </div> */}
+         {/* <div ref={editableRef} className = {styles.textarea} contentEditable spellCheck ={false} onInput={e => handleInput(e)} suppressContentEditableWarning={true} ></div> */}
+         <MyFile ref = {fileInsert} type = 'file' accept = "image/jpeg" multiple = {true} onChange = {e => {handleFileChange(e)}}/>
+         {/* <p>  
+            <Input />
+         </p> */}
+         <ReactQuill ref={quillRef} theme='snow' value={insertBoard.content} onChange={e => handleContentChange(e)}
+         modules={{
+            toolbar : [
+               [{header : [1, 2, false]}],
+               ['bold', 'underline'],
+               [{list : 'ordered'}, {list : 'bullet'}],
+               ['image'],
+               ['clean']
+            ],
+            // handlers : {
+            //    image : handleImgIcon()
+            // }
+         }}
+         formats={[
+            'header',
+            'bold', 'underline',
+            'list', 'bullet',
+            'image'
+         ]}
+         style={{height : '300px'}}
+            />
       </div>
     </div>
   )
