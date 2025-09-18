@@ -61,7 +61,6 @@ const MyFarm = () => {
     //sessionStorage 에서 받아온 memId 객체로 변환
     const memId = JSON.parse(loginInfo).memId
     
-
     // 언마운트 시 interval 제거
     return () => clearInterval(interval);
   }, []);
