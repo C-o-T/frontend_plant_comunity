@@ -19,7 +19,6 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 const MyFarm = () => {
   const nav = useNavigate();
 
- 
   //센서를 통해 받은 데이터를 변경할 state변수
   const [sensorData, setSensorData] = useState([]);
 
@@ -33,12 +32,13 @@ const MyFarm = () => {
     DAY: 24 * 60 * 60 * 1000
   };
 
-  // 데이터 가져오는 함수
+  // 센서 데이터 가져오는 함수
   const fetchSensorData = () => {
     axios.get('/api/sensor')
       .then(res => setSensorData(res.data))
       .catch(e => console.log(e));
   };
+
 
   useEffect(() => {
     //마이팜 페이지를 들어갔는데 로그인이 되어있지 않으면
@@ -53,14 +53,13 @@ const MyFarm = () => {
     // 처음 마운트될 때 데이터 가져오기
     fetchSensorData();
 
+
     // 1시간 마다 데이터 갱신
     const interval = setInterval(fetchSensorData, TIME.HOUR);
 
 
-
     //sessionStorage 에서 받아온 memId 객체로 변환
     const memId = JSON.parse(loginInfo).memId
-    
     
     // 언마운트 시 interval 제거
     return () => clearInterval(interval);
@@ -115,7 +114,10 @@ const MyFarm = () => {
           <div className={styles.img_div}>
             <div>이미지</div>
             <div className={styles.env}>
-              <div>온도</div>
+              <div>
+                <div>차트에서 불러온 가장 최근 데이터의 온도</div>
+                <div>해당 작물의 적정 온도</div>
+              </div>
               <div>습도</div>
             </div>
             <div className={styles.env}>
@@ -129,7 +131,6 @@ const MyFarm = () => {
           <div><Line data={chartData} className={styles.graph}/></div>
         </div>
       </div>
-      
     </div>
   );
 };
