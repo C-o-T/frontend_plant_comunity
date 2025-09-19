@@ -77,7 +77,7 @@ export const handleErrorMsg = (e, joinData) => {
 
     case 'memBusinessNum' :
       if (!e.target.value) {
-        errorStr = ''
+        errorStr = '사업자번호를 입력하세요'
       } else if (!memBusinessNumRegex.test(e.target.value)) {
         errorStr = '000-00-00000 형식으로 입력하세요.'
       } else {
