@@ -68,7 +68,7 @@ const Header = () => {
         <ul>
           <li onClick={e => nav('/myfarm')}>My Farm</li>
           <li onClick={e => nav('/board')}>Community</li>
-          <li onClick={e => nav('/mypage')}>My Page</li>
+          <li onClick={e => nav('/mypage/my-info')}>My Page</li>
         </ul>
       </div>
     </div>
