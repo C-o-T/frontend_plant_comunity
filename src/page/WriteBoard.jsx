@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react'
+import React, { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './WriteBoard.module.css'
 import Select from '../common/Select'
 import Input from '../common/Input'
@@ -10,7 +10,10 @@ import ReactQuill from 'react-quill'
 //import ImageResize from 'quill-image-resize-module';
 
 //Quill.register('modules/imageResize', ImageResize);
-
+//파일 오류안나게 하기
+   const MyFile = forwardRef((props, ref) => {
+      return <Input ref = {ref} {...props}/>
+   })
 const WriteBoard = () => {
    //글쓰기 등록할때 저장 할 변수
    const [insertBoard, setInsertBoard] = useState({
@@ -65,6 +68,21 @@ const WriteBoard = () => {
          [e.target.name] : e.target.value,
       });
    }
+const testInsertImage = () => {
+  const editor = quillRef.current.getEditor();
+  const url = "https://picsum.photos/200"; // 바뀐 테스트 URL
+
+  editor.focus();
+
+  const length = editor.getLength(); // 에디터 현재 내용 길이
+  editor.insertEmbed(length - 1, 'image', url);
+
+  // 삽입 후 커서 이동 - 삽입이 완료된 후에 실행되도록 delay
+  setTimeout(() => {
+    const newLength = editor.getLength();
+    editor.setSelection(newLength, 0);
+  }, 30);
+};
    console.log(insertBoard.content.length)
    console.log(insertBoard.content)
    //
@@ -84,15 +102,17 @@ const WriteBoard = () => {
 
    //이미지 아이콘 클릭시 어떻게할지 함수
    const handleImgIcon = () => {
-      if(fileInsert.current){
+      const editor = quillRef.current.getEditor();
+      
+      editor.focus();
+      setTimeout(() => {
+         if(fileInsert.current){
+         fileInsert.current.value =null;
          fileInsert.current.click();
       }
-      
-   }
-   //파일 오류안나게 하기
-   const MyFile = forwardRef((props, ref) => {
-      <Input ref = {ref} {...props}/>
-   })
+      },0)
+   };
+   
    //커서 위치에 HTML 삽입 함수
    // const insertHtmlAtCursor = (html) => {
    //    let sel, range
@@ -122,9 +142,33 @@ const WriteBoard = () => {
    //       }
    //    }
    // }
-   const handleFileChange = e => {
+   const handleFileChange = async(e) => {
       const files = Array.from(e.target.files)
+      if(!files.length) return;
 
+      const formData = new FormData();
+
+      if(files && files.length > 0){
+         files.forEach((file) => {
+            formData.append('img', file);
+         })
+      }
+      try{
+         const response = await axios.post('/api/boards/upload/img',formData,fileConfig);
+         const imageUrls = response.data;
+         const editor = quillRef.current.getEditor();
+         setTimeout(()=> {
+            imageUrls.forEach(url => {
+            const range = editor.getSelection(true);
+            editor.insertEmbed(range.index, 'image', url);
+            editor.setSelection(range.index + 1);
+         })
+         },2000)
+         
+      }catch(error){
+         console.log('이미지 업로드 실패 : ', error);
+      }
+      e.target.value = '';
       // files.forEach((file) => {
       //    const reader = new FileReader()
       //    reader.onload = (event) => {
@@ -139,10 +183,41 @@ const WriteBoard = () => {
       //    }
       //    reader.readAsDataURL(file)
       // })
-      setImg((prev) => [...prev, ...files])
-
-      e.target.value = '';
+      // setImg((prev) => [...prev, ...files])
+      // console.log(img)
    }
+    const insertImageToEditor = (url) => {
+    const editor = quillRef.current.getEditor();
+    // 현재 selection 위치를 가져옴 (true는 포커스 없을 때 마지막 위치 반환)
+    editor.focus();
+
+    let range = editor.getSelection();
+
+    // 만약 selection이 없으면 포커스 주고 다시 가져오기
+    if (!range) {
+    const length = editor.getLength();
+    editor.setSelection(length, 0);
+    range = editor.getSelection();
+  }
+
+  if (!range) {
+    console.error('No valid selection found!');
+    return;
+  }
+     // 에디터 컨텐츠 길이 다시 얻기 (이미지 삽입 후 length 증가)
+  const newLength = editor.getLength();
+
+  // 삽입 후 커서 위치를 안전하게 설정 (최대 길이-1 이내로)
+  const newIndex = Math.min(range.index + 1, newLength - 1);
+
+  setTimeout(() => {
+    try {
+      editor.setSelection(newIndex, 0);
+    } catch (error) {
+      console.error('setSelection error:', error);
+    }
+  }, 50);
+};
 
 //    useEffect(() => {
 //   //const editor = editableRef.current;
@@ -201,10 +276,30 @@ const WriteBoard = () => {
 //     editor.removeEventListener('drop', () => {});
 //    };
 //    }, []);
-   
+   //quill editor 모듈
+   const modules = useMemo(() => ({
+  toolbar: {
+    container: [
+      [{ header: [1, 2, false] }],
+      ['bold', 'underline'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['image'],
+      ['clean']
+    ],
+    handlers: {
+      image: handleImgIcon
+    }
+  }
+}), []);  // 빈 deps → 한번만 생성
+
+const formats = useMemo(() => [
+  'header', 'bold', 'underline', 'list', 'bullet', 'image'
+], []);
+
+
 
    //데이터 확인
-   //console.log(insertBoard);
+   console.log(insertBoard);
    console.log(img)
    return (
     <div className = 'container'>
@@ -255,31 +350,13 @@ const WriteBoard = () => {
          </div> */}
          {/* <div ref={editableRef} className = {styles.textarea} contentEditable spellCheck ={false} onInput={e => handleInput(e)} suppressContentEditableWarning={true} ></div> */}
          <MyFile ref = {fileInsert} type = 'file' accept = "image/jpeg" multiple = {true} onChange = {e => {handleFileChange(e)}}/>
-         {/* <p>  
-            <Input />
-         </p> */}
          <ReactQuill ref={quillRef} theme='snow' value={insertBoard.content} onChange={e => handleContentChange(e)}
-         modules={{
-            toolbar : [
-               [{header : [1, 2, false]}],
-               ['bold', 'underline'],
-               [{list : 'ordered'}, {list : 'bullet'}],
-               ['image'],
-               ['clean']
-            ],
-            // handlers : {
-            //    image : handleImgIcon()
-            // }
-         }}
-         formats={[
-            'header',
-            'bold', 'underline',
-            'list', 'bullet',
-            'image'
-         ]}
+         modules={modules}
+         formats={formats}
          style={{height : '300px'}}
             />
       </div>
+      <button type='button' onClick={testInsertImage}>테스트이미지 삽입</button>
     </div>
   )
 }
