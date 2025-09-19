@@ -9,6 +9,7 @@ import MyFarm from './page/MyFarm'
 import Board from './page/Board'
 import MyPage from './page/MyPage'
 import WriteBoard from './page/WriteBoard'
+import Find from './page/Find'
 import MyBoardList from './page/MyBoardList'
 import MemberDetail from './page/MemberDetail'
 
@@ -28,7 +29,6 @@ function App() {
           <Route path='my-info' element={<MemberDetail />}/>
           <Route path='my-board-list' element={<MyBoardList />}/>
         </Route>
-
       </Routes>
     </>
   )

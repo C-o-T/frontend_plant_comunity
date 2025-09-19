@@ -109,8 +109,14 @@ const Login = ({isOpenLogin, onClose}) => {
         <div
           className={styles.find_div}
         >
-          <p>아이디찾기</p>
-          <p>비밀번호찾기</p>
+          <p
+            onClick={()=>{
+              nav('/find')
+              onClose()
+            }}
+          >
+            아이디/비밀번호 찾기
+          </p>
         </div>
       </Modal>
     </div>

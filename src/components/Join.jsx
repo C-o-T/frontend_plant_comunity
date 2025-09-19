@@ -18,7 +18,7 @@ const Join = ({isOpenJoin, onClose}) => {
     'memAddr' : '',
     'memDetailAddr' : '',
     'memTell' : '',
-    'memEmail' : ['',''],
+    'memEmail' : '',
     'memBusinessNum' : '', //사업자등록번호
     'memBusinessName' :''  //상호명
   })
@@ -96,6 +96,27 @@ const Join = ({isOpenJoin, onClose}) => {
     
   }
 
+  // Tell 중복확인을 했을 때 실행할 함수
+  const checkTell = () => {
+    axios.get(`/api/members/tell/${joinData.memTell}`)
+    .then(
+      res=>{
+        //console.log(res.data)
+        if (res.data === 0) {
+          alert('사용 가능한 연락처입니다.')
+          // 회원가입 버튼 활성화
+          setIsDuplicated({
+            ...isDuplicated,
+            memTell : true
+          }) 
+        } else {
+          alert('이 연락처는 사용 할 수 없습니다.')
+        }
+    })
+    .catch(e=>console.log(e))
+    
+  }
+
   //사업자번호 중복확인을 했을 때 실행할 함수
   const checkNum = () => {
     axios.get(`/api/members/bn/${joinData.memBusinessNum}`)
@@ -116,9 +137,10 @@ const Join = ({isOpenJoin, onClose}) => {
   }
   
   //회원가입 버튼 사용 가능 여부를 저장하는 state 변수 
-  //(아이디,사업자번호 중복확인 여부)
+  //(아이디, 연락처, 사업자번호 중복확인 여부)
   const [isDisable, setIsDisable] = useState({
     memId : false,
+    memTell : false,
     memBusinessNum : true
   })
 
@@ -365,7 +387,7 @@ const Join = ({isOpenJoin, onClose}) => {
             />
           </div>
           <p className={styles.errMsg}></p>
-          <div className={styles.display_div}>
+          <div className={`${styles.display_div} ${styles.input_size}`}>
             <p>연락처<span>*</span></p>
             <Input type="text"
               name='memTell'
@@ -380,6 +402,12 @@ const Join = ({isOpenJoin, onClose}) => {
                   memTell : handleErrorMsg(e, joinData)
                 })
               }}
+            />
+            <Button 
+              title='중복확인'
+              color='secondary'
+              onClick={e=>checkTell()}
+              disabled={!isUserValid.memTell}
             />
           </div>
           <p className={styles.errMsg}>{errorMsg.memTell}</p>
