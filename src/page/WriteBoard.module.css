@@ -52,4 +52,7 @@
    overflow-y: auto;
 }
 
+.file{
+   display: none;
+}
 
