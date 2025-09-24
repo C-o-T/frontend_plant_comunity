@@ -91,7 +91,7 @@ const WriteBoard = () => {
          editor.insertEmbed(range.index, 'image', url);
          editor.setSelection(range.index + 1);
       })
-      setImg(prev => [...prev, files.map((file, i) => ({file, url : imageUrls[i]}))]);
+      setImg(prev => [...prev, ...files.map((file, i) => ({file, url : imageUrls[i]}))]);
        
          
       }catch(error){
