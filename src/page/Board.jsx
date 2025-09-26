@@ -21,7 +21,6 @@ const Board = () => {
 
   return (
     <div className='container'>
-      <div>Board (정보공유(블로그))</div>
       <div className = {styles.menu}>
         <ul>
           <li>정보공유</li>
