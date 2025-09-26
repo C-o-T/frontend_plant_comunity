@@ -12,6 +12,7 @@ import WriteBoard from './page/WriteBoard'
 import Find from './page/Find'
 import MyBoardList from './page/MyBoardList'
 import MemberDetail from './page/MemberDetail'
+import MyCalendar from './page/MyCalendar'
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path='/mypage' element={<MyPage />}>
           <Route path='my-info' element={<MemberDetail />}/>
           <Route path='my-board-list' element={<MyBoardList />}/>
+          <Route path='my-calendar' element={<MyCalendar />} />
         </Route>
       </Routes>
     </>
