@@ -13,6 +13,8 @@ import {
   Legend
 } from 'chart.js';
 import { useNavigate } from 'react-router-dom';
+import Button from '../common/Button';
+import Select from '../common/Select';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -22,7 +24,18 @@ const MyFarm = () => {
   //센서를 통해 받은 데이터를 변경할 state변수
   const [sensorData, setSensorData] = useState([]);
 
-  console.log(sensorData)
+  //식물 정보를 변경할 state 변수
+  const [plantList, setPlantList] = useState([]);
+ 
+  console.log(plantList);
+
+  const [selectedPlant, setSelectedPlant] = useState(null);
+
+  const handlePlant = (e) => {
+    const herbName = e.target.value;
+    const plant = plantList.find(p => p.herbName === herbName);
+    setSelectedPlant(plant);
+  }
 
   // 시간 단위 객체
   const TIME = {
@@ -39,7 +52,6 @@ const MyFarm = () => {
       .catch(e => console.log(e));
   };
 
-
   useEffect(() => {
     //마이팜 페이지를 들어갔는데 로그인이 되어있지 않으면
     //홈 화면으로 강제로 리턴
@@ -53,10 +65,13 @@ const MyFarm = () => {
     // 처음 마운트될 때 데이터 가져오기
     fetchSensorData();
 
+    //식물 리스트 조회
+    axios.get('/api/plants')
+    .then(res => setPlantList(res.data))
+    .catch(e => console.log(e))
 
     // 1시간 마다 데이터 갱신
     const interval = setInterval(fetchSensorData, TIME.HOUR);
-
 
     //sessionStorage 에서 받아온 memId 객체로 변환
     const memId = JSON.parse(loginInfo).memId
@@ -110,22 +125,30 @@ const MyFarm = () => {
     <div className={styles.container}>
       <div className={styles.content}>
         <div className={styles.herb_info}>
-          <h2>내 식물 정보</h2>
-          <div className={styles.img_div}>
-            <div>이미지</div>
-            <div className={styles.env}>
-              <div>
-                <div>차트에서 불러온 가장 최근 데이터의 온도</div>
-                <div>해당 작물의 적정 온도</div>
-              </div>
-              <div>습도</div>
+          <h2>식물 정보</h2>
+          <Select
+            onChange={handlePlant}
+          >
+            <option value="">선택</option>
+            {plantList.map((plant, i) => (
+              <option key={i} value={plant.herbName}>
+                {plant.herbName}
+              </option>
+            ))}
+          </Select>
+
+          {selectedPlant && (
+            <div>
+              <img src={selectedPlant.imgName} alt={selectedPlant.herbName}/>
+              <h3>{selectedPlant.herbName}</h3>
+              <p>온도: {selectedPlant.tempMin} ~ {selectedPlant.tempMax}℃</p>
+              <p>습도: {selectedPlant.humidMin} ~ {selectedPlant.humidMax}%</p>
+              <p>조도: {selectedPlant.luxMin} ~ {selectedPlant.luxMax}</p>
+              <p>토양습도: {selectedPlant.soilMin} ~ {selectedPlant.soilMax}%</p>
             </div>
-            <div className={styles.env}>
-              <div>조도</div>
-              <div>토양습도</div>
-            </div>
-          </div>
+          )}
         </div>
+        
         <div  className={styles.graph_div}>
           <h2>환경 데이터 (실시간 1시간 간격)</h2>
           <div><Line data={chartData} className={styles.graph}/></div>

@@ -31,6 +31,8 @@ function App() {
           <Route path='my-board-list' element={<MyBoardList />}/>
           <Route path='my-calendar' element={<MyCalendar />} />
         </Route>
+
+        
       </Routes>
     </>
   )
