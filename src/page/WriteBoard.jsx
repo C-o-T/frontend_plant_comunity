@@ -20,7 +20,7 @@ const WriteBoard = () => {
       , cateNum : ''
       , memId : 'aaaa'
    });
-   
+
    //
    const quillRef = useRef(null);
    const fileInsert = useRef(null);

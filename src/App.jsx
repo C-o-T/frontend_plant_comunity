@@ -9,6 +9,9 @@ import MyFarm from './page/MyFarm'
 import Board from './page/Board'
 import MyPage from './page/MyPage'
 import WriteBoard from './page/WriteBoard'
+import Find from './page/Find'
+import MyBoardList from './page/MyBoardList'
+import MemberDetail from './page/MemberDetail'
 
 
 function App() {
@@ -18,10 +21,14 @@ function App() {
       <Header />  
       <Routes>
         <Route path='/' element={<Main />}/>
-          <Route path='myfarm' element={<MyFarm />} />
-          <Route path='board' element={<Board />} />
-          <Route path='mypage' element={<MyPage />} />
-          <Route path='write-board' element = {<WriteBoard/>}/>
+        <Route path='/myfarm' element={<MyFarm />} />
+        <Route path='/board' element={<Board />} />
+        <Route path='/write-board' element = {<WriteBoard/>}/>
+       
+        <Route path='/mypage' element={<MyPage />}>
+          <Route path='my-info' element={<MemberDetail />}/>
+          <Route path='my-board-list' element={<MyBoardList />}/>
+        </Route>
       </Routes>
     </>
   )
