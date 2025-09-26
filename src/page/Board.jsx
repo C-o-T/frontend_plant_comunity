@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Board = () => {
-
+  const loginInfo = sessionStorage.getItem('loginInfo');
   //조회한 글 목록 
   const [boardList, setBoardList] =useState([]);
 
@@ -14,11 +14,11 @@ const Board = () => {
   const nav = useNavigate();
 
   useEffect(() => {
-    axios.get('/api/boards')
+    axios.get('/api/boards/boardList')
     .then(res => setBoardList(res.data))
     .catch(e => console.log(e))
   }, [])
-
+  console.log(boardList)
   return (
     <div className='container'>
       <div className = {styles.menu}>
@@ -35,9 +35,15 @@ const Board = () => {
       </div>
       <div className = {styles.board}>
         <div>
-          <Button title = '글쓰기' onClick = {e => {nav('/write-board')}}/>
+          <Button title = '글쓰기' onClick = {e => {
+            if(!loginInfo){
+              alert('로그인하세요');
+              return;
+            }
+            nav('/write-board');
+            }}/>
         </div>
-        <table className = {styles.table}>
+        {/* <table className = {styles.table}>
           <colgroup>
             <col width={'10%'}/>
             <col width={'10%'}/>
@@ -78,7 +84,27 @@ const Board = () => {
               })
             }
           </tbody>
-        </table>
+        </table> */}
+        <div className = {styles.writedBoard}>
+          {
+            boardList.map((board, i) => {
+              return(
+                <div key={i}>
+                  <div>
+                    {
+                      board.imgList.imgUrl === null ?
+                      <div> 이미지 존재 x</div>
+                      :
+                      <div>
+                        <img src = {board.imgList.imgUrl} className={styles.imgSize}/>
+                      </div>
+                    }
+                  </div>
+                </div>
+              )
+            })
+          }
+        </div>
       </div>
     </div>
     

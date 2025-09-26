@@ -26,10 +26,10 @@
    margin-bottom: 5px;
 }
 
-.table {
+/* .table {
    width: 90%;
    margin: auto;
-}
+} */
 
 .category{
    display: flex;
@@ -46,7 +46,7 @@
    color: white;
 }
 
-.table > thead{
+/* .table > thead{
    background-color: rgb(78, 243, 180);
    color: white;
    border-radius: 5px;
@@ -73,4 +73,22 @@ table td {
 
 table > tbody > tr{
    border-bottom: 1px solid #dddddd;
+} */
+
+.writedBoard{
+   margin: auto;
+   width: 90%;
+   border: 1px solid black;
+   display: grid;
+   grid-template-columns: repeat(4,1fr);
+   gap: 10px;
+}
+
+.writedBoard > div{
+   border: 1px solid black;
+}
+
+.imgSize{
+   width: 100px;
+   height: 100px;
 }
