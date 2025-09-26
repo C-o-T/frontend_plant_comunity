@@ -12,6 +12,7 @@ import WriteBoard from './page/WriteBoard'
 import Find from './page/Find'
 import MyBoardList from './page/MyBoardList'
 import MemberDetail from './page/MemberDetail'
+import AdminMember from './page/AdminMember'
 
 
 function App() {
@@ -29,7 +30,13 @@ function App() {
           <Route path='my-info' element={<MemberDetail />}/>
           <Route path='my-board-list' element={<MyBoardList />}/>
         </Route>
+
+        <Route path='/admin' element={ <AdminMember /> }>
+
+        </Route>
+
       </Routes>
+
     </>
   )
 }
