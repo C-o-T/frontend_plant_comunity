@@ -23,6 +23,12 @@ const MyPageSideLayout = () => {
               className={({isActive}) => isActive ? styles.active : null}
             >게시글 관리</NavLink>
           </li>
+          <li>
+            <NavLink
+              to={'/mypage/my-calendar'}
+              className={(isActive)=>{isActive ? styles.active : null}}
+            >내 식물 관리</NavLink>
+          </li>
         </ul>
       </div>
     </div>
