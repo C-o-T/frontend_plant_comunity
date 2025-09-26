@@ -12,6 +12,7 @@ import ReactQuill from 'react-quill'
       return <Input ref = {ref} {...props}/>
    })
 const WriteBoard = () => {
+
    //글쓰기 등록할때 저장 할 변수
    const [insertBoard, setInsertBoard] = useState({
         title : ''
@@ -19,7 +20,7 @@ const WriteBoard = () => {
       , cateNum : ''
       , memId : 'aaaa'
    });
-
+   
    //
    const quillRef = useRef(null);
    const fileInsert = useRef(null);
