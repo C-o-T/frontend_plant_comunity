@@ -12,7 +12,9 @@ import WriteBoard from './page/WriteBoard'
 import Find from './page/Find'
 import MyBoardList from './page/MyBoardList'
 import MemberDetail from './page/MemberDetail'
+import AdminMember from './page/AdminMember'
 import MyCalendar from './page/MyCalendar'
+
 
 
 function App() {
@@ -32,8 +34,12 @@ function App() {
           <Route path='my-calendar' element={<MyCalendar />} />
         </Route>
 
-        
+        <Route path='/admin' element={ <AdminMember /> }>
+
+        </Route>
+
       </Routes>
+
     </>
   )
 }
