@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styles from './Header.module.css'
 import Join from '../components/Join'
-import { useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import Login from '../components/Login'
 
 const Header = () => {
@@ -12,6 +12,9 @@ const Header = () => {
   //session storage에 저장한 login info 가져오기(정보없으면 null)
   const loginInfo = sessionStorage.getItem('loginInfo')
   const loginData= JSON.parse(loginInfo);
+
+
+  //console.log(loginData)
 
   return (
     <div className={styles.container}>
@@ -64,12 +67,129 @@ const Header = () => {
         <span>Git</span><span>Herb🍀</span>
       </div>
 
+      
+
       <div className={styles.menu_div}>
         <ul>
-          <li onClick={e => nav('/myfarm')}>My Farm</li>
-          <li onClick={e => nav('/board')}>Community</li>
-          <li onClick={e => nav('/mypage/my-info')}>My Page</li>
+          {(loginData === null || loginData.memGrade === 'BUSINESS') && 
+          (
+            <li className={styles.menu}>
+            <NavLink
+              to={'/plantinfo'}
+            >
+            마이팜
+            </NavLink>
+            <ul className={styles.sub_menu}>
+              <li>
+                <NavLink
+                  to={'/plantinfo'}
+                >
+                  식물 정보
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={'/myfarm'}
+                >
+                  환경 정보
+                </NavLink>
+              </li>
+            </ul>
+          </li>
+          )}
+          
+          {
+            (
+              loginData === null || loginData.memGrade === 'BUSINESS' || loginData.memGrade === 'USER'
+            ) && 
+            (
+              <>
+                <li className={styles.menu}>
+                  <NavLink
+                    to={'/board'}
+                  >
+                    커뮤니티
+                  </NavLink>
+                  <ul className={styles.sub_menu}>
+                  </ul>
+                </li>
+                <li className={styles.menu}>
+                  <NavLink
+                    to={'/mypage/my-info'}
+                  >
+                    마이페이지
+                  </NavLink>
+                  <ul className={styles.sub_menu}>
+                    <li>
+                      <NavLink
+                        to={'/mypage/my-info'}
+                      >
+                        회원 정보 수정
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to={'/mypage/my-board-list'}
+                      >
+                        게시글 관리
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to={'/mypage/my-calendar'}
+                      >
+                        내 식물 관리
+                      </NavLink>
+                    </li>
+                  </ul>
+                </li>
+                <li className={styles.menu}>
+                  <NavLink
+                    to={'/'}
+                  >
+                    문의사항
+                  </NavLink>
+                  <ul className={styles.sub_menu}>
+                    <li>
+                      <NavLink
+                        to={'/'}
+                      >
+                        1:1 문의
+                      </NavLink>
+                    </li>
+                  </ul>
+                </li>
+              </>
+            )
+          }
+          
+          {
+            (
+              loginData === 'ADMIN'
+            )
+            &&
+            (
+              <li className={styles.menu}>
+                <NavLink
+                  to={'/'}
+                >
+                  관리페이지
+                </NavLink>
+                <ul className={styles.sub_menu}>
+                  <li>
+                    <NavLink
+                      to={'/'}
+                    >
+                      식물 추가
+                    </NavLink>
+                  </li>
+                </ul>
+              </li>
+            )
+          }
+
         </ul>
+
       </div>
     </div>
   )

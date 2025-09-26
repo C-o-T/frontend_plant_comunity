@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './Main.module.css'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import CalendarPage from './MyCalendar';
 
 const Main = () => {
 
