@@ -29,6 +29,8 @@ function App() {
           <Route path='my-info' element={<MemberDetail />}/>
           <Route path='my-board-list' element={<MyBoardList />}/>
         </Route>
+
+        
       </Routes>
     </>
   )
