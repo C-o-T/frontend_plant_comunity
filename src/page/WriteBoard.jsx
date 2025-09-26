@@ -7,12 +7,14 @@ import axios from 'axios'
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'react-quill/dist/quill.snow.css'; // 기본 테마
 import ReactQuill from 'react-quill'
+import { useNavigate } from 'react-router-dom'
 
    const MyFile = forwardRef((props, ref) => {
       return <Input ref = {ref} {...props}/>
    })
 const WriteBoard = () => {
 
+   const nav = useNavigate()
    //글쓰기 등록할때 저장 할 변수
    const [insertBoard, setInsertBoard] = useState({
         title : ''
@@ -139,7 +141,10 @@ const WriteBoard = () => {
                </Select>
             </div>
             <div>
-               <Button title={'등록'} onClick = {e => {writeBoard()}}/>
+               <Button title={'등록'} onClick = {e => {
+                  writeBoard();
+                  nav('/board');
+                  }}/>
             </div>
          </div>
          <div>

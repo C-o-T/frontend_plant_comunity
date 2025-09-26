@@ -10,7 +10,7 @@ import axios from 'axios'
 const Join = ({isOpenJoin, onClose}) => {
   //회원가입시 입력한 내용을 저장할 useState 변수
   const [joinData, setJoinData] = useState({
-    'memGrade' : 'user',
+    'memGrade' : 'USER',
     'memId' : '',
     'memPw' : '',
     'memPwConfirm' : '',
@@ -27,7 +27,7 @@ const Join = ({isOpenJoin, onClose}) => {
   //닫기버튼 또는 회원가입 완료 시 입력한 내용을 전체 지우는 함수
   const resetJoinData = () => {
     setJoinData({
-      'memGrade' : 'user',
+      'memGrade' : 'USER',
       'memId' : '',
       'memPw' : '',
       'memPwConfirm' : '',
@@ -156,11 +156,11 @@ const Join = ({isOpenJoin, onClose}) => {
   }
 
   //일반유저와 비즈니스유저를 구분
-  const isBusinessMember = joinData.memGrade === 'business'
+  const isBusinessMember = joinData.memGrade === 'BUSINESS'
 
   //일반유저 선택시 input태그 안의 내용을 초기화
   useEffect(()=>{
-    if (joinData.memGrade === 'user') {
+    if (joinData.memGrade === 'USER') {
       setJoinData({
         ...joinData,
         memBusinessNum : '',
@@ -265,8 +265,8 @@ const Join = ({isOpenJoin, onClose}) => {
           <div className={`${styles.display_div} ${styles.input_margin}`}>
             <input type='radio' 
               name='memGrade' 
-              value='user' 
-              checked={joinData.memGrade==='user'}
+              value='USER' 
+              checked={joinData.memGrade==='USER'}
               onChange={e=>{
                 handleJoin(e)
               }}
@@ -274,8 +274,8 @@ const Join = ({isOpenJoin, onClose}) => {
             <p>일반회원</p>
             <input type='radio' 
               name='memGrade' 
-              value='business'
-              checked={joinData.memGrade==='business'} 
+              value='BUSINESS'
+              checked={joinData.memGrade==='BUSINESS'} 
               onChange={e=>{
                 handleJoin(e)
               }}
@@ -432,7 +432,7 @@ const Join = ({isOpenJoin, onClose}) => {
           </div>
           <p className={styles.errMsg}></p>
           <div className={`${styles.display_div} ${styles.input_size}`}>
-            <p>사업자등록번호<span style={{display: joinData.memGrade === 'business' ? 'inline' : 'none'}}>*</span></p>
+            <p>사업자등록번호<span style={{display: joinData.memGrade === 'BUSINESS' ? 'inline' : 'none'}}>*</span></p>
             <Input type="text"
               name='memBusinessNum'
               value={joinData.memBusinessNum}
@@ -473,7 +473,7 @@ const Join = ({isOpenJoin, onClose}) => {
           </div>
           <p className={styles.errMsg}>{errorMsg.memBusinessNum}</p>
           <div className={styles.display_div}>
-            <p>상호명<span style={{display: joinData.memGrade === 'business' ? 'inline' : 'none'}}>*</span></p>
+            <p>상호명<span style={{display: joinData.memGrade === 'BUSINESS' ? 'inline' : 'none'}}>*</span></p>
             <Input type="text"
               name='memBusinessName'
               value={joinData.memBusinessName}

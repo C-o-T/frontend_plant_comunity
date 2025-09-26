@@ -48,3 +48,31 @@
 .menu_div li:hover{
   cursor: pointer;
 }
+
+.menu {
+  width: 100%;
+  text-align: center;
+  position: relative;
+}
+
+.sub_menu {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: white;
+  position: absolute;
+  height: 0px;
+  overflow: hidden;
+  top: 100%;
+  left: 0%;
+  z-index: 10;
+  padding: 5px;
+}
+
+.menu_div:hover .sub_menu{
+  height: 110px;
+}
+
+.sub_menu li {
+  padding: 3px;
+  font-weight: 400;
+}

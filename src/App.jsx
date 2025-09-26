@@ -13,6 +13,8 @@ import Find from './page/Find'
 import MyBoardList from './page/MyBoardList'
 import MemberDetail from './page/MemberDetail'
 import AdminMember from './page/AdminMember'
+import MyCalendar from './page/MyCalendar'
+
 
 
 function App() {
@@ -29,6 +31,7 @@ function App() {
         <Route path='/mypage' element={<MyPage />}>
           <Route path='my-info' element={<MemberDetail />}/>
           <Route path='my-board-list' element={<MyBoardList />}/>
+          <Route path='my-calendar' element={<MyCalendar />} />
         </Route>
 
         <Route path='/admin' element={ <AdminMember /> }>

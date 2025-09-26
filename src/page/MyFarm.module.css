@@ -38,3 +38,7 @@
   flex-direction: column;
   gap: 10px;
 }
+
+.herb_info {
+  position: relative;
+}
