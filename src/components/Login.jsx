@@ -46,7 +46,7 @@ const Login = ({isOpenLogin, onClose}) => {
         //로그인한 유저의 정보를 sissionStorage에 저장
         sessionStorage.setItem('loginInfo', JSON.stringify(loginInfo));
 
-        if (res.data.memGrade === 'business') {
+        if (res.data.memGrade === 'BUSINESS') {
           nav('/myfarm')
           onClose()
           setLoginData({

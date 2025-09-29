@@ -32,6 +32,8 @@ const messages = {
 
 const MyCalendar = () => {
 
+  const [isInputOpen, setIsInputOpen] = useState(false);
+
 
   const loginInfo = JSON.parse(sessionStorage.getItem('loginInfo') || '{}');
   //현재 로그인된 사용자 ID 가져오기
@@ -62,10 +64,35 @@ const MyCalendar = () => {
   // console.log(JSON.parse(sessionStorage.getItem('loginInfo')).memId);
 
   //선택된 관수 주기를 관리할 상태 추가
-  const [selectedCycle, setSelectedCycle] = useState('');
+  const [selectedCycle, setSelectedCycle] = useState({
+    cycle : 0,
+    repetition : 0
+  });
+  //기타 선택 시 직접 입력할 값 (관수주기)
+  const [customCycle, setCustomCycle] = useState(''); 
+  //기타 선택 시 직접 입력할 값 (스케쥴 반복 주기)
+  const [customRepetition, setCustomRepetition] = useState(''); 
   
   //식물 이름을 입력받을 상태 추가(이벤트 제목)
   const [plantName, setPlantName] = useState('');
+
+  // 주기 (cycle) Select 변경 핸들러
+    const handleCycleChange = (e) => {
+        const value = e.target.value;
+        setSelectedCycle(prev => ({ ...prev, cycle: value }));
+        if (value !== '+') {
+            setCustomCycle(''); // 기타가 아니면 직접입력값 초기화
+        }
+    };
+
+    // 반복 횟수 (repetition) Select 변경 핸들러
+    const handleRepetitionChange = (e) => {
+        const value = e.target.value;
+        setSelectedCycle(prev => ({ ...prev, repetition: value }));
+        if (value !== '+') {
+            setCustomRepetition(''); // 기타가 아니면 직접입력값 초기화
+        }
+    };
 
   //console.log(selectedCycle)
   //console.log(plantName)
@@ -73,18 +100,37 @@ const MyCalendar = () => {
   //이벤트 생성 함수
   const addWateringSchedule = () => {
     const groupId = uuidv4(); // 이 그룹의 모든 이벤트에 동일하게 부여될 고유 ID
-    const today = new Date();
+    const start = clickedDate;
     const newEvents = [];
-    const numSchedules = 10; //10회 생성
-    const cycle = parseInt(selectedCycle, 10);
+    // 주기(Cycle) 결정
+    let cycleValue = selectedCycle.cycle;
+    if (cycleValue === '+') {
+        cycleValue = customCycle;
+    }
+    const cycle = parseInt(cycleValue, 10);
 
-    if (cycle === 0) {
-      alert('유효한 주기를 선택하세요.');
-      return;
+    // 반복 횟수(Repetition) 결정
+    let repetitionValue = selectedCycle.repetition;
+    if (repetitionValue === '+') {
+        repetitionValue = customRepetition;
+    }
+    const numSchedules = parseInt(repetitionValue, 10);
+
+    if (cycle <= 0 || isNaN(cycle)) {
+        alert('유효한 물 주기 일수를 선택하거나 입력해주세요.');
+        return false;
+    }
+    if (numSchedules <= 0 || isNaN(numSchedules)) {
+        alert('유효한 반복 횟수를 선택하거나 입력해주세요.');
+        return false;
+    }
+    if (!clickedDate || isNaN(clickedDate.getTime())) {
+        alert('시작 날짜가 유효하지 않습니다.');
+        return false;
     }
 
-    for (let i = 0 ; i < numSchedules; i++ ) {
-      const startDate = moment(today).add(i * cycle, 'days').toDate();
+    for (let i = 0 ; i < numSchedules; i++ ) { 
+      const startDate = moment(start).add(i * cycle, 'days').toDate();
       
 
       newEvents.push({
@@ -105,8 +151,24 @@ const MyCalendar = () => {
     });
 
     setPlantName('');
-    setSelectedCycle(0);
+    setSelectedCycle({
+      cycle:'0',
+      repetition:'0'
+    });
+    setCustomCycle(''); 
+    setCustomRepetition(''); 
+    return true;
   }
+
+  // 클릭된 날짜 정보를 저장할 상태
+  const [clickedDate, setClickedDate] = useState(null);
+
+  //캘린더 슬롯 선택 핸들러 함수 (날짜 클릭시 호출)
+  const handleSelectSlot = (slotInfo) => {
+    setClickedDate(slotInfo.start);
+    setIsInputOpen(true);
+  }
+  
 
   //개별 이벤트 삭제 로직
   const deleteSingleEvent = (eventId) => {
@@ -139,72 +201,165 @@ const MyCalendar = () => {
 
   return (
     <div className={styles.container}>
+      
+      {/* 캘린더 */}
       <div className={styles.calendar_div}>
         <Calendar 
           localizer={localizer}
           events={events}
           startAccessor="start"
           endAccessor="end"
-          style={{height:500}}
+          style={{height:500, width:1280}}
           messages={messages}
           onSelectEvent={handleSelectEvent}
+          selectable={true}
+          onSelectSlot={handleSelectSlot}
+          views={['month', 'agenda']} 
+          longPressThreshold={1}
         />
       </div>
-      <div>
-        <div>
-          <Input 
-            type='text'
-            placeholder='식물 이름을 입력해주세요.'
-            value={plantName}
-            onChange={e=>setPlantName(e.target.value)}
-          />
-          <Select
-            size='120px'
-            value={selectedCycle}
-            onChange={e=>setSelectedCycle(e.target.value)}
+
+      {/* 일정 추가 모달 */}
+      {
+        isInputOpen&&
+        <Modal
+          size=''
+          isOpen={isInputOpen}
+          title={'일정 추가'}
+          onClose={(e)=>{
+            setIsInputOpen(false);
+            setClickedDate(null);
+            setPlantName('');
+            setSelectedCycle({ cycle: '0', repetition: '0' }); // 객체 초기화
+            setCustomCycle('');
+            setCustomRepetition('');
+          }}
+        >
+          <div className={styles.input_div}>
+            <div>
+              <p>{`${moment(clickedDate).format('YYYY년 M월 D일')}부터 일정을 추가합니다.`}</p>
+              <Input 
+                type='text'
+                placeholder='식물 이름을 입력해주세요.'
+                value={plantName}
+                onChange={e=>setPlantName(e.target.value)}
+              />
+            </div>
+            <div>
+              <p>얼마나 자주 줄까요?</p>
+              <Select
+                size='186px'
+                value={selectedCycle.cycle}
+                onChange={e=>handleCycleChange(e)}
+              >
+                <option value='0'>주기 선택</option>
+                <option value='3'>3일</option>
+                <option value='5'>5일</option>
+                <option value='7'>7일</option>
+                <option value='10'>10일</option>
+                <option value='14'>14일</option>
+                <option value='+'>기타</option>
+              </Select>
+              {
+                selectedCycle.cycle !== '+' &&
+                <span style={{marginLeft: '8px'}}>일 마다</span>
+              }
+            </div>
+            {
+              selectedCycle.cycle === '+' && (
+                <div className={styles.custom_input_div}>
+                    <Input
+                        type='number'
+                        placeholder='일 수 (예: 21)'
+                        value={customCycle}
+                        onChange={e => setCustomCycle(e.target.value)}
+                        min="1"
+                    />
+                    <span style={{marginLeft: '8px'}}>일 마다</span>
+                </div>
+              )
+            }
+
+            <div>
+              <p>몇번 반복할까요?</p>
+              <Select
+                size='186px'
+                value={selectedCycle.repetition}
+                onChange={handleRepetitionChange} 
+              >
+                <option value='0'>회수 선택</option>
+                  {[...Array(10)].map((_, i) => (
+                      <option key={i + 1} value={String(i + 1)}>
+                          {i + 1}번
+                      </option>
+                  ))}
+                <option value='+'>기타</option>
+              </Select>
+              {
+                selectedCycle.repetition !== '+' &&
+                <span style={{marginLeft: '8px'}}>번 반복</span>
+              }
+            </div>
+            {
+              selectedCycle.repetition === '+' && (
+                <div className={styles.custom_input_div}>
+                  <Input
+                      type='number'
+                      placeholder='반복 횟수 (예: 50)'
+                      value={customRepetition}
+                      onChange={e => setCustomRepetition(e.target.value)}
+                      min="1"
+                  />
+                  <span style={{marginLeft: '8px'}}>번 반복</span>
+                </div>
+              )
+            }
+            <div style={{textAlign:'center'}}>
+              <Button 
+                title='추가'
+                size='60px'
+                onClick={e=>{
+                  if (addWateringSchedule(e)) {
+                    setIsInputOpen(false);
+                    setClickedDate(null);
+                  }
+                }}
+              />
+            </div>
+          </div>
+      </Modal>
+      }
+      
+      {/* 일정 삭제 모달 */}
+      {
+        selectedEvent && (
+          <Modal
+            isOpen={!!selectedEvent}
+            title='일정 삭제'
+            event={selectedEvent}
+            onClose={()=>{
+              setSelectedEvent(null);
+            }}
           >
-            <option value='0'>주기 선택</option>
-            <option value='3'>3일</option>
-            <option value='5'>5일</option>
-            <option value='7'>7일</option>
-            <option value='10'>10일</option>
-            <option value='14'>14일</option>
-          </Select>
-          <Button 
-            title='물주기스케쥴추가'
-            onClick={e=>addWateringSchedule(e)}
-          />
-        </div>
-        {
-          selectedEvent && (
-            <Modal
-              isOpen={!!selectedEvent}
-              title='일정 삭제'
-              event={selectedEvent}
-              onClose={()=>{
-                setSelectedEvent(null);
+            <div>일정을 삭제하시겠습니까?</div>
+            <Button
+              color='secondary'
+              title='이 일정만 삭제'
+              onClick={()=>{
+                deleteSingleEvent(selectedEvent.id)
+                setSelectedEvent(null)
               }}
-            >
-              <div>일정을 삭제하시겠습니까?</div>
-              <Button
-                color='secondary'
-                title='이 일정만 삭제'
-                onClick={()=>{
-                  deleteSingleEvent(selectedEvent.id)
-                  setSelectedEvent(null)
-                }}
-              />
-              <Button
-                title='모든 일정을 삭제'
-                onClick={()=>{
-                  deleteEventGroup(selectedEvent.groupId)
-                  setSelectedEvent(null)
-                }}
-              />
-            </Modal>
-          )
-        }
-      </div>
+            />
+            <Button
+              title='모든 일정을 삭제'
+              onClick={()=>{
+                deleteEventGroup(selectedEvent.groupId)
+                setSelectedEvent(null)
+              }}
+            />
+          </Modal>
+        )
+      }
       
     </div>
   )

@@ -37,6 +37,7 @@ function App() {
         <Route path='/admin' element={ <AdminMember /> }>
 
         </Route>
+        <Route path='/find' element={ <Find /> } />
 
       </Routes>
 
