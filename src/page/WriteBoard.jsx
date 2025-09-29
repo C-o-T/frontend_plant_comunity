@@ -38,7 +38,10 @@ const WriteBoard = () => {
 
       axios
          .post('/api/boards',insertBoard)
-         .then(response => {alert('등록')})
+         .then(response => {
+            alert('등록');
+            nav('/board');
+         })
          .catch(error => console.log(error))
    }
 
@@ -143,7 +146,6 @@ const WriteBoard = () => {
             <div>
                <Button title={'등록'} onClick = {e => {
                   writeBoard();
-                  nav('/board');
                   }}/>
             </div>
          </div>

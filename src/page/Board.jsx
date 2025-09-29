@@ -6,19 +6,33 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Board = () => {
+  //로그인한 정보 확인
   const loginInfo = sessionStorage.getItem('loginInfo');
+  
   //조회한 글 목록 
   const [boardList, setBoardList] =useState([]);
 
   //페이지 이동하기
   const nav = useNavigate();
 
+  const [category,setCartegory] = useState([]);
+
+  //글 목록 조회하기
   useEffect(() => {
     axios.get('/api/boards/boardList')
     .then(res => setBoardList(res.data))
     .catch(e => console.log(e))
-  }, [])
-  console.log(boardList)
+  }, []);
+
+  //내용 자르는 함수
+  const cutText = (text, maxLength = 30) => {
+    let confirmText = text.replace(/<\/?p[^>]*>/gi, '')
+    if(confirmText.length <= maxLength){return confirmText}
+    return confirmText.substring(0, maxLength) + '...';
+  }
+
+  // 데이터 확인
+  console.log(boardList);
   return (
     <div className='container'>
       <div className = {styles.menu}>
@@ -43,66 +57,39 @@ const Board = () => {
             nav('/write-board');
             }}/>
         </div>
-        {/* <table className = {styles.table}>
-          <colgroup>
-            <col width={'10%'}/>
-            <col width={'10%'}/>
-            <col width={'*'}/>
-            <col width={'10%'}/>
-            <col width={'10%'}/>
-            <col width={'10%'}/>
-            </colgroup>
-          <thead>
-            <tr>
-              <td>글번호</td>
-              <td>말머리</td>
-              <td>글제목</td>
-              <td>조회수</td>
-              <td>추천</td>
-              <td>비추천</td>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              !boardList.length 
-              ?
-              <tr>
-                <td colSpan={6}>등록된 글이 없습니다.</td>
-              </tr>
-              :
-              boardList.map((board, i) => {
-                return(
-                  <tr key={i}>
-                    <td>{board.boardNum}</td>
-                    <td>{board.cateName}</td>
-                    <td>{board.title}</td>
-                    <td>{board.readCnt}</td>
-                    <td>{board.likeCnt}</td>
-                    <td>{board.disLikeCnt}</td>
-                  </tr>
-                )
-              })
-            }
-          </tbody>
-        </table> */}
         <div className = {styles.writedBoard}>
           {
+            boardList.length ?
             boardList.map((board, i) => {
+              const maxLength = 30;
               return(
                 <div key={i}>
                   <div>
                     {
-                      board.imgList.imgUrl === null ?
-                      <div> 이미지 존재 x</div>
-                      :
                       <div>
+                        <div className={styles.img_div}>{
+                        board.imgList.imgUrl === null ?
+                        cutText(board.content, maxLength)
+                        :
                         <img src = {board.imgList.imgUrl} className={styles.imgSize}/>
-                      </div>
+                        }</div>
+                        <div>{board.memId}</div>
+                          <div className={styles.likeAndComent}>
+                            <i className={"bi bi-heart"}></i>
+                            <span>{board.likeCnt}</span>
+                            <span><i className={"bi bi-chat"}></i></span>
+                            <span>1</span>
+                          </div>
+                      </div>                      
                     }
                   </div>
                 </div>
               )
             })
+            :
+            <div>
+              등록된 게시글이 없습니다.
+            </div>
           }
         </div>
       </div>
