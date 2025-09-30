@@ -145,14 +145,14 @@ const Header = () => {
                 </li>
                 <li className={styles.menu}>
                   <NavLink
-                    to={'/'}
+                    to={'/qna'}
                   >
                     문의사항
                   </NavLink>
                   <ul className={styles.sub_menu}>
                     <li>
                       <NavLink
-                        to={'/'}
+                        to={'/qna'}
                       >
                         1:1 문의
                       </NavLink>
@@ -172,21 +172,21 @@ const Header = () => {
               <ul className={styles.admin_menu}>
                 <li>
                   <NavLink
-                    to={'/AdminQnA'}
+                    to={'/adminQnA'}
                   >
                     1:1 문의 관리
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
-                    to={'/AdminMember'}
+                    to={'/adminmember'}
                   >
                     회원 관리
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
-                    to={'/AdminBoard'}
+                    to={'/adminboard'}
                   >
                     게시판 관리
                   </NavLink>

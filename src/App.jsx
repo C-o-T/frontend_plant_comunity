@@ -18,6 +18,7 @@ import EnvironmentInfo from './page/EnvironmentInfo'
 import AdminQnA from './page/AdminQnA'
 import AdminBoard from './page/AdminBoard'
 import AdminMember from './page/AdminMember'
+import MemberQnA from './page/MemberQnA'
 
 
 
@@ -43,13 +44,15 @@ function App() {
           <Route path='my-calendar' element={<MyCalendar />} />
         </Route>
 
+        <Route path='/qna' element={<MemberQnA />} />
+
         <Route path='/admin' element={ <AdminBoard /> }>
           <Route path='member' element={<AdminMember />} />
         </Route>
         <Route path='/find' element={ <Find /> } />
-        <Route path='/QnA' element={ <AdminQnA /> } />
-        <Route path='/QnA' element={ <AdminBoard /> } />
-        <Route path='/QnA' element={ <AdminMember /> } />
+        <Route path='/adminQnA' element={ <AdminQnA /> } />
+        <Route path='/adminboard' element={ <AdminBoard /> } />
+        <Route path='/adminmember' element={ <AdminMember /> } />
 
       </Routes>
   
