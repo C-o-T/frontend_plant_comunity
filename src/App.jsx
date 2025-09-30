@@ -13,9 +13,12 @@ import Find from './page/Find'
 import MyBoardList from './page/MyBoardList'
 import MemberDetail from './page/MemberDetail'
 import MyCalendar from './page/MyCalendar'
+import MyPlantInfo from './page/MyPlantInfo'
+import EnvironmentInfo from './page/EnvironmentInfo'
 import AdminQnA from './page/AdminQnA'
 import AdminBoard from './page/AdminBoard'
 import AdminMember from './page/AdminMember'
+
 
 
 
@@ -26,9 +29,13 @@ function App() {
       <Header />  
       <Routes>
         <Route path='/' element={<Main />}/>
-        <Route path='/myfarm' element={<MyFarm />} />
         <Route path='/board' element={<Board />} />
         <Route path='/write-board' element = {<WriteBoard/>}/>
+        
+        <Route path='/myfarm' element={<MyFarm />}> 
+          <Route path='my-plant-info' element={<MyPlantInfo />}/>
+          <Route path='environment-info' element={<EnvironmentInfo />}/>
+        </Route>
        
         <Route path='/mypage' element={<MyPage />}>
           <Route path='my-info' element={<MemberDetail />}/>

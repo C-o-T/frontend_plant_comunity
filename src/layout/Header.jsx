@@ -75,21 +75,21 @@ const Header = () => {
           (
             <li className={styles.menu}>
             <NavLink
-              to={'/plantinfo'}
+              to={'/myfarm/my-plant-info'}
             >
             마이팜
             </NavLink>
             <ul className={styles.sub_menu}>
               <li>
                 <NavLink
-                  to={'/plantinfo'}
+                  to={'/myfarm/my-plant-info'}
                 >
                   식물 정보
                 </NavLink>
               </li>
               <li>
                 <NavLink
-                  to={'/myfarm'}
+                  to={'/myfarm/environment-info'}
                 >
                   환경 정보
                 </NavLink>

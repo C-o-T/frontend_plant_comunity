@@ -1,0 +1,38 @@
+.graph_div{
+  width: 1280px;
+  margin: 0px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 {
+  margin: 0;
+}
+
+.graphs_container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.graph_item {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.graph_item h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+  color: #333;
+  text-align: center;
+}
