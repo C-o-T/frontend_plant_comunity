@@ -88,7 +88,7 @@ const Board = () => {
                 <div key={i}>
                   <div>
                     {
-                      <div>
+                      <div onClick={() => {nav(`/board/detail/${board.boardNum}`)}}>
                         <div className={styles.img_div}>{
                         board.imgList.imgUrl === null ?
                         cutText(board.content, maxLength)
