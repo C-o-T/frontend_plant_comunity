@@ -60,9 +60,7 @@ const MemberDetail = () => {
 
   return (
     <div className={styles.container}>
-      <div>
-        <MyPageSideLayout />
-      </div>
+      
       <div>
         <h2>개인정보수정</h2>
         <table>

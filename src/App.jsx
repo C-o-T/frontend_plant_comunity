@@ -14,6 +14,8 @@ import MyBoardList from './page/MyBoardList'
 import MemberDetail from './page/MemberDetail'
 import AdminMember from './page/AdminMember'
 import MyCalendar from './page/MyCalendar'
+import MyPlantInfo from './page/MyPlantInfo'
+import EnvironmentInfo from './page/EnvironmentInfo'
 
 
 
@@ -24,9 +26,13 @@ function App() {
       <Header />  
       <Routes>
         <Route path='/' element={<Main />}/>
-        <Route path='/myfarm' element={<MyFarm />} />
         <Route path='/board' element={<Board />} />
         <Route path='/write-board' element = {<WriteBoard/>}/>
+        
+        <Route path='/myfarm' element={<MyFarm />}> 
+          <Route path='my-plant-info' element={<MyPlantInfo />}/>
+          <Route path='environment-info' element={<EnvironmentInfo />}/>
+        </Route>
        
         <Route path='/mypage' element={<MyPage />}>
           <Route path='my-info' element={<MemberDetail />}/>
