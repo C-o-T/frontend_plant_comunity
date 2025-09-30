@@ -14,6 +14,8 @@ import MyBoardList from './page/MyBoardList'
 import MemberDetail from './page/MemberDetail'
 import AdminMember from './page/AdminMember'
 import MyCalendar from './page/MyCalendar'
+import AdminQnA from './page/AdminQnA'
+import AdminBoard from './page/AdminBoard'
 
 
 
@@ -38,6 +40,9 @@ function App() {
 
         </Route>
         <Route path='/find' element={ <Find /> } />
+        <Route path='/QnA' element={ <AdminQnA /> } />
+        <Route path='/QnA' element={ <AdminBoard /> } />
+        <Route path='/QnA' element={ <AdminMember /> } />
 
       </Routes>
 

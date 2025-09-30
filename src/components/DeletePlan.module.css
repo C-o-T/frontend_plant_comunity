@@ -1,0 +1,9 @@
+.input_div > div:first-child{
+  margin-bottom: 20px;
+}
+
+.input_div button {
+  height: 30px;
+  text-align: center;
+  margin-bottom: 10px;
+}

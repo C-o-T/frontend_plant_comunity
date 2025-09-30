@@ -53,6 +53,13 @@ const Login = ({isOpenLogin, onClose}) => {
             memId:'',
             memPw:''
           })
+        } else if (res.data.memGrade === 'ADMIN') {
+          nav('/QnA')
+          onClose()
+          setLoginData({
+            memId:'',
+            memPw:''
+          })
         } else {
           nav('/board')
           onClose()
@@ -92,10 +99,15 @@ const Login = ({isOpenLogin, onClose}) => {
         </div>
         <div className={styles.display_div}>
           <p>비밀번호</p>
-          <Input type='password' 
+          <Input type='password'
             name='memPw'
             value={loginData.memPw}
             onChange={e=>handleLogin(e)}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                login()
+              }
+            }}
           />
         </div>
         <div
