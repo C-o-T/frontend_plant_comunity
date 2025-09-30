@@ -5,8 +5,10 @@ import Select from '../common/Select';
 import Button from '../common/Button';
 import styles from './MemberDetail.module.css'
 import MyPageSideLayout from '../layout/MyPageSideLayout';
+import { useNavigate } from 'react-router-dom';
 
 const MemberDetail = () => {
+  const nav = useNavigate()
   //로그인 한 회원의 정보를 받을 state 변수
   const [memberData, setMemberData] = useState({
     'memId' : '',
@@ -25,8 +27,15 @@ const MemberDetail = () => {
 
   //마운트 시 회원 정보 조회
   useEffect(() => {
+    //마이 페이지를 들어갔는데 로그인이 되어있지 않으면
+    //홈 화면으로 강제로 리턴
     //로그인한 회원의 아이디를 받을 변수
     const loginInfo = sessionStorage.getItem('loginInfo')
+    if(loginInfo === null){
+      alert('로그인을 해주세요')
+      nav('/')
+      return;
+    }
     const memId = JSON.parse(loginInfo).memId
 
     axios.get(`/api/members/${memId}`)

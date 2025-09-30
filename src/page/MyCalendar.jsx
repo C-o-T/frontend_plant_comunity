@@ -7,6 +7,7 @@ import styles from './MyCalendar.module.css'
 import { v4 as uuidv4 } from 'uuid';
 import WateringPlan from '../components/WateringPlan';
 import DeletePlan from '../components/DeletePlan';
+import { useNavigate } from 'react-router-dom';
 
 //moment 로컬라이저 설정
 moment.locale("ko"); //한국어로 설정
@@ -28,8 +29,21 @@ const messages = {
 
 
 const MyCalendar = () => {
+  const nav = useNavigate();
 
   const [isInputOpen, setIsInputOpen] = useState(false);
+
+  useEffect(() => {
+    //마이 페이지를 들어갔는데 로그인이 되어있지 않으면
+    //홈 화면으로 강제로 리턴
+    //로그인한 회원의 아이디를 받을 변수
+    const loginInfo = sessionStorage.getItem('loginInfo')
+    if(loginInfo === null){
+      alert('로그인을 해주세요')
+      nav('/')
+      return;
+    }
+  }, []);
 
 
   const loginInfo = JSON.parse(sessionStorage.getItem('loginInfo') || '{}');
