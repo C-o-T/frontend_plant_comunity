@@ -1,18 +1,19 @@
 import MyPageSideLayout from '../layout/MyPageSideLayout';
 import { Outlet } from 'react-router-dom';
+import styles from './MyPage.module.css'
 
 const MyPage = () => {
   
 
   return (
-    <div>
+    <div className={styles.container}>
       {/* 사이드 메뉴 */}
       <div>
         <MyPageSideLayout />
       </div>
 
       {/* 오른쪽 콘텐츠 영역 */}
-      <div>
+      <div className={styles.size}>
         <Outlet />
       </div>
     </div>

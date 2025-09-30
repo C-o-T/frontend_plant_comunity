@@ -1,0 +1,12 @@
+.input_div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.custom_input_div {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}

@@ -4,12 +4,9 @@ import moment from 'moment';
 import 'moment/locale/ko';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import styles from './MyCalendar.module.css'
-import Select from '../common/Select'
-import Button from '../common/Button';
-import Input from '../common/Input';
 import { v4 as uuidv4 } from 'uuid';
-import axios from 'axios';
-import Modal from '../common/Modal';
+import WateringPlan from '../components/WateringPlan';
+import DeletePlan from '../components/DeletePlan';
 
 //moment 로컬라이저 설정
 moment.locale("ko"); //한국어로 설정
@@ -31,6 +28,8 @@ const messages = {
 
 
 const MyCalendar = () => {
+
+  const [isInputOpen, setIsInputOpen] = useState(false);
 
 
   const loginInfo = JSON.parse(sessionStorage.getItem('loginInfo') || '{}');
@@ -61,52 +60,55 @@ const MyCalendar = () => {
   // console.log(sessionStorage);
   // console.log(JSON.parse(sessionStorage.getItem('loginInfo')).memId);
 
-  //선택된 관수 주기를 관리할 상태 추가
-  const [selectedCycle, setSelectedCycle] = useState('');
-  
-  //식물 이름을 입력받을 상태 추가(이벤트 제목)
-  const [plantName, setPlantName] = useState('');
-
-  //console.log(selectedCycle)
-  //console.log(plantName)
-
   //이벤트 생성 함수
-  const addWateringSchedule = () => {
-    const groupId = uuidv4(); // 이 그룹의 모든 이벤트에 동일하게 부여될 고유 ID
-    const today = new Date();
+  const addWateringSchedule = ({ plantName, cycle, numSchedules, color }) => {
+    const groupId = uuidv4();
+    const start = clickedDate;
     const newEvents = [];
-    const numSchedules = 10; //10회 생성
-    const cycle = parseInt(selectedCycle, 10);
-
-    if (cycle === 0) {
-      alert('유효한 주기를 선택하세요.');
-      return;
-    }
 
     for (let i = 0 ; i < numSchedules; i++ ) {
-      const startDate = moment(today).add(i * cycle, 'days').toDate();
-      
+      const startDate = moment(start).add(i * cycle, 'days').toDate();
 
       newEvents.push({
-        id:uuidv4(), //각 이벤트의 고유 ID
-        groupId : groupId, //그룹의 모든 이벤트에 동일하게 부여될 고유 ID
+        id:uuidv4(),
+        groupId : groupId,
         memId:'',
         title:`${plantName} 물 주기`,
         start : startDate,
         end : startDate,
-        allDay: true
+        allDay: true,
+        color: color
       })
     }
 
     setEvents((prevEvents) => {
-      // prevEvents가 배열이 아니면 빈 배열로 초기화
       const safePrevEvents = Array.isArray(prevEvents) ? prevEvents : [];
       return [...safePrevEvents, ...newEvents];
     });
-
-    setPlantName('');
-    setSelectedCycle(0);
   }
+
+  // 이벤트 스타일 지정 함수
+  const eventStyleGetter = (event) => {
+    const style = {
+      backgroundColor: event.color || '#3174ad',
+      borderRadius: '4px',
+      opacity: 0.8,
+      color: 'white',
+      border: '0px',
+      display: 'block'
+    };
+    return { style };
+  };
+
+  // 클릭된 날짜 정보를 저장할 상태
+  const [clickedDate, setClickedDate] = useState(null);
+
+  //캘린더 슬롯 선택 핸들러 함수 (날짜 클릭시 호출)
+  const handleSelectSlot = (slotInfo) => {
+    setClickedDate(slotInfo.start);
+    setIsInputOpen(true);
+  }
+  
 
   //개별 이벤트 삭제 로직
   const deleteSingleEvent = (eventId) => {
@@ -117,6 +119,22 @@ const MyCalendar = () => {
   const deleteEventGroup = (groupId) => {
     setEvents((prevEvents) => prevEvents.filter((event) => event.groupId !== groupId));
   };
+
+
+  //이 일정 이후 모든 일정 삭제 로직
+  const deleteEventsAfter = (event) => {
+    const selectedDate = new Date(event.start);
+      setEvents((prevEvents) =>
+      prevEvents.filter((e) => {
+        // 다른 그룹의 일정은 유지
+        if (e.groupId !== event.groupId) 
+          return true;
+        // 같은 그룹이면서 선택된 일정보다 이전 날짜인 일정만 유지
+        return new Date(e.start) < selectedDate;
+      })
+    );
+  };
+        
 
   // 클릭된 이벤트 정보를 상태에 저장
   const [selectedEvent, setSelectedEvent] = useState('');
@@ -139,72 +157,52 @@ const MyCalendar = () => {
 
   return (
     <div className={styles.container}>
+      
+      {/* 캘린더 */}
       <div className={styles.calendar_div}>
-        <Calendar 
+        <Calendar
           localizer={localizer}
           events={events}
           startAccessor="start"
           endAccessor="end"
-          style={{height:500}}
+          style={{height:500, width:1080}}
           messages={messages}
           onSelectEvent={handleSelectEvent}
+          selectable={true}
+          onSelectSlot={handleSelectSlot}
+          views={['month', 'agenda']}
+          longPressThreshold={1}
+          eventPropGetter={eventStyleGetter}
         />
       </div>
-      <div>
-        <div>
-          <Input 
-            type='text'
-            placeholder='식물 이름을 입력해주세요.'
-            value={plantName}
-            onChange={e=>setPlantName(e.target.value)}
-          />
-          <Select
-            size='120px'
-            value={selectedCycle}
-            onChange={e=>setSelectedCycle(e.target.value)}
-          >
-            <option value='0'>주기 선택</option>
-            <option value='3'>3일</option>
-            <option value='5'>5일</option>
-            <option value='7'>7일</option>
-            <option value='10'>10일</option>
-            <option value='14'>14일</option>
-          </Select>
-          <Button 
-            title='물주기스케쥴추가'
-            onClick={e=>addWateringSchedule(e)}
-          />
-        </div>
-        {
-          selectedEvent && (
-            <Modal
-              isOpen={!!selectedEvent}
-              title='일정 삭제'
-              event={selectedEvent}
-              onClose={()=>{
-                setSelectedEvent(null);
-              }}
-            >
-              <div>일정을 삭제하시겠습니까?</div>
-              <Button
-                color='secondary'
-                title='이 일정만 삭제'
-                onClick={()=>{
-                  deleteSingleEvent(selectedEvent.id)
-                  setSelectedEvent(null)
-                }}
-              />
-              <Button
-                title='모든 일정을 삭제'
-                onClick={()=>{
-                  deleteEventGroup(selectedEvent.groupId)
-                  setSelectedEvent(null)
-                }}
-              />
-            </Modal>
-          )
-        }
-      </div>
+
+      {/* 일정 추가 모달 */}
+      {
+        isInputOpen&&
+        <WateringPlan
+          isOpen={isInputOpen}
+          onClose={() => {
+            setIsInputOpen(false);
+            setClickedDate(null);
+          }}
+          clickedDate={clickedDate}
+          onAddSchedule={addWateringSchedule}
+        />
+      }
+
+      {/* 일정 삭제 모달 */}
+      {
+        selectedEvent && (
+        <DeletePlan
+          isOpen={!!selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+          selectedEvent={selectedEvent}
+          deleteSingleEvent={deleteSingleEvent}
+          deleteEventsAfter={deleteEventsAfter}
+          deleteEventGroup={deleteEventGroup}
+        />
+        )
+      }
       
     </div>
   )

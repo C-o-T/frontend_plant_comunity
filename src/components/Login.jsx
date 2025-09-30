@@ -46,8 +46,15 @@ const Login = ({isOpenLogin, onClose}) => {
         //로그인한 유저의 정보를 sissionStorage에 저장
         sessionStorage.setItem('loginInfo', JSON.stringify(loginInfo));
 
-        if (res.data.memGrade === 'business') {
+        if (res.data.memGrade === 'BUSINESS') {
           nav('/myfarm')
+          onClose()
+          setLoginData({
+            memId:'',
+            memPw:''
+          })
+        } else if (res.data.memGrade === 'ADMIN') {
+          nav('/QnA')
           onClose()
           setLoginData({
             memId:'',
@@ -92,10 +99,15 @@ const Login = ({isOpenLogin, onClose}) => {
         </div>
         <div className={styles.display_div}>
           <p>비밀번호</p>
-          <Input type='password' 
+          <Input type='password'
             name='memPw'
             value={loginData.memPw}
             onChange={e=>handleLogin(e)}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                login()
+              }
+            }}
           />
         </div>
         <div

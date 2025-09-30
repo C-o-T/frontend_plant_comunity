@@ -15,6 +15,7 @@ import MemberDetail from './page/MemberDetail'
 import MyCalendar from './page/MyCalendar'
 import MyPlantInfo from './page/MyPlantInfo'
 import EnvironmentInfo from './page/EnvironmentInfo'
+import AdminQnA from './page/AdminQnA'
 import AdminBoard from './page/AdminBoard'
 import AdminMember from './page/AdminMember'
 
@@ -45,6 +46,10 @@ function App() {
         <Route path='/admin' element={ <AdminBoard /> }>
           <Route path='member' element={<AdminMember />} />
         </Route>
+        <Route path='/find' element={ <Find /> } />
+        <Route path='/QnA' element={ <AdminQnA /> } />
+        <Route path='/QnA' element={ <AdminBoard /> } />
+        <Route path='/QnA' element={ <AdminMember /> } />
 
       </Routes>
   

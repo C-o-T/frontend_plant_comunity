@@ -100,7 +100,7 @@ const Header = () => {
           
           {
             (
-              loginData === null || loginData.memGrade === 'BUSINESS' || loginData.memGrade === 'USER'
+              loginData === null || loginData.memGrade === 'BUSINESS' || loginData.memGrade === 'USER' 
             ) && 
             (
               <>
@@ -164,27 +164,34 @@ const Header = () => {
           }
           
           {
-            (
-              loginData === 'ADMIN'
-            )
+             (
+               loginData && loginData.memGrade === 'ADMIN'
+             )
             &&
             (
-              <li className={styles.menu}>
-                <NavLink
-                  to={'/'}
-                >
-                  관리페이지
-                </NavLink>
-                <ul className={styles.sub_menu}>
-                  <li>
-                    <NavLink
-                      to={'/'}
-                    >
-                      식물 추가
-                    </NavLink>
-                  </li>
-                </ul>
-              </li>
+              <ul className={styles.admin_menu}>
+                <li>
+                  <NavLink
+                    to={'/AdminQnA'}
+                  >
+                    1:1 문의 관리
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to={'/AdminMember'}
+                  >
+                    회원 관리
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to={'/AdminBoard'}
+                  >
+                    게시판 관리
+                  </NavLink>
+                </li>
+              </ul>
             )
           }
 
