@@ -87,6 +87,7 @@ const Board = () => {
         </table> */}
         <div className = {styles.writedBoard}>
           {
+            boardList.length ?
             boardList.map((board, i) => {
               return(
                 <div key={i}>
@@ -103,6 +104,10 @@ const Board = () => {
                 </div>
               )
             })
+            :
+            <div>
+              등록된 게시글이 없습니다.
+            </div>
           }
         </div>
       </div>

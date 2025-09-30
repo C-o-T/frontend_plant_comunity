@@ -1,0 +1,156 @@
+.adminWrap {
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.filters {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.filterRow {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.filterRow select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  min-width: 150px;
+}
+
+.tableWrap {
+  margin: 25px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  background-color: white;
+}
+
+.table th {
+  padding: 12px 8px;
+  background-color: #4CAF50;
+  color: white;
+  font-weight: 500;
+}
+
+.table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.table tr:hover {
+  background-color: #f5f5f5;
+}
+
+.title {
+  text-align: left;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #333;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.pagination button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  color: #666;
+}
+
+.error {
+  color: #dc3545;
+  text-align: center;
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #fff3f3;
+  border-radius: 4px;
+}
+
+.table input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* 버튼 스타일 */
+.table button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #dc3545;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.table button:hover {
+  background-color: #c82333;
+}
+
+.resetButton {
+  background-color: #6c757d;
+  color: white;
+}
+
+.deleteButton {
+  background-color: #dc3545;
+  color: white;
+}
+
+.pageButton {
+  background-color: #4CAF50;
+  color: white;
+  min-width: 80px;
+}
+
+.resetButton:hover,
+.deleteButton:hover,
+.pageButton:hover {
+  opacity: 0.9;
+}
+
+.resetButton:disabled,
+.deleteButton:disabled,
+.pageButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
