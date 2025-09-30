@@ -4,6 +4,7 @@ import Button from '../common/Button'
 import Input from '../common/Input';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import PageNextAndPrev from '../components/PageNextAndPrev';
 
 const Board = () => {
   //로그인한 정보 확인
@@ -12,17 +13,37 @@ const Board = () => {
   //조회한 글 목록 
   const [boardList, setBoardList] =useState([]);
 
+  //페이징 정보 가진 변수
+  const [pageData, setPageData] = useState({});
+
   //페이지 이동하기
   const nav = useNavigate();
 
+ 
+  
   const [category,setCartegory] = useState([]);
 
   //글 목록 조회하기
   useEffect(() => {
     axios.get('/api/boards/boardList')
-    .then(res => setBoardList(res.data))
+    .then(res => {
+      setBoardList(res.data.boardList); //글 목록
+      setPageData(res.data.boardDTO);// 페이지 정보
+      
+    })
     .catch(e => console.log(e))
   }, []);
+
+  //페이지 목록 클릭시 목록 재조회 
+  const ClickReloadPage = (page) => {
+    axios.get(`/api/boards/boardList`,{params : {nowPage : page}})
+    .then(res => {
+      setBoardList(res.data.boardList); //글 목록
+      setPageData(res.data.boardDTO);// 페이지 정보
+      
+    })
+    .catch(e => console.log(e))
+  }
 
   //내용 자르는 함수
   const cutText = (text, maxLength = 30) => {
@@ -33,6 +54,7 @@ const Board = () => {
 
   // 데이터 확인
   console.log(boardList);
+  //console.log(pageData);
   return (
     <div className='container'>
       <div className = {styles.menu}>
@@ -74,6 +96,7 @@ const Board = () => {
                         <img src = {board.imgList.imgUrl} className={styles.imgSize}/>
                         }</div>
                         <div>{board.memId}</div>
+                        <div>{board.title}</div>
                           <div className={styles.likeAndComent}>
                             <i className={"bi bi-heart"}></i>
                             <span>{board.likeCnt}</span>
@@ -93,6 +116,7 @@ const Board = () => {
           }
         </div>
       </div>
+      <PageNextAndPrev pageData = {pageData} onClickPage={ClickReloadPage}/>
     </div>
     
   )
