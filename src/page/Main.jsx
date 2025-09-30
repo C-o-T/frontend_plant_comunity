@@ -6,6 +6,8 @@ import CalendarPage from './MyCalendar';
 
 const Main = () => {
 
+  console.log(sessionStorage.getItem('loginInfo'));
+  
   const nav = useNavigate();
 
   //인기글 조회를 위한 state 변수
