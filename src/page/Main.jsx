@@ -87,7 +87,7 @@ const Main = () => {
                   popularBoardList.map((write, i) => {
                     return (
                       <tr key={i}
-                        onClick={e => nav(`/board/${write.boardNum}`)}
+                        onClick={e => nav(`/board/detail/${write.boardNum}`)}
                         className={styles.table_row}
                       >
                         <td>{write.boardNum}</td>

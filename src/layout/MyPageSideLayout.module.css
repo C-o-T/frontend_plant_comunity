@@ -1,58 +1,67 @@
-.container{
+.container {
   width: 100%;
-  background-color: #f5f5f8;
+  background: #f8fdf8;
   height: 100%;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
-.menuCategory{
+.menuCategory {
   margin-bottom: 20px;
+  padding-top: 12px;
 }
 
-.menuCategory > p{
+.menuCategory > p {
   font-size: 0.8rem;
-  color: #777777;
+  color: #666;
   padding: 12px;
 }
 
-.menuCategory > p > span{
-  color: #333333;
+.menuCategory > p > span {
+  color: #2e7d32;
   margin-right: 4px;
+  font-weight: 600;
 }
 
-.sideMenu{
+.sideMenu {
   font-size: 0.9rem;
 }
 
-.sideMenu > li{
-  /* 12시부터 시계방향 */
+.sideMenu > li {
   padding: 10px 0px 10px 16px;
-  border-left: 3px solid rgba(0,0,0,0);
+  border-left: 3px solid rgba(0, 0, 0, 0);
+  transition: all 0.3s ease;
 }
 
-.sideMenu > li:hover{
-  background-color: #e0e4f6;
-  border-left: 3px solid #667eea;
-  color: #667eea;
+.sideMenu > li:hover {
+  background: #e8f5e9;
+  border-left: 3px solid #4caf50;
+  color: #2e7d32;
   cursor: pointer;
+  transform: translateX(2px);
 }
 
 /* .active를 자식으로 가진 .menu_li */
-.menu_li:has(.active){
-  background-color: #e0e4f6;
-  border-left: 3px solid #667eea !important;
-  color: #667eea;
+.menu_li:has(.active) {
+  background: #e8f5e9;
+  border-left: 3px solid #4caf50 !important;
+  color: #2e7d32;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1);
 }
 
-.active{
-  color: #667eea;
+.active {
+  color: #2e7d32;
+  font-weight: 600;
 }
 
-a{
+a {
   color: black;
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
-.menu_li:hover a{
-  color: #667eea;
+.menu_li:hover a {
+  color: #2e7d32;
+  font-weight: 600;
 }
 

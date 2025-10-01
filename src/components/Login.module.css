@@ -1,24 +1,60 @@
 .container {
   cursor: default;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .display_div {
   display: flex;
   gap: 8px;
+  align-items: center;
 }
 
 .display_div > p:first-child {
   width: 80px;
+  color: #2e7d32;
+  font-weight: 600;
 }
 
 .display_div input {
   width: 250px;
   margin-bottom: 20px;
+  padding: 10px 14px;
+  border: 2px solid #e8f5e9;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: #f8fdf8;
+}
+
+.display_div input:focus {
+  outline: none;
+  border-color: #66bb6a;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+  background: #ffffff;
 }
 
 .btn_div {
   text-align: center;
   width: 100%;
+}
+
+.btn_div button {
+  background: linear-gradient(135deg, #66bb6a, #4caf50);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.btn_div button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.15);
 }
 
 .find_div {
@@ -28,10 +64,16 @@
   display: flex;
   gap: 8px;
   justify-content: center;
-  margin-top: 2px;
-  color: #818181;
+  margin-top: 12px;
+  color: #666;
+}
+
+.find_div > p {
+  transition: all 0.2s ease;
 }
 
 .find_div > p:hover {
   cursor: pointer;
+  color: #2e7d32;
+  transform: translateY(-1px);
 }

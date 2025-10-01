@@ -179,12 +179,12 @@ const MyCalendar = () => {
           events={events}
           startAccessor="start"
           endAccessor="end"
-          style={{height:500, width:1080}}
+          style={{height:500}}
           messages={messages}
           onSelectEvent={handleSelectEvent}
           selectable={true}
           onSelectSlot={handleSelectSlot}
-          views={['month', 'agenda']}
+          views={['month']}
           longPressThreshold={1}
           eventPropGetter={eventStyleGetter}
         />
