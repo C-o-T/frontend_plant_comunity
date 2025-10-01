@@ -3,6 +3,7 @@ import styles from './Header.module.css'
 import Join from '../components/Join'
 import { NavLink, useNavigate } from 'react-router-dom'
 import Login from '../components/Login'
+import MessageAlarm from '../components/message/MessageAlarm'
 
 const Header = () => {
   const nav = useNavigate();
@@ -36,6 +37,7 @@ const Header = () => {
           </>
           :
           <>
+            <MessageAlarm />
             <span>
               {loginData.memName}님 반갑습니다.
             </span>

@@ -1,0 +1,175 @@
+.container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 2rem;
+  color: #2e7d32;
+  margin: 0;
+}
+
+.write_btn {
+  background: linear-gradient(135deg, #66bb6a, #4caf50);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.write_btn:hover {
+  background: linear-gradient(135deg, #4caf50, #388e3c);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.tabs button {
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #757575;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.tabs button:hover {
+  color: #4caf50;
+}
+
+.tabs button.active {
+  color: #2e7d32;
+  border-bottom-color: #4caf50;
+}
+
+.message_list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message_item {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.message_item:hover {
+  border-color: #4caf50;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
+  transform: translateY(-2px);
+}
+
+.message_item.unread {
+  background: #f1f8e9;
+  border-color: #66bb6a;
+  font-weight: 500;
+}
+
+.message_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.new_badge {
+  background: #f44336;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.id {
+  font-size: 0.9rem;
+  color: #757575;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.date {
+  font-size: 0.9rem;
+  color: #757575;
+}
+
+.delete_btn {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.delete_btn:hover {
+  background: #d32f2f;
+  transform: scale(1.05);
+}
+
+.message_content h3 {
+  font-size: 1.1rem;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.message_content p {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.loading,
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+  font-size: 1.1rem;
+}

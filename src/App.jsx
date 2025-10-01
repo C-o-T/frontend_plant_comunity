@@ -20,6 +20,9 @@ import AdminBoard from './page/AdminBoard'
 import AdminMember from './page/AdminMember'
 import BoardDetail from './page/BoardDetail'
 import MemberQnA from './page/MemberQnA'
+import MessageList from './components/message/MessageList'
+import MessageDetail from './components/message/MessageDetail'
+import MessageWrite from './components/message/MessageWrite'
 
 
 
@@ -47,6 +50,10 @@ function App() {
         </Route>
 
         <Route path='/qna' element={<MemberQnA />} />
+
+        <Route path='/messages' element={<MessageList />} />
+        <Route path='/messages/:messageId' element={<MessageDetail />} />
+        <Route path='/messages/write' element={<MessageWrite />} />
 
         <Route path='/admin' element={ <AdminBoard /> }>
           <Route path='member' element={<AdminMember />} />
