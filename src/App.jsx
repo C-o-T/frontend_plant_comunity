@@ -19,13 +19,12 @@ import AdminQnA from './page/AdminQnA'
 import AdminBoard from './page/AdminBoard'
 import AdminMember from './page/AdminMember'
 import BoardDetail from './page/BoardDetail'
+import UpdateBoard from './page/UpdateBoard'
 import MemberQnA from './page/MemberQnA'
 import MessageList from './components/message/MessageList'
 import MessageDetail from './components/message/MessageDetail'
 import MessageWrite from './components/message/MessageWrite'
 import AdminPage from './page/AdminPage'
-
-
 
 
 function App() {
@@ -38,6 +37,7 @@ function App() {
         <Route path='/board' element={<Board />} />
         <Route path='/write-board' element = {<WriteBoard/>}/>
         <Route path='/board/detail/:boardNum' element = {<BoardDetail/>}/>
+        <Route path='/update-board/:boardNum' element = {<UpdateBoard/>}/>
         
         <Route path='/myfarm' element={<MyFarm />}> 
           <Route path='my-plant-info' element={<MyPlantInfo />}/>

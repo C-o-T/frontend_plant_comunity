@@ -25,7 +25,7 @@ const Board = () => {
 
   //글 목록 조회하기
   useEffect(() => {
-    axios.get('/api/boards/boardList')
+    axios.get('/api/boards/boardList-paging')
     .then(res => {
       setBoardList(res.data.boardList); //글 목록
       setPageData(res.data.boardDTO);// 페이지 정보
@@ -36,7 +36,7 @@ const Board = () => {
 
   //페이지 목록 클릭시 목록 재조회 
   const ClickReloadPage = (page) => {
-    axios.get(`/api/boards/boardList`,{params : {nowPage : page}})
+    axios.get(`/api/boards/boardList-paging`,{params : {nowPage : page}})
     .then(res => {
       setBoardList(res.data.boardList); //글 목록
       setPageData(res.data.boardDTO);// 페이지 정보
@@ -85,26 +85,20 @@ const Board = () => {
             boardList.map((board, i) => {
               const maxLength = 30;
               return(
-                <div key={i}>
-                  <div>
-                    {
-                      <div onClick={() => {nav(`/board/detail/${board.boardNum}`)}}>
-                        <div className={styles.img_div}>{
-                        board.imgList.imgUrl === null ?
-                        cutText(board.content, maxLength)
-                        :
-                        <img src = {board.imgList.imgUrl} className={styles.imgSize}/>
-                        }</div>
-                        <div>{board.memId}</div>
-                        <div>{board.title}</div>
-                          <div className={styles.likeAndComent}>
-                            <i className={"bi bi-heart"}></i>
-                            <span>{board.likeCnt}</span>
-                            <span><i className={"bi bi-chat"}></i></span>
-                            <span>1</span>
-                          </div>
-                      </div>                      
-                    }
+                <div key={i} onClick={() => {nav(`/board/detail/${board.boardNum}`)}}>
+                  <div className={styles.img_div}>{
+                  board.imgList.imgUrl === null ?
+                  cutText(board.content, maxLength)
+                  :
+                  <img src = {board.imgList.imgUrl} className={styles.imgSize}/>
+                  }</div>
+                  <div>{board.memId}</div>
+                  <div>{board.title}</div>
+                  <div className={styles.likeAndComent}>
+                    <i className={"bi bi-heart"}></i>
+                    <span>{board.likeCnt}</span>
+                    <span><i className={"bi bi-chat"}></i></span>
+                    <span>1</span>
                   </div>
                 </div>
               )
