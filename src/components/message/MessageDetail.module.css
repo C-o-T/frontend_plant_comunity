@@ -1,0 +1,150 @@
+.container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 2rem;
+  color: #2e7d32;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.list_btn,
+.reply_btn,
+.delete_btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.list_btn {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.list_btn:hover {
+  background: #bdbdbd;
+}
+
+.reply_btn {
+  background: linear-gradient(135deg, #66bb6a, #4caf50);
+  color: white;
+}
+
+.reply_btn:hover {
+  background: linear-gradient(135deg, #4caf50, #388e3c);
+  transform: translateY(-2px);
+}
+
+.delete_btn {
+  background: #f44336;
+  color: white;
+}
+
+.delete_btn:hover {
+  background: #d32f2f;
+  transform: translateY(-2px);
+}
+
+.message_card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.message_header {
+  padding: 24px;
+  border-bottom: 2px solid #e8f5e9;
+  background: #f8fdf8;
+}
+
+.message_header h2 {
+  font-size: 1.5rem;
+  color: #2e7d32;
+  margin: 0 0 16px 0;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.sender {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.sender strong {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.date {
+  font-size: 0.9rem;
+  color: #757575;
+}
+
+.message_body {
+  padding: 32px 24px;
+  min-height: 300px;
+}
+
+.message_body p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #333;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 100px 20px;
+  font-size: 1.2rem;
+  color: #999;
+}
+
+.error {
+  color: #f44336;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .list_btn,
+  .reply_btn,
+  .delete_btn {
+    flex: 1;
+  }
+}

@@ -1,0 +1,15 @@
+.container{
+  width: 1280px;
+  margin: 0px auto;
+	padding: 20px;
+}
+
+.qnaTable{
+  width: 100%;
+  margin: auto;
+  text-align: center;
+}
+.qnaTable tr, .qnaTable td {
+  padding: 3px;
+  border: 1px solid black;
+}

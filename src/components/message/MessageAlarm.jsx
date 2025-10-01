@@ -1,0 +1,49 @@
+import React, { useState, useEffect } from 'react'
+import styles from './MessageAlarm.module.css'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+
+const MessageAlarm = () => {
+  const nav = useNavigate();
+  const [unreadCount, setUnreadCount] = useState(0);
+  const loginInfo = sessionStorage.getItem('loginInfo');
+
+  // 로그인하지 않았으면 렌더링하지 않음
+  if (!loginInfo) {
+    return null;
+  }
+
+  // 안 읽은 쪽지 개수 조회
+  useEffect(() => {
+    const fetchUnreadCount = async () => {
+      try {
+        const response = await axios.get('/messages/unread/count');
+        setUnreadCount(response.data);
+      } catch (error) {
+        console.error('안 읽은 쪽지 조회 실패:', error);
+        setUnreadCount(0);
+      }
+    };
+
+    fetchUnreadCount();
+
+    // 30초마다 갱신
+    const interval = setInterval(fetchUnreadCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div
+      className={styles.message_alarm}
+      onClick={() => nav('/messages')}
+      title="쪽지함"
+    >
+      <span className={styles.icon}>✉️</span>
+      {unreadCount > 0 && (
+        <span className={styles.badge}>{unreadCount > 99 ? '99+' : unreadCount}</span>
+      )}
+    </div>
+  )
+}
+
+export default MessageAlarm

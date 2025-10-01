@@ -3,6 +3,7 @@ import styles from './Header.module.css'
 import Join from '../components/Join'
 import { NavLink, useNavigate } from 'react-router-dom'
 import Login from '../components/Login'
+import MessageAlarm from '../components/message/MessageAlarm'
 
 const Header = () => {
   const nav = useNavigate();
@@ -36,6 +37,7 @@ const Header = () => {
           </>
           :
           <>
+            <MessageAlarm />
             <span>
               {loginData.memName}님 반갑습니다.
             </span>
@@ -145,14 +147,14 @@ const Header = () => {
                 </li>
                 <li className={styles.menu}>
                   <NavLink
-                    to={'/'}
+                    to={'/qna'}
                   >
                     문의사항
                   </NavLink>
                   <ul className={styles.sub_menu}>
                     <li>
                       <NavLink
-                        to={'/'}
+                        to={'/qna'}
                       >
                         1:1 문의
                       </NavLink>
@@ -172,21 +174,21 @@ const Header = () => {
               <ul className={styles.admin_menu}>
                 <li>
                   <NavLink
-                    to={'/AdminQnA'}
+                    to={'/admin/QnA'}
                   >
                     1:1 문의 관리
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
-                    to={'/AdminMember'}
+                    to={'/admin/member'}
                   >
                     회원 관리
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
-                    to={'/AdminBoard'}
+                    to={'/admin/board'}
                   >
                     게시판 관리
                   </NavLink>

@@ -25,6 +25,10 @@
   background: linear-gradient(to right, #b7e1ac 70%, #fffee8 );
 }
 
+.banner_div:hover{
+  cursor: pointer;
+}
+
 .banner_div > span:first-child {
   color: #61bd48;
 }

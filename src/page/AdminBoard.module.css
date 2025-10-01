@@ -154,3 +154,288 @@
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+.container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
+}
+
+.boardCount {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.filterSection {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.searchBox {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.optionBox {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.sortBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sortBox label {
+  font-weight: 500;
+  color: #555;
+  white-space: nowrap;
+}
+
+.pageSizeBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pageSizeBox label {
+  font-weight: 500;
+  color: #555;
+  white-space: nowrap;
+}
+
+.sortIndicator {
+  font-size: 12px;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.table th {
+  background-color: #f1f3f4;
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid #ddd;
+}
+
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+
+.table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.titleLink {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.titleLink:hover {
+  color: #0056b3;
+}
+
+.status {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status.active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status.inactive {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin: 20px 0;
+}
+
+.pageButton {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.pageButton:hover:not(:disabled) {
+  background-color: #f8f9fa;
+}
+
+.pageButton:disabled {
+  background-color: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.pageButton.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.pageInfo {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.modalContent {
+  padding: 10px;
+}
+
+.boardInfo {
+  margin-bottom: 20px;
+}
+
+.infoRow {
+  display: flex;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.infoRow label {
+  width: 100px;
+  font-weight: 600;
+  color: #555;
+}
+
+.infoRow span {
+  flex: 1;
+  color: #333;
+}
+
+.contentRow {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.contentRow label {
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.content {
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 5px;
+  border: 1px solid #eee;
+  min-height: 100px;
+  line-height: 1.5;
+  max-height: 400px;
+  overflow-y: auto;
+  word-wrap: break-word;
+}
+
+/* 내용 안의 이미지 스타일 */
+.content img {
+  max-width: 100%;
+  height: auto;
+  margin: 10px 0;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 내용 안의 텍스트 스타일 */
+.content p {
+  margin: 10px 0;
+}
+
+.content h1, .content h2, .content h3 {
+  margin: 15px 0 10px 0;
+  color: #333;
+}
+
+.modalButtons {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.detailTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.labelCell {
+  width: 120px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  font-weight: 600;
+  color: #555;
+  vertical-align: middle;
+}
+
+.valueCell {
+  padding: 12px;
+  border: 1px solid #dee2e6;
+  color: #333;
+  vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+  .searchBox {
+    flex-direction: column;
+  }
+  
+  .optionBox {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .sortBox, .pageSizeBox {
+    width: 100%;
+  }
+}
