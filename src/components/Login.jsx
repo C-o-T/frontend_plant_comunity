@@ -47,7 +47,7 @@ const Login = ({isOpenLogin, onClose}) => {
         sessionStorage.setItem('loginInfo', JSON.stringify(loginInfo));
 
         if (res.data.memGrade === 'BUSINESS') {
-          nav('/myfarm')
+          nav('/myfarm/my-plant-info')
           onClose()
           setLoginData({
             memId:'',
