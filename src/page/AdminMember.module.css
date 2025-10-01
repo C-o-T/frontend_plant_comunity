@@ -1,116 +1,112 @@
 .container {
-  padding: 20px;
+  padding: 40px 20px;
   max-width: 1200px;
-  margin: 0 auto;
-}
-
-.title {
-  font-size: 24px;
-  font-weight: 500;
-  margin-bottom: 24px;
-  color: #2c3e50;
+  margin: 40px auto 0;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  min-height: calc(100vh - 200px);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #eee;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 3px solid #2e7d32;
+}
+
+.header h2 {
+  color: #2e7d32;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
 }
 
 .memberCount {
-  font-size: 14px;
+  font-size: 0.95rem;
   color: #666;
-  font-weight: 500;
-}
-
-.controls {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-  align-items: center;
+  font-weight: 600;
+  background: #e8f5e9;
+  padding: 8px 16px;
+  border-radius: 8px;
 }
 
 .searchBox {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 5px;
-}
-
-.search {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.search:focus {
-  border-color: #4CAF50;
-  outline: none;
-}
-
-.tableWrap {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  gap: 12px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #f8fdf8;
+  border-radius: 12px;
+  border: 2px solid #e8f5e9;
+  flex-wrap: wrap;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
-  border-radius: 5px;
+  background: #f8fdf8;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+.table thead {
+  background: linear-gradient(135deg, #66bb6a, #4caf50);
+}
+
+.table thead tr {
+  border: none;
 }
 
 .table th {
-  background-color: #f1f3f4;
-  padding: 12px;
-  text-align: left;
+  padding: 16px 12px;
+  color: white;
   font-weight: 600;
-  border-bottom: 1px solid #ddd;
+  border: none;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+  text-align: center;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #e8f5e9;
+  transition: all 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background: #e8f5e9;
+  cursor: pointer;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1);
 }
 
 .table td {
-  padding: 12px;
-  border-bottom: 1px solid #eee;
-  color: #444;
+  padding: 14px 12px;
+  border: none;
+  color: #424242;
+  font-size: 0.9rem;
+  text-align: center;
 }
 
-.table tr:hover {
-  background-color: #f8f9fa;
+.table tbody tr:last-child {
+  border-bottom: none;
 }
 
 .actions {
   display: flex;
   gap: 8px;
+  justify-content: center;
 }
 
-.ellipsis {
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: #666;
-}
-
-.empty {
-  text-align: center;
-  padding: 40px;
-  color: #666;
+.actionButtons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .detail {
@@ -118,39 +114,39 @@
 }
 
 .detail p {
-  margin: 12px 0;
+  margin: 15px 0;
   display: flex;
-  gap: 12px;
+  gap: 15px;
+  padding: 12px;
+  background: #f8fdf8;
+  border-radius: 8px;
+  border-left: 4px solid #66bb6a;
 }
 
 .detail strong {
-  min-width: 100px;
-  color: #2c3e50;
+  min-width: 120px;
+  color: #2e7d32;
+  font-weight: 600;
 }
 
 .modalActions {
   display: flex;
   gap: 12px;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid #eee;
+  padding-top: 20px;
+  border-top: 2px solid #e8f5e9;
 }
 
-/* 반응형 디자인 */
 @media (max-width: 768px) {
-  .controls {
+  .searchBox {
     flex-direction: column;
   }
-  
-  .search {
-    width: 100%;
-  }
-  
+
   .table {
     font-size: 14px;
   }
-  
+
   .actions {
     flex-wrap: wrap;
   }

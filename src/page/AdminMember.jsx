@@ -169,8 +169,19 @@ const AdminMember = () => {
                 <td>{member.memEmail}</td>
                 <td>{new Date(member.memRegdate).toLocaleDateString()}</td>
                 <td>
-                  <Button title="상세보기" onClick={() => handleOpenModal(member)} />
-                  <Button title="삭제" onClick={() => handleDeleteMember(member.memId)} />
+                  <div className={styles.actionButtons}>
+                    <Button
+                      title="상세보기"
+                      onClick={() => handleOpenModal(member)}
+                      size="small"
+                    />
+                    <Button
+                      title="삭제"
+                      onClick={() => handleDeleteMember(member.memId)}
+                      color="danger"
+                      size="small"
+                    />
+                  </div>
                 </td>
               </tr>
             ))

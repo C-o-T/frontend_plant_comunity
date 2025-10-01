@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import Title from '../common/Title';
+import styles from './MyBoardList.module.css';
 
 const MyBoardList = () => {
   const nav = useNavigate()
@@ -30,17 +32,17 @@ const MyBoardList = () => {
   }, []);
 
   return (
-    <div>
-        <h2>게시글</h2>
-        <table>
+    <div className={styles.container}>
+        <Title title="게시글 관리" />
+        <table className={styles.boardTable}>
           <thead>
             <tr>
-              <td>글번호</td>
-              <td>제목</td>
-              <td>작성자</td>
-              <td>작성일</td>
-              <td>조회수</td>
-              <td>좋아요</td>
+              <th>글번호</th>
+              <th>제목</th>
+              <th>작성자</th>
+              <th>작성일</th>
+              <th>조회수</th>
+              <th>좋아요</th>
             </tr>
           </thead>
           <tbody>

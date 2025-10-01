@@ -54,7 +54,7 @@ const Login = ({isOpenLogin, onClose}) => {
             memPw:''
           })
         } else if (res.data.memGrade === 'ADMIN') {
-          nav('/QnA')
+          nav('/admin/qna')
           onClose()
           setLoginData({
             memId:'',

@@ -3,16 +3,27 @@
   margin: 30px auto;
   margin-bottom: 0px;
   cursor: default;
+  position: relative;
+  z-index: 10000;
 }
 
 .login_div {
   display: flex;
   justify-content: end;
   gap: 12px;
+  margin-bottom: 10px;
+}
+
+.login_div > p {
+  color: #2e7d32;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 
 .login_div > p:hover {
   cursor: pointer;
+  transform: translateY(-1px);
+  color: #66bb6a;
 }
 
 .banner_div {
@@ -22,19 +33,30 @@
   font-size: 2rem;
   font-weight: bolder;
   letter-spacing: 10px;
-  background: linear-gradient(to right, #b7e1ac 70%, #fffee8 );
+  background: linear-gradient(to right, #e8f5e9 70%, #f1f8e9);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 }
 
-.banner_div:hover{
+.banner_div:hover {
   cursor: pointer;
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.15);
+  transform: translateY(-2px);
 }
 
 .banner_div > span:first-child {
-  color: #61bd48;
+  color: #2e7d32;
 }
 
 .menu_div {
   height: 40px;
+  background: #ffffff;
+  border-radius: 8px;
+  margin-top: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 100;
 }
 
 .menu_div > ul {
@@ -47,10 +69,14 @@
 .menu_div li {
   font-size: 1.05rem;
   font-weight: bolder;
+  color: #2e7d32;
+  transition: all 0.2s ease;
 }
 
-.menu_div li:hover{
+.menu_div li:hover {
   cursor: pointer;
+  color: #66bb6a;
+  transform: translateY(-1px);
 }
 
 .menu {
@@ -62,25 +88,41 @@
 .sub_menu {
   width: 100%;
   box-sizing: border-box;
-  background-color: white;
-  opacity: 0.7;
+  background: #f8fdf8;
+  opacity: 0;
+  visibility: hidden;
   position: absolute;
-  height: 0px;
+  max-height: 0px;
   overflow: hidden;
-  top: 100%;
+  top: calc(100% + 8px);
   left: 0%;
-  z-index: 10;
-  padding: 5px;
+  z-index: 50;
+  padding: 0px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 }
 
-.menu_div:hover .sub_menu{
-  height: 110px;
-  transition: 0.5s;
+.menu:hover .sub_menu {
+  max-height: 200px;
+  opacity: 1;
+  visibility: visible;
+  padding: 8px;
+  border: 2px solid #e8f5e9;
 }
 
 .sub_menu li {
-  padding: 3px;
+  padding: 8px;
   font-weight: 400;
+  color: #555;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+}
+
+.sub_menu li:hover {
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-weight: 600;
 }
 
 .admin_menu {

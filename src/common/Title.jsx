@@ -2,18 +2,19 @@ import React from 'react'
 
 const Title = ({title='제목'}) => {
   return (
-    <p
+    <h2
       style={{
-        'fontSize' : '1.2rem',
-        'fontWeight' : '600',
-        'paddingBottom' : '3px',
-        'marginBottom' : '15px',
-        'color' : '#61bd48',
-        'letterSpacing' : '5px'
+        fontSize: '1.2rem',
+        fontWeight: '600',
+        paddingBottom: '3px',
+        marginBottom: '0.7rem',
+        margin: '0 0 0.7rem 0',
+        color: '#2e7d32',
+        letterSpacing: '-0.3px'
       }}
     >
       {title}
-    </p>
+    </h2>
   )
 }
 
