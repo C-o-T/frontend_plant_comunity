@@ -172,21 +172,21 @@ const Header = () => {
               <ul className={styles.admin_menu}>
                 <li>
                   <NavLink
-                    to={'/adminQnA'}
+                    to={'/admin/QnA'}
                   >
                     1:1 문의 관리
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
-                    to={'/adminmember'}
+                    to={'/admin/member'}
                   >
                     회원 관리
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
-                    to={'/adminboard'}
+                    to={'/admin/board'}
                   >
                     게시판 관리
                   </NavLink>
