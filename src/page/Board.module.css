@@ -89,7 +89,7 @@
 /* 게시글 목록 그리드 */
 .writedBoard {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 한 줄에 정확히 5개 */
+  grid-template-columns: repeat(5, 1fr);
   gap: 20px;
   padding: 20px 0;
 }
@@ -103,19 +103,16 @@
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: 2px solid #e8f5e9;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
 }
 
 .writedBoard > div:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 35px rgba(97, 189, 72, 0.25);
   border-color: #b7e1ac;
-}
-
-/* 카드 내부 레이아웃 */
-.writedBoard > div > div > div {
-  display: grid;
-  grid-template-rows: 200px auto auto auto;
-  height: 100%;
 }
 
 /* 이미지/텍스트 미리보기 영역 */
@@ -127,6 +124,7 @@
   justify-content: center;
   overflow: hidden;
   height: 200px;
+  flex-shrink: 0;
 }
 
 /* 이미지 스타일 */
@@ -161,7 +159,7 @@
 }
 
 /* 작성자 정보 */
-.writedBoard > div > div > div > div:nth-child(2) {
+.writedBoard > div > div:nth-child(2) {
   padding: 10px 20px;
   font-weight: 600;
   color: #61bd48;
@@ -171,7 +169,7 @@
 }
 
 /* 제목 정보 */
-.writedBoard > div > div > div > div:nth-child(3) {
+.writedBoard > div > div:nth-child(3) {
   padding: 10px 20px;
   font-weight: 600;
   color: #61bd48;
@@ -217,63 +215,4 @@
   background: linear-gradient(135deg, #fffef8 0%, #f5fde8 100%);
   border: 2px dashed #b7e1ac;
   border-radius: 15px;
-}
-
-/* 반응형 디자인 */
-@media (max-width: 1200px) {
-  .writedBoard {
-    grid-template-columns: repeat(4, 1fr); /* 1200px 이하에서는 4개 */
-  }
-}
-
-@media (max-width: 950px) {
-  .writedBoard {
-    grid-template-columns: repeat(3, 1fr); /* 950px 이하에서는 3개 */
-  }
-}
-
-@media (max-width: 768px) {
-  .container {
-    padding: 15px;
-  }
-  
-  .writedBoard {
-    grid-template-columns: repeat(2, 1fr); /* 태블릿에서는 2개 */
-    gap: 15px;
-  }
-  
-  .menu ul {
-    flex-direction: column;
-  }
-  
-  .menu li:not(:last-child)::after {
-    display: none;
-  }
-  
-  .category {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-  
-  .category > div:first-child {
-    min-width: auto;
-    text-align: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .writedBoard {
-    grid-template-columns: 1fr; /* 모바일에서는 1개 */
-  }
-  
-  .img_div {
-    height: 180px;
-  }
-  
-  .img_div:not(:has(img)) {
-    height: 160px;
-    padding: 20px;
-    margin: 8px;
-  }
 }

@@ -19,6 +19,7 @@ import AdminQnA from './page/AdminQnA'
 import AdminBoard from './page/AdminBoard'
 import AdminMember from './page/AdminMember'
 import BoardDetail from './page/BoardDetail'
+import UpdateBoard from './page/UpdateBoard'
 
 
 
@@ -33,6 +34,7 @@ function App() {
         <Route path='/board' element={<Board />} />
         <Route path='/write-board' element = {<WriteBoard/>}/>
         <Route path='/board/detail/:boardNum' element = {<BoardDetail/>}/>
+        <Route path='/update-board/:boardNum' element = {<UpdateBoard/>}/>
         
         <Route path='/myfarm' element={<MyFarm />}> 
           <Route path='my-plant-info' element={<MyPlantInfo />}/>
