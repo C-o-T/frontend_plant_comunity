@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Input from '../common/Input';
 import Select from '../common/Select';
 import Button from '../common/Button';
+import Title from '../common/Title';
 import styles from './MemberDetail.module.css'
 import MyPageSideLayout from '../layout/MyPageSideLayout';
 import { useNavigate } from 'react-router-dom';
@@ -69,9 +70,9 @@ const MemberDetail = () => {
 
   return (
     <div className={styles.container}>
-      
+
       <div>
-        <h2>개인정보수정</h2>
+        <Title title="개인정보수정" />
         <table>
           <tbody>
             <tr>

@@ -1,9 +1,33 @@
-.input_div > div:first-child{
+.input_div > div:first-child {
   margin-bottom: 20px;
+  padding: 16px;
+  background: #f8fdf8;
+  border-radius: 12px;
+  border: 2px solid #e8f5e9;
+  transition: all 0.3s ease;
+}
+
+.input_div > div:first-child:hover {
+  border-color: #66bb6a;
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.08);
 }
 
 .input_div button {
-  height: 30px;
+  height: 38px;
   text-align: center;
   margin-bottom: 10px;
+  background: linear-gradient(135deg, #66bb6a, #4caf50);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.input_div button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.15);
 }

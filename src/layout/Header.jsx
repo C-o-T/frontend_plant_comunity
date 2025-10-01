@@ -51,17 +51,21 @@ const Header = () => {
             </p>
           </>
         }
-        
-        <Login 
+      </div>
+
+      {isOpenLogin && (
+        <Login
           isOpenLogin={isOpenLogin}
           onClose={()=>setIsOpenLogin(false)}
         />
-       
-        <Join 
+      )}
+
+      {isOpenJoin && (
+        <Join
           isOpenJoin={isOpenJoin}
           onClose={()=>setIsOpenJoin(false)}
         />
-      </div>
+      )}
 
       <div className={styles.banner_div}
         onClick={e=>nav('/')}
@@ -112,8 +116,6 @@ const Header = () => {
                   >
                     커뮤니티
                   </NavLink>
-                  <ul className={styles.sub_menu}>
-                  </ul>
                 </li>
                 <li className={styles.menu}>
                   <NavLink

@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Select from '../common/Select';
+import Title from '../common/Title';
 import styles from './MyPlantInfo.module.css'
 
 
@@ -114,7 +115,7 @@ const MyPlantInfo = () => {
       <div className={styles.content}>
         {/* 좌측 상단: 식물 정보 */}
         <div className={styles.herb_info}>
-          <h2>식물 정보</h2>
+          <Title title="식물 정보" />
           <Select onChange={handlePlant}>
             <option value="">선택</option>
             {plantList.map((plant, i) => (
@@ -159,7 +160,7 @@ const MyPlantInfo = () => {
 
         {/* 좌측 하단: 상태 */}
         <div className={styles.status_section}>
-          <h2>상태</h2>
+          <Title title="상태" />
           {selectedPlant && lastSensorData ? (
             <div>
               <div className={styles.overall_status}>
@@ -231,7 +232,7 @@ const MyPlantInfo = () => {
 
         {/* 우측: 장치 가동 로그 */}
         <div className={styles.log_section}>
-          <h2>장치 가동 로그</h2>
+          <Title title="장치 가동 로그" />
           {selectedPlant ? (
             <>
               <div className={styles.log_list}>

@@ -1,7 +1,18 @@
-.input{
-   border: none;
-   outline: 1px solid #cccccc;
-   border-radius: 4px;
-   color: #666666;
-   padding: 4px 8px;
+.input {
+  border: 1px solid #c8e6c9;
+  border-radius: 8px;
+  color: #555;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #66bb6a;
+  box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.1);
+}
+
+.input:hover {
+  border-color: #81c784;
 }

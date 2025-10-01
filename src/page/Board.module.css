@@ -13,9 +13,9 @@
 .menu {
   margin-bottom: 30px;
   background: white;
-  border-radius: 15px;
+  border-radius: 16px;
   box-shadow: 0 4px 20px rgba(97, 189, 72, 0.15);
-  overflow: hidden;
+  padding: 15px;
 }
 
 .menu ul {
@@ -23,33 +23,27 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  gap: 15px;
 }
 
 .menu li {
   flex: 1;
   text-align: center;
-  padding: 20px;
-  background: linear-gradient(135deg, #7fc96e 0%, #61bd48 100%);
+  padding: 18px 25px;
+  background: linear-gradient(135deg, #81c784 0%, #66bb6a 100%);
   color: white;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  position: relative;
-}
-
-.menu li:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 20%;
-  height: 60%;
-  width: 1px;
-  background: rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.15);
 }
 
 .menu li:hover {
-  background: linear-gradient(135deg, #61bd48 0%, #52a03a 100%);
+  background: linear-gradient(135deg, #a5d6a7 0%, #81c784 100%);
+  color: white;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
 }
 
 /* 카테고리 검색 섹션 */
@@ -67,8 +61,16 @@
 
 .category > div:first-child {
   font-weight: 600;
-  color: #61bd48;
+  color: #2e7d32;
   min-width: 120px;
+}
+
+.category input {
+  border-radius: 12px;
+}
+
+.category button {
+  border-radius: 12px;
 }
 
 /* 게시판 섹션 */
