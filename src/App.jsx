@@ -23,6 +23,7 @@ import MemberQnA from './page/MemberQnA'
 import MessageList from './components/message/MessageList'
 import MessageDetail from './components/message/MessageDetail'
 import MessageWrite from './components/message/MessageWrite'
+import AdminPage from './page/AdminPage'
 
 
 
@@ -55,13 +56,13 @@ function App() {
         <Route path='/messages/:messageId' element={<MessageDetail />} />
         <Route path='/messages/write' element={<MessageWrite />} />
 
-        <Route path='/admin' element={ <AdminBoard /> }>
-          <Route path='member' element={<AdminMember />} />
-        </Route>
         <Route path='/find' element={ <Find /> } />
-        <Route path='/adminQnA' element={ <AdminQnA /> } />
-        <Route path='/adminboard' element={ <AdminBoard /> } />
-        <Route path='/adminmember' element={ <AdminMember /> } />
+
+        <Route path='/admin' element={ <AdminPage /> }>
+          <Route path='QnA' element={ <AdminQnA /> } />
+          <Route path='board' element={ <AdminBoard /> } />
+          <Route path='member' element={ <AdminMember /> } />
+        </Route>
 
       </Routes>
   
