@@ -1,137 +1,207 @@
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './AdminMember.module.css';
 import Button from '../common/Button';
 import Modal from '../common/Modal';
 import axios from 'axios';
+import Input from '../common/Input';
+import Select from '../common/Select';
 
 const AdminMember = () => {
   const nav = useNavigate();
-  // 1. 단순화된 상태 관리
-  const [members, setMembers] = useState([]); // 회원 목록
-  const [selected, setSelected] = useState(null); // 선택된 회원
-  const [showModal, setShowModal] = useState(false); // 모달 표시 여부
-  const [searchText, setSearchText] = useState(''); // 검색어
 
-  // 2. 단순화된 관리자 체크
+  //회원 목록 저장할 state 변수
+  const [members, setMembers] = useState([]);
+
+  //모달 열림 여부 저장할 state 변수
+  const [showModal, setShowModal] = useState(false);
+
+  //선택한 회원 정보를 저장할 state 변수
+  const [selectedMember, setSelectedMember] = useState(null);
+
+  //필터 옵션 저장할 state 변수
+  const [filter, setFilter] = useState({
+    searchType: '', // 검색 타입 (이메일, 이름, 등급)
+    searchText: ''  // 검색어
+  });
+
+  //마운트 될 때마다 회원 목록 조회
   useEffect(() => {
-    const loginInfo = sessionStorage.getItem('loginInfo');
-    if(!loginInfo) {
-      alert('로그인이 필요합니다');
-      nav('/');
-      return;
-    }
-
-    const { memGrade } = JSON.parse(loginInfo);
-    if(memGrade !== 'ADMIN') {
-      alert('관리자만 접근 가능합니다');
-      nav('/');
-    }
+    axios.get('/api/members/admin')
+    .then(res => {
+      setMembers(res.data);
+      console.log(res.data);
+    })
+    .catch(e => console.log(e))
   }, []);
 
-  // 3. 회원 목록 조회 - headers/token 제거
-  const getMembers = () => {
-    axios.get('/api/member')
-      .then(res => {
-        setMembers(res.data);
-      })
-      .catch(error => {
-        alert('회원 목록 조회에 실패했습니다');
-      });
+  //필터 조건 변경 함수
+  const handleFilterChange = (e) => {
+    setFilter(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
   };
 
-  useEffect(() => {
-    getMembers();
-  }, []);
-
-  // 4. 회원 삭제 처리 - headers/token 제거
-  const handleMemberDelete = (id) => {
-    if(!window.confirm('회원을 삭제하시겠습니까?')) return;
-
-    axios.delete(`/api/member/${id}`)
-      .then(() => {
-        alert('삭제되었습니다');
-        getMembers();
-      })
-      .catch(() => {
-        alert('삭제 실패');
-      });
+  //필터 초기화 함수
+  const handleFilterReset = () => {
+    setFilter({
+      searchType: '',
+      searchText: ''
+    });
   };
 
-  // 5. 검색 기능
-  const filteredMembers = members.filter(member => 
-    member.name?.toLowerCase().includes(searchText.toLowerCase()) ||
-    member.email?.toLowerCase().includes(searchText.toLowerCase())
-  );
+  //새로고침 함수
+  const handleRefresh = () => {
+    axios.get('/api/members/admin')
+    .then(res => {
+      setMembers(res.data);
+      console.log(res.data);
+    })
+    .catch(e => console.log(e));
+  };
+
+  //필터링된 회원 목록
+  const filteredMembers = members.filter(member => {
+    // 검색어가 없으면 모든 회원 표시
+    if (!filter.searchText.trim()) {
+      return true;
+    }
+
+    const searchQuery = filter.searchText.toLowerCase();
+
+    // 검색 타입에 따른 필터링
+    if (filter.searchType === '' || filter.searchType === 'all') {
+      // 전체 검색
+      return (
+        member.memId?.toLowerCase().includes(searchQuery) ||
+        member.memName?.toLowerCase().includes(searchQuery) ||
+        member.memEmail?.toLowerCase().includes(searchQuery) ||
+        member.memTell?.includes(filter.searchText)
+      );
+    } else if (filter.searchType === 'email') {
+      return member.memEmail?.toLowerCase().includes(searchQuery);
+    } else if (filter.searchType === 'name') {
+      return member.memName?.toLowerCase().includes(searchQuery);
+    } else if (filter.searchType === 'id') {
+      return member.memId?.toLowerCase().includes(searchQuery);
+    }
+
+    return true;
+  });
+
+  //회원 삭제 함수
+  const handleDeleteMember = (memId) => {
+    if(!window.confirm('정말로 삭제하시겠습니까?')) return;
+
+    axios.delete(`/api/members/${memId}`)
+    .then(() => {
+      alert('삭제되었습니다.');
+      handleRefresh(); // 목록 새로고침
+    })
+    .catch(e => {
+      console.log(e);
+      alert('삭제에 실패했습니다.');
+    });
+  };
+
+  const handleOpenModal = (member) => {
+    setSelectedMember(member);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedMember(null);
+  };
 
   return (
     <div className={styles.container}>
-      <h2>회원 관리</h2>
+      <div className={styles.header}>
+        <h2>회원 관리</h2>
+        <div className={styles.memberCount}>
+          검색 결과: {filteredMembers.length}명 / 전체: {members.length}명
+        </div>
+      </div>
       
-      {/* 6. 검색 UI */}
+      {/* 검색 영역 */}
       <div className={styles.searchBox}>
-        <input
+        <Select 
+          name="searchType"
+          value={filter.searchType}
+          onChange={handleFilterChange}
+        >
+          <option value="">전체</option>
+          <option value="id">아이디</option>
+          <option value="name">이름</option>
+          <option value="email">이메일</option>
+        </Select>
+        <Input
           type="text"
-          placeholder="이름 또는 이메일 검색"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+          name="searchText"
+          placeholder="검색어를 입력하세요"
+          value={filter.searchText}
+          onChange={handleFilterChange}
         />
-        <Button title="새로고침" onClick={getMembers} />
+        <Button title="초기화" onClick={handleFilterReset} />
+        <Button title="새로고침" onClick={handleRefresh} />
       </div>
 
-      {/* 7. 회원 목록 테이블 */}
+      {/* 회원 목록 테이블 */}
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>이메일</th>
+            <th>아이디</th>
             <th>이름</th>
+            <th>휴대폰 번호</th>
+            <th>이메일</th>
             <th>가입일</th>
             <th>관리</th>
           </tr>
         </thead>
         <tbody>
-          {filteredMembers.map(member => (
-            <tr key={member.id}>
-              <td>{member.id}</td>
-              <td>{member.email}</td>
-              <td>{member.name}</td>
-              <td>{new Date(member.createdAt).toLocaleDateString()}</td>
-              <td>
-                <Button 
-                  title="상세보기" 
-                  onClick={() => {
-                    setSelected(member);
-                    setShowModal(true);
-                  }}
-                />
-                <Button 
-                  title="삭제" 
-                  onClick={() => handleMemberDelete(member.id)}
-                />
+          {filteredMembers.length > 0 ? (
+            filteredMembers.map((member, i) => (
+              <tr key={i}>
+                <td>{member.memId}</td>
+                <td>{member.memName}</td>
+                <td>{member.memTell}</td>
+                <td>{member.memEmail}</td>
+                <td>{new Date(member.memRegdate).toLocaleDateString()}</td>
+                <td>
+                  <Button title="상세보기" onClick={() => handleOpenModal(member)} />
+                  <Button title="삭제" onClick={() => handleDeleteMember(member.memId)} />
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="6" style={{textAlign: 'center', padding: '20px'}}>
+                조회된 회원이 없습니다.
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
 
-      {/* 8. 상세 정보 모달 */}
-      {showModal && selected && (
-        <Modal 
-          title="회원 상세정보" 
-          onClose={() => setShowModal(false)}
-        >
-          <div>
-            <p>이메일: {selected.email}</p>
-            <p>이름: {selected.name}</p>
-            <p>가입일: {new Date(selected.createdAt).toLocaleDateString()}</p>
-            <Button 
-              title="닫기" 
-              onClick={() => setShowModal(false)} 
-            />
-          </div>
-        </Modal>
-      )}
+      {/* 상세 정보 모달 */}
+      <Modal 
+        title="회원 상세정보" 
+        isOpen={showModal}
+        onClose={handleCloseModal}
+        size="600px"
+      >
+        <div>
+          <p>아이디: {selectedMember?.memId}</p>
+          <p>이름: {selectedMember?.memName}</p>
+          <p>이메일: {selectedMember?.memEmail}</p>
+          <p>전화번호: {selectedMember?.memTell}</p>
+          <p>주소: {selectedMember?.memAddr}</p>
+          <p>등급: {selectedMember?.memGrade}</p>
+          <p>가입일: {selectedMember && new Date(selectedMember.memRegdate).toLocaleDateString()}</p>
+          <Button title="닫기" onClick={handleCloseModal} />
+        </div>
+      </Modal>
     </div>
   );
 };
