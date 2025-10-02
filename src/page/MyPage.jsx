@@ -7,10 +7,6 @@ const MyPage = () => {
 
   return (
     <div className={styles.container}>
-      {/* 사이드 메뉴 */}
-      <div>
-        <MyPageSideLayout />
-      </div>
 
       {/* 오른쪽 콘텐츠 영역 */}
       <div className={styles.size}>

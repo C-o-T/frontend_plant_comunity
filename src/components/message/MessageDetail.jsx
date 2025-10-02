@@ -9,21 +9,33 @@ const MessageDetail = () => {
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // 로그인 정보 가져오기
+  const loginInfo = JSON.parse(sessionStorage.getItem('loginInfo'));
+  const memberId = loginInfo?.memId;
+
   useEffect(() => {
+    if (!memberId) {
+      alert('로그인이 필요합니다.');
+      navigate('/');
+      return;
+    }
     fetchMessageDetail();
-  }, [messageId]);
+  }, [messageId, memberId]);
 
   const fetchMessageDetail = async () => {
     try {
-      const response = await axios.get(`/messages/${messageId}`);
+      console.log('쪽지 조회 요청:', messageId); // 디버깅
+      const response = await axios.get(`/api/messages/${messageId}`);
+      console.log('쪽지 조회 응답:', response.data); // 디버깅
       setMessage(response.data);
     } catch (error) {
       console.error('쪽지 조회 실패:', error);
+      console.error('에러 상세:', error.response?.data); // 디버깅
       if (error.response?.status === 401) {
         alert('로그인이 필요합니다.');
         navigate('/');
       } else {
-        alert('쪽지를 불러올 수 없습니다.');
+        alert(`쪽지를 불러올 수 없습니다.\n${error.response?.data || error.message}`);
         navigate('/messages');
       }
     } finally {
@@ -35,7 +47,7 @@ const MessageDetail = () => {
     if (!window.confirm('쪽지를 삭제하시겠습니까?')) return;
 
     try {
-      await axios.delete(`/messages/${messageId}`);
+      await axios.delete(`/api/messages/${messageId}/${memberId}`);
       alert('쪽지가 삭제되었습니다.');
       navigate('/messages');
     } catch (error) {
@@ -86,7 +98,7 @@ const MessageDetail = () => {
             <span className={styles.sender}>
               보낸 사람: <strong>{message.senderName}</strong> ({message.senderId})
             </span>
-            <span className={styles.date}>{message.sendDate}</span>
+            <span className={styles.date}>{message.createdAt}</span>
           </div>
         </div>
         <div className={styles.message_body}>
