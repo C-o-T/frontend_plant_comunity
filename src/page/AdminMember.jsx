@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './AdminMember.module.css';
 import Button from '../common/Button';
@@ -12,6 +12,10 @@ const AdminMember = () => {
 
   //회원 목록 저장할 state 변수
   const [members, setMembers] = useState([]);
+  //삭제된 회원 목록 저장할 state 변수
+  const [deletedMembers, setDeletedMembers] = useState([]);
+  //현재 보고 있는 회원 유형 (active 또는 deleted)
+  const [viewType, setViewType] = useState('active');
 
   //모달 열림 여부 저장할 state 변수
   const [showModal, setShowModal] = useState(false);
@@ -27,13 +31,28 @@ const AdminMember = () => {
 
   //마운트 될 때마다 회원 목록 조회
   useEffect(() => {
-    axios.get('/api/members/admin')
-    .then(res => {
-      setMembers(res.data);
-      console.log(res.data);
-    })
-    .catch(e => console.log(e))
-  }, []);
+    fetchMembers();
+  }, [viewType]);
+
+  // 회원 목록 조회 함수
+  const fetchMembers = () => {
+    const url = viewType === 'active' 
+      ? '/api/members/admin' 
+      : '/api/members/admin/deleted';
+    
+    axios.get(url)
+      .then(res => {
+        if (viewType === 'active') {
+          setMembers(res.data);
+        } else {
+          setDeletedMembers(res.data);
+        }
+      })
+      .catch(e => {
+        console.log(e);
+        alert('회원 목록 조회에 실패했습니다.');
+      });
+  };
 
   //필터 조건 변경 함수
   const handleFilterChange = (e) => {
@@ -53,16 +72,16 @@ const AdminMember = () => {
 
   //새로고침 함수
   const handleRefresh = () => {
-    axios.get('/api/members/admin')
-    .then(res => {
-      setMembers(res.data);
-      console.log(res.data);
-    })
-    .catch(e => console.log(e));
+    fetchMembers();
+  };
+
+  // 보기 유형 변경 함수
+  const handleViewTypeChange = (type) => {
+    setViewType(type);
   };
 
   //필터링된 회원 목록
-  const filteredMembers = members.filter(member => {
+  const filteredMembers = (viewType === 'active' ? members : deletedMembers).filter(member => {
     // 검색어가 없으면 모든 회원 표시
     if (!filter.searchText.trim()) {
       return true;
@@ -90,19 +109,42 @@ const AdminMember = () => {
     return true;
   });
 
-  //회원 삭제 함수
+  // 회원 논리적 삭제 함수 (상태 변경)
   const handleDeleteMember = (memId) => {
     if(!window.confirm('정말로 삭제하시겠습니까?')) return;
 
-    axios.delete(`/api/members/${memId}`)
-    .then(() => {
-      alert('삭제되었습니다.');
-      handleRefresh(); // 목록 새로고침
-    })
-    .catch(e => {
-      console.log(e);
-      alert('삭제에 실패했습니다.');
-    });
+    axios.put(`/api/members/admin/${memId}/delete`)
+      .then(res => {
+        if (res.data.success) {
+          alert(res.data.message || '회원이 삭제되었습니다.');
+          handleRefresh(); // 목록 새로고침
+        } else {
+          alert(res.data.message || '삭제에 실패했습니다.');
+        }
+      })
+      .catch(e => {
+        console.log(e);
+        alert('삭제에 실패했습니다.');
+      });
+  };
+
+  // 회원 복구 함수
+  const handleRestoreMember = (memId) => {
+    if(!window.confirm('이 회원을 복구하시겠습니까?')) return;
+
+    axios.put(`/api/members/admin/${memId}/restore`)
+      .then(res => {
+        if (res.data.success) {
+          alert(res.data.message || '회원이 복구되었습니다.');
+          handleRefresh(); // 목록 새로고침
+        } else {
+          alert(res.data.message || '복구에 실패했습니다.');
+        }
+      })
+      .catch(e => {
+        console.log(e);
+        alert('복구에 실패했습니다.');
+      });
   };
 
   const handleOpenModal = (member) => {
@@ -120,8 +162,24 @@ const AdminMember = () => {
       <div className={styles.header}>
         <h2>회원 관리</h2>
         <div className={styles.memberCount}>
-          검색 결과: {filteredMembers.length}명 / 전체: {members.length}명
+          검색 결과: {filteredMembers.length}명 / 전체: {(viewType === 'active' ? members : deletedMembers).length}명
         </div>
+      </div>
+      
+      {/* 탭 메뉴 */}
+      <div className={styles.tabMenu}>
+        <button 
+          className={`${styles.tabButton} ${viewType === 'active' ? styles.active : ''}`}
+          onClick={() => handleViewTypeChange('active')}
+        >
+          활성 회원
+        </button>
+        <button 
+          className={`${styles.tabButton} ${viewType === 'deleted' ? styles.active : ''}`}
+          onClick={() => handleViewTypeChange('deleted')}
+        >
+          삭제된 회원
+        </button>
       </div>
       
       {/* 검색 영역 */}
@@ -156,6 +214,7 @@ const AdminMember = () => {
             <th>휴대폰 번호</th>
             <th>이메일</th>
             <th>가입일</th>
+            <th>상태</th>
             <th>관리</th>
           </tr>
         </thead>
@@ -167,7 +226,15 @@ const AdminMember = () => {
                 <td>{member.memName}</td>
                 <td>{member.memTell}</td>
                 <td>{member.memEmail}</td>
-                <td>{new Date(member.memRegdate).toLocaleDateString()}</td>
+                <td>{new Date(member.joinDate).toLocaleDateString()}</td>
+                <td>
+                  <span className={`${styles.memberStatus} ${styles[member.memStatus?.toLowerCase()]}`}>
+                    {member.memStatus === 'ACTIVE' ? '활성' : 
+                     member.memStatus === 'DELETED' ? '삭제됨' : 
+                     member.memStatus === 'SUSPENDED' ? '정지됨' : 
+                     member.memStatus}
+                  </span>
+                </td>
                 <td>
                   <div className={styles.actionButtons}>
                     <Button
@@ -175,20 +242,30 @@ const AdminMember = () => {
                       onClick={() => handleOpenModal(member)}
                       size="small"
                     />
-                    <Button
-                      title="삭제"
-                      onClick={() => handleDeleteMember(member.memId)}
-                      color="danger"
-                      size="small"
-                    />
+                    {member.memStatus === 'ACTIVE' && (
+                      <Button
+                        title="삭제"
+                        onClick={() => handleDeleteMember(member.memId)}
+                        color="danger"
+                        size="small"
+                      />
+                    )}
+                    {member.memStatus === 'DELETED' && (
+                      <Button
+                        title="복구"
+                        onClick={() => handleRestoreMember(member.memId)}
+                        color="success"
+                        size="small"
+                      />
+                    )}
                   </div>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="6" style={{textAlign: 'center', padding: '20px'}}>
-                조회된 회원이 없습니다.
+              <td colSpan="7" style={{textAlign: 'center', padding: '20px'}}>
+                {viewType === 'active' ? '조회된 회원이 없습니다.' : '삭제된 회원이 없습니다.'}
               </td>
             </tr>
           )}
@@ -209,8 +286,34 @@ const AdminMember = () => {
           <p>전화번호: {selectedMember?.memTell}</p>
           <p>주소: {selectedMember?.memAddr}</p>
           <p>등급: {selectedMember?.memGrade}</p>
-          <p>가입일: {selectedMember && new Date(selectedMember.memRegdate).toLocaleDateString()}</p>
+          <p>상태: {
+            selectedMember?.memStatus === 'ACTIVE' ? '활성' : 
+            selectedMember?.memStatus === 'DELETED' ? '삭제됨' : 
+            selectedMember?.memStatus === 'SUSPENDED' ? '정지됨' : 
+            selectedMember?.memStatus
+          }</p>
+          <p>가입일: {selectedMember && new Date(selectedMember.joinDate).toLocaleDateString()}</p>
           <Button title="닫기" onClick={handleCloseModal} />
+          {selectedMember?.memStatus === 'ACTIVE' && (
+            <Button 
+              title="삭제" 
+              onClick={() => {
+                handleCloseModal();
+                handleDeleteMember(selectedMember.memId);
+              }} 
+              color="danger"
+            />
+          )}
+          {selectedMember?.memStatus === 'DELETED' && (
+            <Button 
+              title="복구" 
+              onClick={() => {
+                handleCloseModal();
+                handleRestoreMember(selectedMember.memId);
+              }} 
+              color="success"
+            />
+          )}
         </div>
       </Modal>
     </div>
