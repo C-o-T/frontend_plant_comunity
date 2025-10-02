@@ -86,19 +86,23 @@ const Board = () => {
               const maxLength = 30;
               return(
                 <div key={i} onClick={() => {nav(`/board/detail/${board.boardNum}`)}}>
-                  <div className={styles.img_div}>{
-                  board.imgList.imgUrl === null ?
-                  cutText(board.content, maxLength)
-                  :
-                  <img src = {board.imgList.imgUrl} className={styles.imgSize}/>
-                  }</div>
-                  <div>{board.memId}</div>
-                  <div>{board.title}</div>
-                  <div className={styles.likeAndComent}>
-                    <i className={"bi bi-heart"}></i>
-                    <span>{board.likeCnt}</span>
-                    <span><i className={"bi bi-chat"}></i></span>
-                    <span>1</span>
+                  <div className={styles.img_div}>
+                    {
+                      board.imgList.imgUrl === null ?
+                      cutText(board.content, maxLength)
+                      :
+                      <img src = {board.imgList.imgUrl} className={styles.imgSize}/>
+                    }
+                  </div>
+                  <div>
+                    <div>{board.memId}</div>
+                    <div>{board.title}</div>
+                    <div className={styles.likeAndComent}>
+                      <i className={"bi bi-heart"}></i>
+                      <span>{board.likeCnt}</span>
+                      <span><i className={"bi bi-chat"}></i></span>
+                      <span>1</span>
+                    </div>
                   </div>
                 </div>
               )

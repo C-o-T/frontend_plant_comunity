@@ -9,15 +9,31 @@ const MessageList = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // 로그인 정보 가져오기
+  const loginInfo = JSON.parse(sessionStorage.getItem('loginInfo'));
+  const memberId = loginInfo?.memId;
+
+  // 로그인 체크
+  useEffect(() => {
+    if (!memberId) {
+      alert('로그인이 필요합니다.');
+      navigate('/');
+    }
+  }, [memberId, navigate]);
+
   // 쪽지 목록 조회
   useEffect(() => {
-    fetchMessages();
-  }, [tab]);
+    if (memberId) {
+      fetchMessages();
+    }
+  }, [tab, memberId]);
 
   const fetchMessages = async () => {
     setLoading(true);
     try {
-      const endpoint = tab === 'received' ? '/messages/received' : '/messages/sent';
+      const endpoint = tab === 'received'
+        ? `/api/messages/box/received/${memberId}`
+        : `/api/messages/box/sent/${memberId}`;
       const response = await axios.get(endpoint);
       // 응답이 배열인지 확인
       if (Array.isArray(response.data)) {
@@ -39,12 +55,12 @@ const MessageList = () => {
   };
 
   // 쪽지 삭제
-  const handleDelete = async (messageId, e) => {
+  const handleDelete = async (msgNum, e) => {
     e.stopPropagation();
     if (!window.confirm('쪽지를 삭제하시겠습니까?')) return;
 
     try {
-      await axios.delete(`/messages/${messageId}`);
+      await axios.delete(`/api/messages/${msgNum}/${memberId}`);
       alert('쪽지가 삭제되었습니다.');
       fetchMessages();
     } catch (error) {
@@ -54,8 +70,8 @@ const MessageList = () => {
   };
 
   // 쪽지 상세 보기
-  const handleMessageClick = (messageId) => {
-    navigate(`/messages/${messageId}`);
+  const handleMessageClick = (msgNum) => {
+    navigate(`/messages/${msgNum}`);
   };
 
   return (
@@ -97,13 +113,13 @@ const MessageList = () => {
         ) : (
           messages.map((message) => (
             <div
-              key={message.messageId}
-              className={`${styles.message_item} ${!message.readYn && tab === 'received' ? styles.unread : ''}`}
-              onClick={() => handleMessageClick(message.messageId)}
+              key={message.msgNum}
+              className={`${styles.message_item} ${!message.isRead && tab === 'received' ? styles.unread : ''}`}
+              onClick={() => handleMessageClick(message.msgNum)}
             >
               <div className={styles.message_header}>
                 <div className={styles.left}>
-                  {!message.readYn && tab === 'received' && (
+                  {!message.isRead && tab === 'received' && (
                     <span className={styles.new_badge}>N</span>
                   )}
                   <span className={styles.name}>
@@ -114,10 +130,10 @@ const MessageList = () => {
                   </span>
                 </div>
                 <div className={styles.right}>
-                  <span className={styles.date}>{message.sendDate}</span>
+                  <span className={styles.date}>{message.createdAt}</span>
                   <button
                     className={styles.delete_btn}
-                    onClick={(e) => handleDelete(message.messageId, e)}
+                    onClick={(e) => handleDelete(message.msgNum, e)}
                   >
                     삭제
                   </button>

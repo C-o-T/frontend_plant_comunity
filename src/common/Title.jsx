@@ -10,7 +10,8 @@ const Title = ({title='제목'}) => {
         marginBottom: '0.7rem',
         margin: '0 0 0.7rem 0',
         color: '#2e7d32',
-        letterSpacing: '-0.3px'
+        letterSpacing: '-0.3px',
+        flexShrink: 0
       }}
     >
       {title}

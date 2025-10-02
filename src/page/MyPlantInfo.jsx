@@ -256,8 +256,10 @@ const MyPlantInfo = () => {
             </>
           ) : (
             <div className={styles.empty_message}>
-              <p>📝</p>
-              <p>선택된 식물 정보 없음</p>
+              <p>
+                <p>📝</p>
+                <p>선택된 식물 정보 없음</p>
+              </p>
             </div>
           )}
         </div>

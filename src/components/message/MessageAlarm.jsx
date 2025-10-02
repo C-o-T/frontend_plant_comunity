@@ -17,7 +17,11 @@ const MessageAlarm = () => {
   useEffect(() => {
     const fetchUnreadCount = async () => {
       try {
-        const response = await axios.get('/messages/unread/count');
+        const loginData = JSON.parse(loginInfo);
+        const memberId = loginData?.memId;
+        if (!memberId) return;
+
+        const response = await axios.get(`/api/messages/unread/count/${memberId}`);
         setUnreadCount(response.data);
       } catch (error) {
         console.error('안 읽은 쪽지 조회 실패:', error);
