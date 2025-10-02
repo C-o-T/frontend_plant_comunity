@@ -13,6 +13,9 @@ const Login = ({isOpenLogin, onClose}) => {
     'memId' : '',
     'memPw' : ''
   });
+  
+  // 로그인 에러 메시지
+  const [loginError, setLoginError] = useState('');
 
   //닫기버튼 또는 로그인 완료 시 입력한 내용을 전체 지우는 함수
   const resetLoginData = () => {
@@ -20,6 +23,7 @@ const Login = ({isOpenLogin, onClose}) => {
       'memId' : '',
       'memPw' : ''
     })
+    setLoginError('');
   }
 
   //로그인 정보 입력시 저장할 함수
@@ -28,55 +32,79 @@ const Login = ({isOpenLogin, onClose}) => {
       ...loginData,
       [e.target.name] : e.target.value
     })
+    setLoginError(''); // 입력 시 에러 메시지 초기화
   }
 
   //로그인 버튼을 누르면 실행할 함수
   const login = () => {
-    axios.get('/api/members/login', {params:loginData})
-    .then(res => {
-      console.log('res.data', res.data)
-      if (res.data) {
-        alert (`${res.data.memName}님 반갑습니다.`)
-        //로그인한 아이디, 이름, 권한 정보를 갖는 객체 생성
-        const loginInfo = {
-          'memId' : res.data.memId,
-          'memName' : res.data.memName,
-          'memGrade' : res.data.memGrade
-        }
-        //로그인한 유저의 정보를 sissionStorage에 저장
-        sessionStorage.setItem('loginInfo', JSON.stringify(loginInfo));
+    // 입력값 검증
+    if (!loginData.memId.trim()) {
+      setLoginError('아이디를 입력해주세요.');
+      return;
+    }
+    if (!loginData.memPw.trim()) {
+      setLoginError('비밀번호를 입력해주세요.');
+      return;
+    }
+    
+    // 먼저 회원 상태 확인
+    axios.get(`/api/members/status/${loginData.memId}`)
+      .then(statusRes => {
+        if (statusRes.data.success) {
+          // 회원 상태에 따른 처리
+          if (statusRes.data.status === 'DELETED') {
+            setLoginError('삭제된 계정입니다. 관리자에게 문의해주세요.');
+            return;
+          } else if (statusRes.data.status === 'SUSPENDED') {
+            setLoginError('정지된 계정입니다. 관리자에게 문의해주세요.');
+            return;
+          }
+          
+          // 회원이 활성 상태인 경우 로그인 진행
+          axios.get('/api/members/login', {params:loginData})
+            .then(res => {
+              if (res.data) {
+                alert (`${res.data.memName}님 반갑습니다.`)
+                //로그인한 아이디, 이름, 권한 정보를 갖는 객체 생성
+                const loginInfo = {
+                  'memId' : res.data.memId,
+                  'memName' : res.data.memName,
+                  'memGrade' : res.data.memGrade
+                }
+                //로그인한 유저의 정보를 sessionStorage에 저장
+                sessionStorage.setItem('loginInfo', JSON.stringify(loginInfo));
 
-        if (res.data.memGrade === 'BUSINESS') {
-          nav('/myfarm')
-          onClose()
-          setLoginData({
-            memId:'',
-            memPw:''
-          })
-        } else if (res.data.memGrade === 'ADMIN') {
-          nav('/admin/qna')
-          onClose()
-          setLoginData({
-            memId:'',
-            memPw:''
-          })
+                if (res.data.memGrade === 'BUSINESS') {
+                  nav('/myfarm/my-plant-info')
+                  onClose()
+                  resetLoginData();
+                } else if (res.data.memGrade === 'ADMIN') {
+                  nav('/admin/qna')
+                  onClose()
+                  resetLoginData();
+                } else {
+                  nav('/board')
+                  onClose()
+                  resetLoginData();
+                }
+              } else {
+                setLoginError('아이디 또는 비밀번호가 잘못 입력되었습니다.');
+              }
+            })
+            .catch(e => {
+              console.log(e);
+              setLoginError('로그인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+            });
         } else {
-          nav('/board')
-          onClose()
-          setLoginData({
-            memId:'',
-            memPw:''
-          })
+          // 회원이 존재하지 않는 경우
+          setLoginError('아이디 또는 비밀번호가 잘못 입력되었습니다.');
         }
-        
-      } else {
-        alert('아이디 또는 비밀번호가 잘못 입력되었습니다.')
-      }
-    })
-    .catch(e=>console.log(e))
+      })
+      .catch(e => {
+        console.log(e);
+        setLoginError('로그인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      });
   }
-  
-  //console.log(loginData)
 
   return (
     <div className={styles.container}>
@@ -110,12 +138,20 @@ const Login = ({isOpenLogin, onClose}) => {
             }}
           />
         </div>
+        
+        {/* 로그인 에러 메시지 */}
+        {loginError && (
+          <div className={styles.error_message}>
+            {loginError}
+          </div>
+        )}
+        
         <div
           className={styles.btn_div}
         >
           <Button 
             title='로그인'
-            onClick={e=>{login(e)}}
+            onClick={login}
           />
         </div>
         <div

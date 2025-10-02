@@ -156,9 +156,26 @@ const AdminBoard = () => {
     });
   };
 
+  // 게시글 상세 조회 함수 수정
   const handleOpenModal = (board) => {
     setSelectedBoard(board);
-    setShowModal(true);
+    
+    // 작성자 상태 확인
+    axios.get(`/api/members/status/${board.memId}`)
+      .then(res => {
+        if (res.data && res.data.success) {
+          // 게시글 정보에 작성자 상태 추가
+          setSelectedBoard(prev => ({
+            ...prev,
+            memberStatus: res.data.status
+          }));
+        }
+        setShowModal(true);
+      })
+      .catch(err => {
+        console.log(err);
+        setShowModal(true);
+      });
   };
 
   const handleCloseModal = () => {
@@ -379,7 +396,12 @@ const AdminBoard = () => {
               </tr>
               <tr>
                 <td className={styles.labelCell}>작성자:</td>
-                <td className={styles.valueCell}>{selectedBoard?.memId}</td>
+                <td className={styles.valueCell}>
+                  {selectedBoard?.memId} 
+                  {selectedBoard?.memberStatus === 'DELETED' && (
+                    <span className={styles.deletedTag}>(회원 삭제됨)</span>
+                  )}
+                </td>
               </tr>
               <tr>
                 <td className={styles.labelCell}>카테고리:</td>
