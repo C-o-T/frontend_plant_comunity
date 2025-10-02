@@ -5,6 +5,7 @@ import Input from '../common/Input';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PageNextAndPrev from '../components/PageNextAndPrev';
+import Select from '../common/Select';
 
 const Board = () => {
   //로그인한 정보 확인
@@ -19,28 +20,77 @@ const Board = () => {
   //페이지 이동하기
   const nav = useNavigate();
 
- 
-  
+  //카테고리 목록
   const [category,setCartegory] = useState([]);
 
-  //글 목록 조회하기
+  //선택된 카테고리 번호
+  const [selectedCateNum, setSelectedCateNum] = useState(null);
+
+  //검색 조건
+  const [searchType, setSearchType] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
+
+
+  //카테고리 목록 조회하기
   useEffect(() => {
-    axios.get('/api/boards/boardList-paging')
+    axios.get('/api/categories')
     .then(res => {
-      setBoardList(res.data.boardList); //글 목록
-      setPageData(res.data.boardDTO);// 페이지 정보
-      
+      setCartegory(res.data);
     })
     .catch(e => console.log(e))
   }, []);
 
-  //페이지 목록 클릭시 목록 재조회 
-  const ClickReloadPage = (page) => {
-    axios.get(`/api/boards/boardList-paging`,{params : {nowPage : page}})
+  //글 목록 조회하기
+  useEffect(() => {
+    const params = selectedCateNum ? { cateNum: selectedCateNum } : {};
+    axios.get('/api/boards/boardList-paging', { params })
     .then(res => {
       setBoardList(res.data.boardList); //글 목록
       setPageData(res.data.boardDTO);// 페이지 정보
-      
+
+    })
+    .catch(e => console.log(e))
+  }, [selectedCateNum]);
+
+  //페이지 목록 클릭시 목록 재조회
+  const ClickReloadPage = (page) => {
+    const params = { nowPage: page };
+    if (selectedCateNum) {
+      params.cateNum = selectedCateNum;
+    }
+    if (searchType && searchKeyword) {
+      params.searchType = searchType;
+      params.searchKeyword = searchKeyword;
+    }
+    axios.get(`/api/boards/boardList-paging`, { params })
+    .then(res => {
+      setBoardList(res.data.boardList); //글 목록
+      setPageData(res.data.boardDTO);// 페이지 정보
+
+    })
+    .catch(e => console.log(e))
+  }
+
+  //카테고리 클릭시 해당 카테고리 게시글 조회
+  const handleCategoryClick = (cateNum) => {
+    setSelectedCateNum(cateNum);
+  }
+
+  //검색 버튼 클릭시 검색 조회
+  const handleSearch = () => {
+    const params = {};
+    if (selectedCateNum) {
+      params.cateNum = selectedCateNum;
+    }
+    if (searchType && searchKeyword) {
+      params.searchType = searchType;
+      params.searchKeyword = searchKeyword;
+    }
+
+    axios.get('/api/boards/boardList-paging', { params })
+    .then(res => {
+      setBoardList(res.data.boardList);
+      setPageData(res.data.boardDTO);
     })
     .catch(e => console.log(e))
   }
@@ -55,19 +105,34 @@ const Board = () => {
   // 데이터 확인
   console.log(boardList);
   //console.log(pageData);
+  console.log(selectedCateNum);
   return (
     <div className='container'>
       <div className = {styles.menu}>
         <ul>
-          <li>정보공유</li>
-          <li>피드</li>
-          <li>지식인</li>
+          {
+            category.length ?
+            category.map((cate, i) => (
+              <li key={i} onClick={() => handleCategoryClick(cate.cateNum)}>
+                {cate.cateName}
+              </li>
+            ))
+            :
+            null
+          }
         </ul>
       </div>
       <div className = {styles.category}>
-        <div>카테고리 검색</div>
-        <Input/>
-        <Button title = '검색'/>
+        <div>
+          <Select value={searchType} onChange={(e) => setSearchType(e.target.value)}>
+            <option value="">전체</option>
+            <option value="memId">작성자</option>
+            <option value="title">제목</option>
+            <option value="titleAndContent">제목 + 내용</option>
+          </Select>
+        </div>
+        <Input value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)}/>
+        <Button title='검색' onClick={handleSearch}/>
       </div>
       <div className = {styles.board}>
         <div>
