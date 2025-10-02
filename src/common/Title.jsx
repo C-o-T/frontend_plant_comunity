@@ -7,7 +7,6 @@ const Title = ({title='제목'}) => {
         fontSize: '1.2rem',
         fontWeight: '600',
         paddingBottom: '3px',
-        marginBottom: '0.7rem',
         margin: '0 0 0.7rem 0',
         color: '#2e7d32',
         letterSpacing: '-0.3px',

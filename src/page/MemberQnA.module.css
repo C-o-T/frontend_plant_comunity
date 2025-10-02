@@ -26,7 +26,10 @@
 .qnaTable thead tr {
   border: none;
 }
-
+.qnaTable thead td {
+  color: white;
+  font-weight: bold;
+}
 .qnaTable th {
   padding: 16px 12px;
   color: white;
@@ -57,4 +60,10 @@
 
 .qnaTable tbody tr:last-child {
   border-bottom: none;
+}
+
+.btn {
+  display: flex;
+  justify-content: end;
+  margin-bottom: 10px;
 }

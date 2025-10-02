@@ -49,5 +49,36 @@
   border-radius: 8px;
 }
 
+/* 일요일 날짜 빨간색 */
+.calendar_div :global(.rbc-date-cell):nth-child(1) button,
+.calendar_div :global(.rbc-date-cell):nth-child(1) a,
+.calendar_div :global(.rbc-date-cell):nth-child(1) {
+  color: #d32f2f !important;
+}
+.calendar_div :global(.rbc-date-cell):nth-child(7n+1) a,
+.calendar_div :global(.rbc-header):nth-child(7n+1) {
+  color: #d32f2f !important;
+}
+
+/* 토요일 날짜 파란색 */
+.calendar_div :global(.rbc-date-cell):nth-child(7) button,
+.calendar_div :global(.rbc-date-cell):nth-child(7) a,
+.calendar_div :global(.rbc-date-cell):nth-child(7) {
+  color: #1976d2 !important;
+}
+.calendar_div :global(.rbc-date-cell):nth-child(7n) a,
+.calendar_div :global(.rbc-header):nth-child(7n) {
+  color: #1976d2 !important;
+}
+
+/* 전체 날짜 셀에 적용 */
+.calendar_div :global(.rbc-month-row) :global(.rbc-date-cell):nth-child(1) {
+  color: #d32f2f !important;
+}
+
+.calendar_div :global(.rbc-month-row) :global(.rbc-date-cell):nth-child(7) {
+  color: #1976d2 !important;
+}
+
 
 

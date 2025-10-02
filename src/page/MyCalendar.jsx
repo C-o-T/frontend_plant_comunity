@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import WateringPlan from '../components/WateringPlan';
 import DeletePlan from '../components/DeletePlan';
 import { useNavigate } from 'react-router-dom';
+import Holidays from 'date-holidays';
 
 //moment 로컬라이저 설정
 moment.locale("ko"); //한국어로 설정
@@ -69,6 +70,27 @@ const MyCalendar = () => {
     return [];
   });
 
+  // 한국 공휴일 생성
+  const [holidays, setHolidays] = useState([]);
+
+  useEffect(() => {
+    const hd = new Holidays('KR'); // 한국 공휴일
+    const year = new Date().getFullYear();
+    const holidayList = hd.getHolidays(year);
+
+    const holidayEvents = holidayList.map(holiday => ({
+      id: `holiday-${holiday.date}`,
+      title: holiday.name,
+      start: new Date(holiday.date),
+      end: new Date(holiday.date),
+      allDay: true,
+      color: '#FF6B6B', // 공휴일은 빨간색으로 표시
+      isHoliday: true // 공휴일 구분 플래그
+    }));
+
+    setHolidays(holidayEvents);
+  }, []);
+
   
   // console.log(memId)
   // console.log(sessionStorage);
@@ -104,7 +126,7 @@ const MyCalendar = () => {
   // 이벤트 스타일 지정 함수
   const eventStyleGetter = (event) => {
     const style = {
-      backgroundColor: event.color || '#3174ad',
+      backgroundColor: event.color,
       borderRadius: '4px',
       opacity: 0.8,
       color: 'white',
@@ -155,6 +177,8 @@ const MyCalendar = () => {
 
   //이벤트 선택 핸들러 (삭제 옵션)
   const handleSelectEvent = (event) => {
+    // 공휴일은 삭제 모달을 띄우지 않음
+    if (event.isHoliday) return;
     setSelectedEvent(event); // 클릭된 이벤트 정보를 상태에 저장
   };
   
@@ -176,7 +200,7 @@ const MyCalendar = () => {
       <div className={styles.calendar_div}>
         <Calendar
           localizer={localizer}
-          events={events}
+          events={[...events, ...holidays]}
           startAccessor="start"
           endAccessor="end"
           style={{height:500}}

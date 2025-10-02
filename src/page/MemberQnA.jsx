@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import styles from './MemberQnA.module.css'
 import Title from '../common/Title';
 import axios from 'axios';
+import Button from '../common/Button'
+import dayjs from 'dayjs'
 
 const MemberQnA = () => {
   const nav = useNavigate();
@@ -28,22 +30,29 @@ const MemberQnA = () => {
     const memId = loginData.memId;  // loginInfo 구조에 맞게 수정
 
     //문의 내역을 조회해올 axios
-    // axios.get()
-    // .then(res=>
-    //   setQnaList(res.data)
-    // )
-    // .catch(e=>{
-    //   setQnaList([])
-    // })
+    axios.get(`/api/qna/${memId}`)
+    .then(res=>
+      setQnaList(res.data)
+    )
+    .catch(e=>{
+      setQnaList([])
+    })
   }, []);
 
-  
+  console.log(qnaList)
 
   return (
     <div className={styles.container}>
       <Title
         title='1:1문의내역'
       />
+      <p className={styles.btn}>
+        <Button 
+          title='1:1 문의하기'
+          size='120px'
+          onClick={()=>nav('/qnaboard')}
+        />
+      </p>
       <table className={styles.qnaTable}>
         <thead>
           <tr>
@@ -57,27 +66,24 @@ const MemberQnA = () => {
         </thead>
         <tbody>
           {
-            qnaList.length === 0 
-            ? 
+            qnaList.length === 0
+            ?
             <tr>
               <td colSpan="6">
                 문의 내역이 없습니다.
               </td>
             </tr>
-            : 
-            qnaList.map((qna,i)=>{
-              return(
-                
-                <tr key={i}>
-                  <td>{qna.qnaNum}</td>
-                  <td>{qna.cateNum}</td>
-                  <td>{qna.title}</td>
-                  <td>{qna.memId}</td>
-                  <td>{qna.createDate}</td>
-                  <td>{qna.qnaStatus}</td>
-                </tr>
-              );
-            })
+            :
+            qnaList.map((qna) => (
+              <tr key={qna.qnaNum} onClick={() => nav(`/qna/${qna.qnaNum}`)} style={{cursor: 'pointer'}}>
+                <td>{qna.qnaNum}</td>
+                <td>{qna.qnaCategory.cateName}</td>
+                <td>{qna.title}</td>
+                <td>{qna.memId}</td>
+                <td>{dayjs(qna.createDate).format('YYYY-MM-DD')}</td>
+                <td>{qna.qnaStatus}</td>
+              </tr>
+            ))
           }
         </tbody>
       </table>
