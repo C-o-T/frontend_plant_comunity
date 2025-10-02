@@ -21,10 +21,12 @@ import AdminMember from './page/AdminMember'
 import BoardDetail from './page/BoardDetail'
 import UpdateBoard from './page/UpdateBoard'
 import MemberQnA from './page/MemberQnA'
+import MemberQnADetail from './page/MemberQnADetail'
 import MessageList from './components/message/MessageList'
 import MessageDetail from './components/message/MessageDetail'
 import MessageWrite from './components/message/MessageWrite'
 import AdminPage from './page/AdminPage'
+import MemberQnaBoard from './page/MemberQnaBoard'
 
 
 function App() {
@@ -51,6 +53,8 @@ function App() {
         </Route>
 
         <Route path='/qna' element={<MemberQnA />} />
+        <Route path='/qna/:qnaNum' element={<MemberQnADetail />} />
+        <Route path='/qnaboard' element={<MemberQnaBoard />} />
 
         <Route path='/messages' element={<MessageList />} />
         <Route path='/messages/:messageId' element={<MessageDetail />} />

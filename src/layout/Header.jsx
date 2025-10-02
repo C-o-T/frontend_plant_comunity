@@ -176,6 +176,13 @@ const Header = () => {
               <ul className={styles.admin_menu}>
                 <li>
                   <NavLink
+                    to={'/board'}
+                  >
+                    커뮤니티
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
                     to={'/admin/QnA'}
                   >
                     1:1 문의 관리
