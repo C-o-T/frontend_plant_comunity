@@ -13,17 +13,21 @@ import { useNavigate } from 'react-router-dom'
       return <Input ref = {ref} {...props}/>
    })
 const WriteBoard = () => {
+   //로그인한 정보 확인
+   const loginInfo = sessionStorage.getItem('loginInfo');
+   const currentUserId = loginInfo ? JSON.parse(loginInfo).memId : null;
 
-   const nav = useNavigate()
+   //페이지 이동
+   const nav = useNavigate();
+
    //글쓰기 등록할때 저장 할 변수
    const [insertBoard, setInsertBoard] = useState({
         title : ''
       , content : ''
       , cateNum : ''
-      , memId : 'aaaa'
+      , memId : currentUserId
    });
 
-   //
    const quillRef = useRef(null);
    const fileInsert = useRef(null);
 
@@ -35,7 +39,6 @@ const WriteBoard = () => {
 
    //글쓰기 등록 함수
    const writeBoard = () => {
-
       axios
          .post('/api/boards',insertBoard)
          .then(response => {
@@ -126,6 +129,11 @@ const WriteBoard = () => {
    'header', 'bold', 'underline', 'list', 'bullet', 'image'
    ], []);
 
+   //등록 버튼 활성화 조건
+   const isFormValid = insertBoard.title.trim() !== '' &&
+                       insertBoard.content.trim() !== '' &&
+                       insertBoard.cateNum !== '';
+
    //데이터 확인
    console.log(insertBoard);
    console.log(img)
@@ -144,9 +152,13 @@ const WriteBoard = () => {
                </Select>
             </div>
             <div>
-               <Button title={'등록'} onClick = {e => {
-                  writeBoard();
-                  }}/>
+               <Button
+                  title={'등록'}
+                  onClick = {e => {
+                     writeBoard();
+                  }}
+                  disabled={!isFormValid}
+               />
             </div>
          </div>
          <div>
