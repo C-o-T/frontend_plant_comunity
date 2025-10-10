@@ -29,3 +29,8 @@
   background: #f1f8e9;
   transition: background 0.2s ease;
 }
+
+.searchAddr {
+  display: flex;
+  gap: 10px;
+}
