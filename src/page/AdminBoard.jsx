@@ -21,10 +21,10 @@ const AdminBoard = () => {
 
   //필터 옵션 저장할 state 변수
   const [filter, setFilter] = useState({
-    searchType: '',  // 검색 타입 (제목, 내용, 작성자)
-    searchText: '',  // 검색어
-    pageSize: '10',  // 페이지당 게시글 수
-    sortOrder: 'desc' // 정렬 순서 (desc: 최신순, asc: 오래된순)
+    searchType: '',
+    searchText: '',
+    pageSize: '10',
+    sortOrder: 'desc'
   });
 
   //현재 페이지 번호
@@ -40,7 +40,7 @@ const AdminBoard = () => {
     axios.get('/api/boards/boardList')
     .then(res => {
       setBoards(res.data);
-      console.log(res.data);
+      console.log('게시글 목록:', res.data);
     })
     .catch(e => {
       console.log(e);
@@ -158,22 +158,31 @@ const AdminBoard = () => {
 
   // 게시글 상세 조회 함수 수정
   const handleOpenModal = (board) => {
-    setSelectedBoard(board);
-    
-    // 작성자 상태 확인
-    axios.get(`/api/members/status/${board.memId}`)
+    // boardDetail 엔드포인트 사용
+    axios.get(`/api/boards/boardDetail/${board.boardNum}`)
       .then(res => {
-        if (res.data && res.data.success) {
-          // 게시글 정보에 작성자 상태 추가
+        console.log('게시글 상세 정보:', res.data);
+        setSelectedBoard(res.data);
+        
+        // 작성자 상태 확인
+        return axios.get(`/api/members/status/${res.data.memId}`);
+      })
+      .then(statusRes => {
+        if (statusRes.data && statusRes.data.success) {
           setSelectedBoard(prev => ({
             ...prev,
-            memberStatus: res.data.status
+            memberStatus: statusRes.data.status
           }));
         }
         setShowModal(true);
       })
       .catch(err => {
-        console.log(err);
+        console.log('상세 조회 에러:', err);
+        console.log('에러 응답:', err.response);
+        
+        // 에러가 나도 모달은 열고 목록 데이터 사용
+        alert('상세 정보를 불러올 수 없어 목록 정보를 표시합니다.');
+        setSelectedBoard(board);
         setShowModal(true);
       });
   };
@@ -388,16 +397,16 @@ const AdminBoard = () => {
             <tbody>
               <tr>
                 <td className={styles.labelCell}>번호:</td>
-                <td className={styles.valueCell}>{selectedBoard?.boardNum}</td>
+                <td className={styles.valueCell}>{selectedBoard?.boardNum || '-'}</td>
               </tr>
               <tr>
                 <td className={styles.labelCell}>제목:</td>
-                <td className={styles.valueCell}>{selectedBoard?.title}</td>
+                <td className={styles.valueCell}>{selectedBoard?.title || '-'}</td>
               </tr>
               <tr>
                 <td className={styles.labelCell}>작성자:</td>
                 <td className={styles.valueCell}>
-                  {selectedBoard?.memId} 
+                  {selectedBoard?.memId || '-'} 
                   {selectedBoard?.memberStatus === 'DELETED' && (
                     <span className={styles.deletedTag}>(회원 삭제됨)</span>
                   )}
@@ -405,44 +414,75 @@ const AdminBoard = () => {
               </tr>
               <tr>
                 <td className={styles.labelCell}>카테고리:</td>
-                <td className={styles.valueCell}>{selectedBoard?.cateNum}</td>
+                <td className={styles.valueCell}>
+                  {selectedBoard?.cateNum 
+                    ? getCategoryName(selectedBoard.cateNum)
+                    : '카테고리 없음'
+                  }
+                </td>
               </tr>
               <tr>
                 <td className={styles.labelCell}>작성일:</td>
                 <td className={styles.valueCell}>
-                  {selectedBoard && new Date(selectedBoard.createDate).toLocaleDateString()}
+                  {selectedBoard?.createDate 
+                    ? new Date(selectedBoard.createDate).toLocaleDateString()
+                    : '-'
+                  }
                 </td>
               </tr>
               <tr>
                 <td className={styles.labelCell}>조회수:</td>
-                <td className={styles.valueCell}>{selectedBoard?.readCnt}</td>
+                <td className={styles.valueCell}>{selectedBoard?.readCnt || 0}</td>
               </tr>
               <tr>
                 <td className={styles.labelCell}>좋아요:</td>
-                <td className={styles.valueCell}>{selectedBoard?.likeCnt}</td>
+                <td className={styles.valueCell}>{selectedBoard?.likeCnt || 0}</td>
               </tr>
               <tr>
                 <td className={styles.labelCell}>싫어요:</td>
-                <td className={styles.valueCell}>{selectedBoard?.dislikeCnt}</td>
+                <td className={styles.valueCell}>{selectedBoard?.dislikeCnt || 0}</td>
               </tr>
               <tr>
                 <td className={styles.labelCell} style={{verticalAlign: 'top'}}>내용:</td>
                 <td className={styles.valueCell}>
-                  <div 
-                    className={styles.content}
-                    dangerouslySetInnerHTML={{ __html: selectedBoard?.content || '' }}
-                  />
+                  {selectedBoard?.content ? (
+                    <div 
+                      className={styles.content}
+                      dangerouslySetInnerHTML={{ __html: selectedBoard.content }}
+                    />
+                  ) : (
+                    <div className={styles.noContent}>내용이 없습니다.</div>
+                  )}
                 </td>
               </tr>
             </tbody>
           </table>
           <div className={styles.modalButtons}>
             <Button title="닫기" onClick={handleCloseModal} />
+            <Button 
+              title="삭제" 
+              onClick={() => {
+                handleDeleteBoard(selectedBoard?.boardNum);
+                handleCloseModal();
+              }}
+              color="danger"
+            />
           </div>
         </div>
       </Modal>
     </div>
   );
+};
+
+// 카테고리 번호를 카테고리명으로 변환하는 함수 추가
+const getCategoryName = (cateNum) => {
+  const categoryMap = {
+    1: '자유게시판',
+    2: '질문게시판',
+    3: '정보공유',
+    4: '후기/리뷰'
+  };
+  return categoryMap[cateNum] || `카테고리 ${cateNum}`;
 };
 
 export default AdminBoard;
