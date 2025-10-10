@@ -65,11 +65,12 @@ const Login = ({isOpenLogin, onClose}) => {
             .then(res => {
               if (res.data) {
                 alert (`${res.data.memName}님 반갑습니다.`)
-                //로그인한 아이디, 이름, 권한 정보를 갖는 객체 생성
+                //로그인한 아이디, 이름, 권한, 주소 정보를 갖는 객체 생성
                 const loginInfo = {
                   'memId' : res.data.memId,
                   'memName' : res.data.memName,
-                  'memGrade' : res.data.memGrade
+                  'memGrade' : res.data.memGrade,
+                  'memAddr' : res.data.memAddr || ''
                 }
                 //로그인한 유저의 정보를 sessionStorage에 저장
                 sessionStorage.setItem('loginInfo', JSON.stringify(loginInfo));

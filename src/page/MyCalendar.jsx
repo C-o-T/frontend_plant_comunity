@@ -9,6 +9,7 @@ import WateringPlan from '../components/WateringPlan';
 import DeletePlan from '../components/DeletePlan';
 import { useNavigate } from 'react-router-dom';
 import Holidays from 'date-holidays';
+import Weather from '../components/Weather';
 
 //moment 로컬라이저 설정
 moment.locale("ko"); //한국어로 설정
@@ -195,7 +196,11 @@ const MyCalendar = () => {
 
   return (
     <div className={styles.container}>
-      
+      {/* 날씨 */}
+      <div className={styles.weather_section}>
+        <Weather />
+      </div>
+
       {/* 캘린더 */}
       <div className={styles.calendar_div}>
         <Calendar
