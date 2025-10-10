@@ -32,12 +32,32 @@ const AdminQnA = () => {
     qnaStatus: ''   // 답변 상태
   });
 
-  // 카테고리 매핑
-  const categoryMap = {
-    1: '식물관리',
-    2: '기술문의', 
-    3: '계정문의',
-    4: '기타문의'
+  // 카테고리 목록 저장할 state 변수
+  const [categories, setCategories] = useState([]);
+
+  //마운트 될 때마다 카테고리 목록과 문의 목록 조회
+  useEffect(() => {
+    getCategories();
+    getQnaList();
+  }, []);
+
+  //카테고리 목록 조회 함수
+  const getCategories = () => {
+    axios.get('/api/qna/categories')
+      .then(res => {
+        setCategories(res.data || []);
+      })
+      .catch(e => {
+        console.log(e);
+        alert('카테고리 목록 조회에 실패했습니다.');
+        setCategories([]);
+      });
+  };
+
+  //카테고리 번호로 카테고리 이름 찾는 함수
+  const getCategoryName = (cateNum) => {
+    const category = categories.find(cat => cat.cateNum === cateNum);
+    return category ? category.cateName : '알 수 없음';
   };
 
   //마운트 될 때마다 문의 목록 조회
@@ -254,11 +274,11 @@ const AdminQnA = () => {
     const processing = qnaList.filter(qna => qna.qnaStatus === '답변중').length;
     const completed = qnaList.filter(qna => qna.qnaStatus === '답변완료').length;
 
-    // 카테고리별 통계
-    const categoryStats = Object.keys(categoryMap).map(key => {
-      const count = qnaList.filter(qna => qna.cateNum === parseInt(key)).length;
+    // 카테고리별 통계 (동적)
+    const categoryStats = categories.map(category => {
+      const count = qnaList.filter(qna => qna.cateNum === category.cateNum).length;
       return {
-        name: categoryMap[key],
+        name: category.cateName,
         count: count,
         percentage: total > 0 ? Math.round((count / total) * 100) : 0
       };
@@ -357,10 +377,11 @@ const AdminQnA = () => {
           onChange={handleFilterChange}
         >
           <option value="">전체 카테고리</option>
-          <option value="1">식물관리</option>
-          <option value="2">기술문의</option>
-          <option value="3">계정문의</option>
-          <option value="4">기타문의</option>
+          {categories.map(category => (
+            <option key={category.cateNum} value={category.cateNum}>
+              {category.cateName}
+            </option>
+          ))}
         </Select>
         <Select 
           name="qnaStatus"
@@ -395,7 +416,7 @@ const AdminQnA = () => {
             filteredQnaList.map((qna, i) => (
               <tr key={i}>
                 <td>{qna.qnaNum}</td>
-                <td>{categoryMap[qna.cateNum]}</td>
+                <td>{getCategoryName(qna.cateNum)}</td>
                 <td>
                   <span 
                     className={styles.titleLink}
@@ -462,7 +483,9 @@ const AdminQnA = () => {
               </tr>
               <tr>
                 <td className={styles.labelCell}>카테고리:</td>
-                <td className={styles.valueCell}>{categoryMap[selectedQna?.cateNum]}</td>
+                <td className={styles.valueCell}>
+                  {getCategoryName(selectedQna?.cateNum)}
+                </td>
               </tr>
               <tr>
                 <td className={styles.labelCell}>제목:</td>

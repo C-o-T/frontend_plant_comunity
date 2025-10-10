@@ -6,8 +6,25 @@ import Button from '../common/Button'
 import styles from './Join.module.css'
 import { handleErrorMsg } from '../validate/joinValidate'
 import axios from 'axios'
+import { useDaumPostcodePopup } from 'react-daum-postcode'
 
 const Join = ({isOpenJoin, onClose}) => {
+
+  //다음 주소록 팝업 생성 함수
+  const open = useDaumPostcodePopup('//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js');
+
+  //주소검색 버튼 클릭시 실행할 함수
+  const handlePost = () => {
+    open({onComplete : (data) => {
+            //매개변수 data 안에 선택한 주소의 모든 정보가 객체형태로 들어있음
+            setJoinData({
+              ...joinData,
+              'memAddr' : data.address //도로명 주소
+            });
+          }})
+  }
+
+
   //회원가입시 입력한 내용을 저장할 useState 변수
   const [joinData, setJoinData] = useState({
     'memGrade' : 'USER',
@@ -369,21 +386,29 @@ const Join = ({isOpenJoin, onClose}) => {
             />
           </div>
           <p className={styles.errMsg}>{errorMsg.memName}</p>
-          <div className={styles.display_div}>
+          <div className={`${styles.display_div} ${styles.input_size}`}>
             <p>주소</p>
             <Input type="text"
               name='memAddr'
               value={joinData.memAddr}
               onChange={(e)=>{handleJoin(e)}}
+              readOnly
+              placeholder="주소 검색 버튼을 클릭하세요"
+            />
+            <Button 
+              title='주소검색'
+              color='secondary'
+              onClick={handlePost}
             />
           </div>
           <p className={styles.errMsg}></p>
-           <div className={styles.display_div}>
+          <div className={styles.display_div}>
             <p>상세 주소</p>
             <Input type="text"
               name='memDetailAddr'
               value={joinData.memDetailAddr}
               onChange={(e)=>{handleJoin(e)}}
+              placeholder="상세 주소를 입력하세요"
             />
           </div>
           <p className={styles.errMsg}></p>
@@ -503,7 +528,6 @@ const Join = ({isOpenJoin, onClose}) => {
             />
           </div>
         </div>
-          <p className={styles.errMsg}>{errorMsg.memBusinessName}</p>
         <div className={styles.btn_div}>
           <Button
             title='회원가입'
