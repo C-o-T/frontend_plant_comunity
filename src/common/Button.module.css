@@ -59,19 +59,21 @@
 }
 
 .disabled {
-  background-color: #e0e0e0;
-  color: #9e9e9e;
-  cursor: not-allowed;
-  box-shadow: none;
+  background: #e0e0e0 !important;
+  color: #9e9e9e !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  opacity: 0.6;
 }
 
 .disabled:hover {
-  background-color: #e0e0e0;
-  transform: none;
-  box-shadow: none;
+  background: #e0e0e0 !important;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 .disabled:active {
-  background-color: #e0e0e0;
+  background: #e0e0e0 !important;
+  transform: none !important;
 }
 
