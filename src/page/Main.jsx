@@ -14,6 +14,8 @@ const Main = () => {
   //인기글 조회를 위한 state 변수
   const [popularBoardList, setPopularBoardList] = useState([]);
 
+  console.log(popularBoardList)
+
   //마운트 시 인기글 리스트 조회
   useEffect(() => {
     axios.get('/api/boards')
@@ -67,11 +69,11 @@ const Main = () => {
             <table className={styles.popular_table}>
               <thead>
                 <tr>
-                  <th>번호</th>
-                  <th>제목</th>
-                  <th>작성자</th>
-                  <th>조회수</th>
-                  <th>좋아요</th>
+                  <td>카데고리</td>
+                  <td>제목</td>
+                  <td>작성자</td>
+                  <td>조회수</td>
+                  <td>좋아요</td>
                 </tr>
               </thead>
               <tbody>
@@ -90,7 +92,7 @@ const Main = () => {
                         onClick={e => nav(`/board/detail/${write.boardNum}`)}
                         className={styles.table_row}
                       >
-                        <td>{write.boardNum}</td>
+                        <td>{write.categoryDTO.cateName}</td>
                         <td className={styles.title_cell}>{write.title}</td>
                         <td>{write.memId}</td>
                         <td>{write.readCnt}</td>

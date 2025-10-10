@@ -193,11 +193,19 @@ const Join = ({isOpenJoin, onClose}) => {
         'memBusinessNum' : true,
         'memBusinessName' : true
       })
-    } else if (joinData.memGrade === 'business') {
+      setIsDuplicated({
+        ...isDuplicated,
+        'memBusinessNum' : true
+      })
+    } else if (joinData.memGrade === 'BUSINESS') {
       setIsBusinessValid({
         ...isBusinessValid,
         'memBusinessNum' : false,
         'memBusinessName' : false
+      })
+      setIsDuplicated({
+        ...isDuplicated,
+        'memBusinessNum' : false
       })
     }
   },[joinData.memGrade])
@@ -234,7 +242,7 @@ const Join = ({isOpenJoin, onClose}) => {
                        isBusinessValid.memBusinessName)
 
   //모든 중복 확인이 통과했는지 확인
-  const isAllDuplicated = isDuplicated.memId && (joinData.memBusinessNum === '' || isDuplicated.memBusinessNum)
+  const isAllDuplicated = isDuplicated.memId && (joinData.memGrade === 'USER' || isDuplicated.memBusinessNum)
 
   //최종 활성화 조건
   const canSubmit = isAllValid && isAllDuplicated;
@@ -274,7 +282,7 @@ const Join = ({isOpenJoin, onClose}) => {
             'memName' : '',
             'memTell' : '',
             'memBusinessNum' : '',
-            'memBusinessName' :'' 
+            'memBusinessName' :''
           });
         }}
       >
@@ -301,13 +309,22 @@ const Join = ({isOpenJoin, onClose}) => {
           </div>
           <div className={`${styles.display_div} ${styles.input_size}`}>
             <p>아이디<span>*</span></p>
-            <Input type="text" 
+            <Input type="text"
               name='memId'
               value={joinData.memId}
               onChange={(e)=>{
                 handleJoin(e)
-                setIsDisable({
-                  ...isDisable,
+                const error = handleErrorMsg(e,joinData)
+                setErrorMsg({
+                  ...errorMsg,
+                  memId : error
+                })
+                setIsUserValid({
+                  ...isUserValid,
+                  memId:!error
+                })
+                setIsDuplicated({
+                  ...isDuplicated,
                   memId : false
                 })
               }}
@@ -316,7 +333,7 @@ const Join = ({isOpenJoin, onClose}) => {
                 const error = handleErrorMsg(e,joinData)
                 setErrorMsg({
                   ...errorMsg,
-                  memId : handleErrorMsg(e)
+                  memId : error
                 })
                 setIsUserValid({
                   ...isUserValid,
@@ -419,12 +436,30 @@ const Join = ({isOpenJoin, onClose}) => {
               value={joinData.memTell}
               onChange={(e)=>{
                 handleJoin(e)
+                const error = handleErrorMsg(e,joinData)
+                setErrorMsg({
+                  ...errorMsg,
+                  memTell : error
+                })
+                setIsUserValid({
+                  ...isUserValid,
+                  memTell:!error
+                })
+                setIsDuplicated({
+                  ...isDuplicated,
+                  memTell : false
+                })
               }}
               onBlur={e=>{
                 handleBlur(e)
+                const error = handleErrorMsg(e,joinData)
                 setErrorMsg({
                   ...errorMsg,
-                  memTell : handleErrorMsg(e, joinData)
+                  memTell : error
+                })
+                setIsUserValid({
+                  ...isUserValid,
+                  memTell:!error
                 })
               }}
             />
@@ -464,24 +499,25 @@ const Join = ({isOpenJoin, onClose}) => {
               disabled={!isBusinessMember}
               onChange={(e)=>{
                 handleJoin(e)
-                setIsDisable({
-                  ...isDisable,
+                const error = handleErrorMsg(e,joinData)
+                setErrorMsg({
+                  ...errorMsg,
+                  memBusinessNum : error
+                })
+                setIsBusinessValid({
+                  ...isBusinessValid,
+                  memBusinessNum:!error
+                })
+                setIsDuplicated({
+                  ...isDuplicated,
                   memBusinessNum : false
                 })
               }}
               onBlur={(e)=>{
                 const error = handleErrorMsg(e,joinData)
-                const businessNumError = handleErrorMsg(e, joinData);
-                const businessNameError = handleErrorMsg({
-                  target : {
-                    name : 'memBusinessName',
-                    value : joinData.memBusinessName
-                  }
-                }, joinData)
                 setErrorMsg({
-                  ...error,
-                  memBusinessNum : businessNumError,
-                  memBusinessName : businessNameError
+                  ...errorMsg,
+                  memBusinessNum : error
                 })
                 setIsBusinessValid({
                   ...isBusinessValid,
@@ -505,20 +541,21 @@ const Join = ({isOpenJoin, onClose}) => {
               disabled={!isBusinessMember}
               onChange={(e)=>{
                 handleJoin(e)
+                const error = handleErrorMsg(e,joinData)
+                setErrorMsg({
+                  ...errorMsg,
+                  memBusinessName : error
+                })
+                setIsBusinessValid({
+                  ...isBusinessValid,
+                  memBusinessName:!error
+                })
               }}
               onBlur={(e)=>{
                 const error = handleErrorMsg(e,joinData)
-                const businessNameError = handleErrorMsg(e, joinData);
-                const businessNumError = handleErrorMsg({
-                  target : {
-                    name : 'memBusinessNum',
-                    value : joinData.memBusinessNum
-                  }
-                }, joinData)
                 setErrorMsg({
                   ...errorMsg,
-                  memBusinessNum : businessNumError,
-                  memBusinessName : businessNameError
+                  memBusinessName : error
                 })
                 setIsBusinessValid({
                   ...isBusinessValid,

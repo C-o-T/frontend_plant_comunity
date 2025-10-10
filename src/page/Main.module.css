@@ -103,7 +103,7 @@
 /* 인기글 섹션 */
 .popular_section {
   width: 100%;
-  height: 90%;
+  height: 100%;
   background: #ffffff;
   padding: 30px;
   border-radius: 16px;
@@ -157,9 +157,9 @@
 }
 
 .popular_table td {
-  padding: 1rem 0.8rem;
+  padding: 1.9rem 0.8rem;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #424242;
 }
 
