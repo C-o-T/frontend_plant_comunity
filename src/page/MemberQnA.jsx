@@ -14,7 +14,6 @@ const MemberQnA = () => {
 
   
 
-  console.log(qnaList)
   useEffect(() => {
     //마이 페이지를 들어갔는데 로그인이 되어있지 않으면
     //홈 화면으로 강제로 리턴
@@ -30,29 +29,29 @@ const MemberQnA = () => {
     const memId = loginData.memId;  // loginInfo 구조에 맞게 수정
 
     //문의 내역을 조회해올 axios
-    axios.get(`/api/qna/${memId}`)
-    .then(res=>
-      setQnaList(res.data)
-    )
+    axios.get(`/api/qna/member/${memId}`)
+    .then(res=>{
+    setQnaList(res.data)
+    console.log(res.data)
+    })
     .catch(e=>{
       setQnaList([])
     })
   }, []);
 
-  console.log(qnaList)
 
   return (
     <div className={styles.container}>
       <Title
         title='1:1문의내역'
       />
-      <p className={styles.btn}>
+      <div className={styles.btn}>
         <Button 
           title='1:1 문의하기'
           size='120px'
           onClick={()=>nav('/qnaboard')}
         />
-      </p>
+      </div>
       <table className={styles.qnaTable}>
         <thead>
           <tr>
