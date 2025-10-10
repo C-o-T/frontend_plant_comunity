@@ -11,6 +11,9 @@ const BoardDetail = () => {
   //좋아요 상태 저장 변수
   const [isLiked, setIsLiked] = useState(false);
 
+  //좋아요 카운트 저장 변수
+  const [likeCnt, setLikeCnt] = useState(0);
+
   //댓글 입력 내용 저장 변수
   const [commentContent, setCommentContent] = useState('');
 
@@ -46,15 +49,42 @@ const BoardDetail = () => {
       });
   }
 
+  // 좋아요 상태 조회
+  const fetchLikeStatus = () => {
+    if(!loginInfo) return;
+
+    axios
+      .get(`/api/likes/${boardNum}/check`, {
+        params: { memId: currentUserId }
+      })
+      .then(response => {
+        setIsLiked(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
   // 상세데이터 조회
   useEffect(()=>{
+    // 조회수 증가
+    axios
+    .put(`/api/boards/boardDetail/${boardNum}`)
+    .catch(error => console.log(error));
+
     axios
     .get(`/api/boards/boardDetail/${boardNum}`)
-    .then(response => setBoardDetail(response.data))
+    .then(response => {
+      setBoardDetail(response.data);
+      setLikeCnt(response.data.likeCnt || 0);
+    })
     .catch(error => console.log(error));
 
     // 댓글 조회
     fetchComments();
+
+    // 좋아요 상태 조회
+    fetchLikeStatus();
   },[]);
 
   // 작성자와 로그인 사용자가 같은지 확인
@@ -82,9 +112,25 @@ const BoardDetail = () => {
       alert('로그인이 필요합니다.');
       return;
     }
-    setIsLiked(!isLiked);
-    // 좋아요 API 호출 (필요시)
-    // axios.post(`/api/boards/${boardNum}/like`)
+
+    // 좋아요 토글 (추가/삭제)
+    axios
+      .post(`/api/likes/${boardNum}`, {
+        memId: currentUserId
+      })
+      .then(() => {
+        if(isLiked) {
+          setIsLiked(false);
+          setLikeCnt(prevCnt => prevCnt - 1);
+        } else {
+          setIsLiked(true);
+          setLikeCnt(prevCnt => prevCnt + 1);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        alert('좋아요 처리에 실패했습니다.');
+      });
   }
 
   // 댓글/대댓글 등록
@@ -175,7 +221,7 @@ const BoardDetail = () => {
               onClick={handleLike}
             >
               <i className={isLiked ? "bi bi-heart-fill" : "bi bi-heart"}></i>
-              <span>{boardDetail.likeCnt || 0}</span>
+              <span>{likeCnt}</span>
             </button>
           </div>
           <div className={styles.action_buttons}>

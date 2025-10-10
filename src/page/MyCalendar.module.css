@@ -1,14 +1,18 @@
 .container {
   width: 100%;
-  max-width: 100%;
-  padding: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
   cursor: default;
+}
+
+.weather_section {
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 .calendar_div {
   width: 100%;
-  max-width: 850px;
-  margin: 0 auto;
 }
 
 /* Calendar specific styles */
