@@ -7,6 +7,7 @@ import Title from '../common/Title';
 import styles from './MemberDetail.module.css'
 import MyPageSideLayout from '../layout/MyPageSideLayout';
 import { useNavigate } from 'react-router-dom';
+import { useDaumPostcodePopup } from 'react-daum-postcode'
 
 const MemberDetail = () => {
   const nav = useNavigate()
@@ -24,7 +25,19 @@ const MemberDetail = () => {
     'memBusinessName' :''
   });
 
-  console.log(memberData)
+  //다음 주소록 팜업 생성 함수
+  const open = useDaumPostcodePopup('//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js');
+
+  //주소록 띄우기 함수
+  const handlePost= () => {
+    open({onComplete : (data) => {
+      //매개변수 data 안에 선택한 주소의 모든 정보가 객체형태로 들어있음
+      setMemberData({
+        ...memberData,
+        'memAddr' : data.address
+      });
+    }})
+  }
 
   //마운트 시 회원 정보 조회
   useEffect(() => {
@@ -40,9 +53,27 @@ const MemberDetail = () => {
     const memId = JSON.parse(loginInfo).memId
 
     axios.get(`/api/members/${memId}`)
-    .then(res => setMemberData(res.data))
+    .then(res => {
+      const data = res.data;
+      // memEmail을 firstEmail과 secondEmail로 분리
+      let firstEmail = '';
+      let secondEmail = '';
+      if (data.memEmail) {
+        const atIndex = data.memEmail.indexOf('@');
+        if (atIndex !== -1) {
+          firstEmail = data.memEmail.substring(0, atIndex);
+          secondEmail = data.memEmail.substring(atIndex);
+        }
+      }
+
+      setMemberData({
+        ...data,
+        firstEmail,
+        secondEmail
+      });
+    })
     .catch(e => console.log(e))
-    
+
   }, []);
 
   //값을 입력했을 때 변경할 함수
@@ -66,6 +97,19 @@ const MemberDetail = () => {
         [e.target.name] : e.target.value
       })
     }
+  }
+
+  //회원정보 수정 함수
+  const handleUpdate = () => {
+    axios.put(`/api/members/${memberData.memId}`, memberData)
+    .then(res => {
+      alert('회원정보가 수정되었습니다.');
+      nav('/');
+    })
+    .catch(e => {
+      console.log(e);
+      alert('회원정보 수정에 실패했습니다.');
+    })
   }
 
   return (
@@ -96,12 +140,19 @@ const MemberDetail = () => {
             </tr>
             <tr>
               <td>주소</td>
-              <td>
+              <td className={styles.searchAddr}>
                 <Input
                   name = 'memAddr'
                   value = {memberData.memAddr || ''}
                   onChange = {(e) => {handleUpdateData(e)}}
+                  readOnly={true} //읽기전용
+                  onClick={()=>handlePost()}
                  />
+                <Button 
+                  size='100px'
+                  title='주소검색'
+                  onClick={()=>handlePost()}
+                />
               </td>
             </tr>
             <tr>
@@ -138,7 +189,7 @@ const MemberDetail = () => {
                   onChange = {(e) => {handleUpdateData(e)}}
                 >
                   <option value="">선택</option>
-                  <option value="@google.com">@google.com</option>
+                  <option value="@gmail.com">@gmail.com</option>
                   <option value="@naver.com">@naver.com</option>
                   <option value="@kakao.com">@kakao.com</option>
                   <option value="@nate.com">@nate.com</option>
@@ -167,7 +218,7 @@ const MemberDetail = () => {
             </tr>
           </tbody>
         </table>
-        <Button title='수정'/>
+        <Button title='수정' onClick={handleUpdate}/>
       </div>
     </div>
   )
