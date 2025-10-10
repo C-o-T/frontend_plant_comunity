@@ -11,6 +11,18 @@ const BoardDetail = () => {
   //좋아요 상태 저장 변수
   const [isLiked, setIsLiked] = useState(false);
 
+  //댓글 입력 내용 저장 변수
+  const [commentContent, setCommentContent] = useState('');
+
+  //댓글 목록 저장 변수
+  const [comments, setComments] = useState([]);
+
+  //대댓글 입력 내용 저장 변수
+  const [replyContent, setReplyContent] = useState('');
+
+  //대댓글 작성 중인 댓글 번호
+  const [replyingTo, setReplyingTo] = useState(null);
+
   //boardNum받는거
   const {boardNum} = useParams();
 
@@ -21,12 +33,28 @@ const BoardDetail = () => {
   //페이지 이동
   const nav = useNavigate();
 
+  // 댓글 조회
+  const fetchComments = () => {
+    axios
+      .get(`/api/comments/${boardNum}`)
+      .then(response => {
+        setComments(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+        setComments(null);
+      });
+  }
+
   // 상세데이터 조회
   useEffect(()=>{
     axios
     .get(`/api/boards/boardDetail/${boardNum}`)
     .then(response => setBoardDetail(response.data))
     .catch(error => console.log(error));
+
+    // 댓글 조회
+    fetchComments();
   },[]);
 
   // 작성자와 로그인 사용자가 같은지 확인
@@ -59,9 +87,65 @@ const BoardDetail = () => {
     // axios.post(`/api/boards/${boardNum}/like`)
   }
 
+  // 댓글/대댓글 등록
+  const handleCommentSubmit = (parentCommentNum = null) => {
+    if(!loginInfo) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
+    const content = parentCommentNum ? replyContent : commentContent;
+
+    if(!content.trim()) {
+      alert('내용을 입력해주세요.');
+      return;
+    }
+
+    const data = {
+      boardNum: boardNum,
+      memId: currentUserId,
+      content: content
+    };
+
+    // parentCommentNum이 있으면 추가
+    if(parentCommentNum) {
+      data.parentCommentNum = parentCommentNum;
+    }
+
+    axios
+      .post('/api/comments', data)
+      .then(response => {
+        alert(parentCommentNum ? '대댓글이 등록되었습니다.' : '댓글이 등록되었습니다.');
+        if(parentCommentNum) {
+          setReplyContent('');
+          setReplyingTo(null);
+        } else {
+          setCommentContent('');
+        }
+        fetchComments(); // 댓글 목록 다시 조회
+      })
+      .catch(error => {
+        console.log(error);
+        alert('등록에 실패했습니다.');
+      });
+  }
+
+  // 날짜 포맷 변환 함수
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}.${month}.${day} ${hours}:${minutes}`;
+  }
+
   //데이터확인
   console.log(boardNum);
   console.log(boardDetail);
+  console.log(comments)
    return (
     <div className={styles.main}>
       <div className={styles.tag}>게시글 상세</div>
@@ -84,17 +168,77 @@ const BoardDetail = () => {
       </div>
 
       <div className={styles.footer}>
-        <div className={styles.like_section}>
-          <button
-            className={`${styles.like_button} ${isLiked ? styles.liked : ''}`}
-            onClick={handleLike}
-          >
-            <i className={isLiked ? "bi bi-heart-fill" : "bi bi-heart"}></i>
-            <span>{boardDetail.likeCnt || 0}</span>
-          </button>
+        <div>
+          <div className={styles.like_section}>
+            <button
+              className={`${styles.like_button} ${isLiked ? styles.liked : ''}`}
+              onClick={handleLike}
+            >
+              <i className={isLiked ? "bi bi-heart-fill" : "bi bi-heart"}></i>
+              <span>{boardDetail.likeCnt || 0}</span>
+            </button>
+          </div>
+          <div className={styles.action_buttons}>
+            <Button title="목록" onClick={() => nav('/board')} />
+          </div>
         </div>
-        <div className={styles.action_buttons}>
-          <Button title="목록" onClick={() => nav('/board')} />
+        <div className={styles.comment}>
+          <div>
+            {comments === null ? null : (
+              comments.map((comment) => (
+                <div key={comment.commentNum} className={styles.comment_item}>
+                  <div className={styles.comment_header}>
+                    <span className={styles.comment_author}>{comment.memId}</span>
+                    <span className={styles.comment_date}>{formatDate(comment.createDate)}</span>
+                  </div>
+                  <p className={styles.comment_content}>{comment.content}</p>
+                  <button
+                    className={styles.reply_button}
+                    onClick={() => setReplyingTo(replyingTo === comment.commentNum ? null : comment.commentNum)}
+                  >
+                    {replyingTo === comment.commentNum ? '취소' : '답글'}
+                  </button>
+
+                  {/* 대댓글 입력 폼 */}
+                  {replyingTo === comment.commentNum && (
+                    <div className={styles.reply_form}>
+                      <textarea
+                        rows={2}
+                        value={replyContent}
+                        onChange={(e) => setReplyContent(e.target.value)}
+                        placeholder="답글을 입력하세요"
+                      />
+                      <Button title={'등록'} onClick={() => handleCommentSubmit(comment.commentNum)}/>
+                    </div>
+                  )}
+
+                  {/* 대댓글 목록 */}
+                  {comment.replies && comment.replies.length > 0 && (
+                    <div className={styles.replies}>
+                      {comment.replies.map((reply) => (
+                        <div key={reply.commentNum} className={styles.reply_item}>
+                          <div className={styles.comment_header}>
+                            <span className={styles.comment_author}>↳ {reply.memId}</span>
+                            <span className={styles.comment_date}>{formatDate(reply.createDate)}</span>
+                          </div>
+                          <p className={styles.comment_content}>{reply.content}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+          <div>
+            <textarea
+              rows={3}
+              value={commentContent}
+              onChange={(e) => setCommentContent(e.target.value)}
+              placeholder="댓글을 입력하세요"
+            />
+            <Button title={'등록'} onClick={() => handleCommentSubmit()}/>
+          </div>
         </div>
       </div>
     </div>
