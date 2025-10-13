@@ -103,6 +103,14 @@ const MemberDetail = () => {
   const handleUpdate = () => {
     axios.put(`/api/members/${memberData.memId}`, memberData)
     .then(res => {
+      const updatedMember = res.data;
+      console.log(res.data)
+      const loginInfo = JSON.parse(sessionStorage.getItem('loginInfo'));
+      const newLoginInfo = {
+        ...loginInfo,
+        memAddr: updatedMember.memAddr,
+      };
+      sessionStorage.setItem('loginInfo', JSON.stringify(newLoginInfo));
       alert('회원정보가 수정되었습니다.');
       nav('/');
     })

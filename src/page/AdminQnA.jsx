@@ -555,32 +555,62 @@ const AdminQnA = () => {
       </Modal>
 
       {/* 회원 상세 정보 모달 */}
-      <Modal 
-        title="회원 상세정보" 
+      <Modal
+        title="회원 상세정보"
         isOpen={showMemberModal}
         onClose={handleCloseMemberModal}
         size="600px"
       >
-        <div>
+        <div className={styles.memberModalContent}>
           {selectedMember?.memStatus === "DELETED" ? (
             <div className={styles.deletedMemberInfo}>
-              <p>아이디: {selectedMember?.memId}</p>
-              <p className={styles.deletedMessage}>
-                삭제된 회원입니다. 더 이상 상세 정보를 조회할 수 없습니다.
-              </p>
+              <div className={styles.memberDetailRow}>
+                <p className={styles.memberDetailLabel}>아이디</p>
+                <p className={styles.memberDetailValue}>{selectedMember?.memId}</p>
+              </div>
+              <div className={styles.deletedMessageBox}>
+                <p className={styles.deletedMessage}>
+                  삭제된 회원입니다. 더 이상 상세 정보를 조회할 수 없습니다.
+                </p>
+              </div>
             </div>
           ) : (
             <>
-              <p>아이디: {selectedMember?.memId}</p>
-              <p>이름: {selectedMember?.memName}</p>
-              <p>이메일: {selectedMember?.memEmail}</p>
-              <p>전화번호: {selectedMember?.memTell}</p>
-              <p>주소: {selectedMember?.memAddr}</p>
-              <p>등급: {selectedMember?.memGrade}</p>
-              <p>가입일: {selectedMember && new Date(selectedMember.joinDate).toLocaleDateString()}</p>
+              <div className={styles.memberDetailRow}>
+                <p className={styles.memberDetailLabel}>아이디</p>
+                <p className={styles.memberDetailValue}>{selectedMember?.memId}</p>
+              </div>
+              <div className={styles.memberDetailRow}>
+                <p className={styles.memberDetailLabel}>이름</p>
+                <p className={styles.memberDetailValue}>{selectedMember?.memName}</p>
+              </div>
+              <div className={styles.memberDetailRow}>
+                <p className={styles.memberDetailLabel}>이메일</p>
+                <p className={styles.memberDetailValue}>{selectedMember?.memEmail}</p>
+              </div>
+              <div className={styles.memberDetailRow}>
+                <p className={styles.memberDetailLabel}>전화번호</p>
+                <p className={styles.memberDetailValue}>{selectedMember?.memTell}</p>
+              </div>
+              <div className={styles.memberDetailRow}>
+                <p className={styles.memberDetailLabel}>주소</p>
+                <p className={styles.memberDetailValue}>{selectedMember?.memAddr}</p>
+              </div>
+              <div className={styles.memberDetailRow}>
+                <p className={styles.memberDetailLabel}>등급</p>
+                <p className={styles.memberDetailValue}>{selectedMember?.memGrade}</p>
+              </div>
+              <div className={styles.memberDetailRow}>
+                <p className={styles.memberDetailLabel}>가입일</p>
+                <p className={styles.memberDetailValue}>
+                  {selectedMember && new Date(selectedMember.joinDate).toLocaleDateString()}
+                </p>
+              </div>
             </>
           )}
-          <Button title="닫기" onClick={handleCloseMemberModal} />
+          <div className={styles.memberModalActions}>
+            <Button title="닫기" onClick={handleCloseMemberModal} />
+          </div>
         </div>
       </Modal>
     </div>
