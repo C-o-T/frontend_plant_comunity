@@ -24,18 +24,22 @@ const MessageDetail = () => {
 
   const fetchMessageDetail = async () => {
     try {
-      console.log('쪽지 조회 요청:', messageId); // 디버깅
       const response = await axios.get(`/api/messages/${messageId}`);
-      console.log('쪽지 조회 응답:', response.data); // 디버깅
-      setMessage(response.data);
+      const messageData = response.data;
+      setMessage(messageData);
+
+      // 백엔드에서 GET 요청 시 자동으로 읽음 처리됨 (read = true로 업데이트)
+      // 받은 쪽지인 경우 알람 업데이트 이벤트 발생
+      if (messageData.receiverId === memberId) {
+        window.dispatchEvent(new Event('messageUpdated'));
+      }
     } catch (error) {
       console.error('쪽지 조회 실패:', error);
-      console.error('에러 상세:', error.response?.data); // 디버깅
       if (error.response?.status === 401) {
         alert('로그인이 필요합니다.');
         navigate('/');
       } else {
-        alert(`쪽지를 불러올 수 없습니다.\n${error.response?.data || error.message}`);
+        alert('쪽지를 불러올 수 없습니다.');
         navigate('/messages');
       }
     } finally {
@@ -47,7 +51,13 @@ const MessageDetail = () => {
     if (!window.confirm('쪽지를 삭제하시겠습니까?')) return;
 
     try {
-      await axios.delete(`/api/messages/${messageId}/${memberId}`);
+      // 현재 사용자가 보낸 사람인지 받은 사람인지 확인
+      const deleteType = message.receiverId === memberId ? 'receiver' : 'sender';
+      await axios.delete(`/api/messages/${messageId}/${memberId}?deleteType=${deleteType}`);
+
+      // 쪽지 삭제 후 알람 업데이트 이벤트 발생
+      window.dispatchEvent(new Event('messageUpdated'));
+
       alert('쪽지가 삭제되었습니다.');
       navigate('/messages');
     } catch (error) {

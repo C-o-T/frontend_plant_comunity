@@ -31,9 +31,19 @@ const MessageAlarm = () => {
 
     fetchUnreadCount();
 
+    // 커스텀 이벤트 리스너 등록 (쪽지 읽음/삭제 시 알림)
+    const handleMessageUpdate = () => {
+      fetchUnreadCount();
+    };
+    window.addEventListener('messageUpdated', handleMessageUpdate);
+
     // 30초마다 갱신
     const interval = setInterval(fetchUnreadCount, 30000);
-    return () => clearInterval(interval);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('messageUpdated', handleMessageUpdate);
+    };
   }, []);
 
   return (

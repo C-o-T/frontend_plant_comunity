@@ -6,15 +6,11 @@ import CalendarPage from './MyCalendar';
 import smartFarmImage from '../assets/images/smart-farm.jpg';
 
 const Main = () => {
-
-  console.log(sessionStorage.getItem('loginInfo'));
-  
   const nav = useNavigate();
 
   //인기글 조회를 위한 state 변수
   const [popularBoardList, setPopularBoardList] = useState([]);
 
-  console.log(popularBoardList)
 
   //마운트 시 인기글 리스트 조회
   useEffect(() => {
