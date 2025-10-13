@@ -1,0 +1,58 @@
+.input_div {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.date_text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #4caf50;
+  margin-bottom: 8px;
+}
+
+.input_div input {
+  padding: 10px 14px;
+  border: 2px solid #e8f5e9;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: #f8fdf8;
+  width: 100%;
+}
+
+.input_div input:focus {
+  outline: none;
+  border-color: #66bb6a;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+  background: #ffffff;
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid #e8f5e9;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: none;
+  min-height: 200px;
+  transition: all 0.3s ease;
+  background: #f8fdf8;
+  box-sizing: border-box;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #66bb6a;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+  background: #ffffff;
+}
+
+.button_group {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
