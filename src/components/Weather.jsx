@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Weather.module.css';
+import axios from 'axios';
 
 const Weather = () => {
   const [weather, setWeather] = useState(null);
@@ -12,50 +13,54 @@ const Weather = () => {
   const KAKAO_API_KEY = 'dddbbe5f74a903542c46971ec77ba7a1';
 
   // 로그인한 사용자의 주소로 좌표 가져오기
-  useEffect(() => {
-    const loginInfo = sessionStorage.getItem('loginInfo');
-    console.log('=== Weather 디버깅 ===');
-    console.log('1. loginInfo:', loginInfo);
+ useEffect(() => {
+  const loginInfo = sessionStorage.getItem('loginInfo');
+  console.log('=== Weather 디버깅 ===');
+  console.log('1. loginInfo:', loginInfo);
 
-    if (loginInfo) {
-      const userInfo = JSON.parse(loginInfo);
-      console.log('2. userInfo:', userInfo);
-      const userAddress = userInfo.memAddr;
-      console.log('3. userAddress:', userAddress);
+  if (loginInfo) {
+    const userInfo = JSON.parse(loginInfo);
+    console.log('2. userInfo:', userInfo);
+    const userAddress = userInfo.memAddr;
+    console.log('3. userAddress:', userAddress);
 
-      if (userAddress && userAddress.trim() !== '') {
-        console.log('4. Kakao API 호출 시작:', userAddress);
-        // Kakao Geocoding API로 주소 → 좌표 변환
-        fetch(`https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURIComponent(userAddress)}`, {
-          headers: {
-            Authorization: `KakaoAK ${KAKAO_API_KEY}`
-          }
-        })
-        .then(res => res.json())
-        .then(data => {
-          console.log('5. Kakao API 응답:', data);
-          if (data.documents && data.documents.length > 0) {
-            const { x, y, address_name } = data.documents[0];
-            console.log('6. 좌표:', { latitude: y, longitude: x });
-            setCoords({ latitude: parseFloat(y), longitude: parseFloat(x) });
-            // 시/군/구까지만 추출
-            const locationName = address_name.split(' ').slice(0, 2).join(' ');
-            console.log('7. 위치명:', locationName);
-            setLocation(locationName);
-          } else {
-            console.log('6. 주소를 찾을 수 없습니다');
-          }
-        })
-        .catch(err => {
-          console.error('주소를 좌표로 변환하는데 실패했습니다:', err);
-        });
-      } else {
-        console.log('4. 주소가 없거나 비어있음');
-      }
+    if (userAddress && userAddress.trim() !== '') {
+      console.log('4. 백엔드 API 호출 시작:', userAddress);
+      
+      // ✅ axios로 백엔드 호출
+      axios.get('http://localhost:8080/api/weather/geocode', {
+        params: {
+          address: userAddress
+        }
+      })
+      .then(response => {
+        console.log('5. Kakao API 응답:', response.data);
+        if (response.data.documents && response.data.documents.length > 0) {
+          const { x, y, address_name } = response.data.documents[0];
+          console.log('6. 좌표:', { latitude: y, longitude: x });
+          setCoords({ latitude: parseFloat(y), longitude: parseFloat(x) });
+          
+          // 시/군/구까지만 추출
+          const locationName = address_name.split(' ').slice(0, 2).join(' ');
+          console.log('7. 위치명:', locationName);
+          setLocation(locationName);
+        } else {
+          console.log('6. 주소를 찾을 수 없습니다');
+        }
+      })
+      .catch(err => {
+        console.error('주소를 좌표로 변환하는데 실패했습니다:', err);
+      });
+      
     } else {
-      console.log('2. 로그인 정보 없음');
+      console.log('4. 주소가 없거나 비어있음');
+      // 기본 위치 설정 (선택)
+      setLocation('주소를 등록해주세요');
     }
-  }, []);
+  } else {
+    console.log('2. 로그인 정보 없음');
+  }
+}, []);
 
   // 날씨 코드를 한글과 이모지로 변환
   const getWeatherInfo = (code) => {

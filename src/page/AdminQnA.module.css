@@ -270,18 +270,66 @@
   border-top: 1px solid #eee;
 }
 
+/* 회원 모달 스타일 */
+.memberModalContent {
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 16px;
+}
+
+.memberDetailRow {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+  align-items: center;
+}
+
+.memberDetailLabel {
+  width: 120px;
+  font-weight: 600;
+  color: #2e7d32;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.memberDetailValue {
+  flex: 1;
+  margin: 0;
+  color: #424242;
+  font-size: 0.95rem;
+  padding: 10px 15px;
+  background: #f8fdf8;
+  border-radius: 8px;
+  border: 1px solid #e8f5e9;
+}
+
+.memberModalActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid #e8f5e9;
+}
+
 /* 삭제된 회원 정보 스타일 */
 .deletedMemberInfo {
+  padding: 0;
+}
+
+.deletedMessageBox {
+  margin-top: 20px;
   padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 4px;
-  border-left: 4px solid #dc3545;
+  background-color: #fee;
+  border-radius: 8px;
+  border: 1px solid #fcc;
 }
 
 .deletedMessage {
   color: #dc3545;
   font-weight: 500;
-  margin-top: 10px;
+  margin: 0;
+  text-align: center;
 }
 
 /* 반응형 */

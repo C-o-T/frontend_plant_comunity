@@ -160,6 +160,12 @@ const Board = () => {
     return confirmText.substring(0, maxLength) + '...';
   }
 
+  //제목 자르는 함수 (15글자 제한)
+  const cutTitle = (text, maxLength = 15) => {
+    if(text.length <= maxLength){return text}
+    return text.substring(0, maxLength) + '...';
+  }
+
   // 데이터 확인
   console.log(boardList);
   //console.log(pageData);
@@ -209,7 +215,7 @@ const Board = () => {
             boardList.map((board, i) => {
               const maxLength = 30;
               return(
-                <div key={i}>
+                <div key={i} className = {styles.board} style={boardList.length === 1 ? {width: '230px', padding: '10px'} : {}}>
                   <div className={styles.img_div} onClick={() => {nav(`/board/detail/${board.boardNum}`)}} style={{cursor: 'pointer'}}>
                     {
                       board.imgList.imgUrl === null ?
@@ -219,8 +225,8 @@ const Board = () => {
                     }
                   </div>
                   <div>
-                    <div onClick={() => {nav(`/board/detail/${board.boardNum}`)}} style={{cursor: 'pointer'}}>{board.memId}</div>
-                    <div onClick={() => {nav(`/board/detail/${board.boardNum}`)}} style={{cursor: 'pointer'}}>{board.title}</div>
+                    <div className={styles.memId} onClick={() => {nav(`/board/detail/${board.boardNum}`)}} style={{cursor: 'pointer'}}>{board.memId}</div>
+                    <div className={styles.title} onClick={() => {nav(`/board/detail/${board.boardNum}`)}} style={{cursor: 'pointer'}}>{cutTitle(board.title)}</div>
                     <div className={styles.likeAndComent}>
                       <i
                         className={likedPosts[board.boardNum] ? "bi bi-heart-fill" : "bi bi-heart"}

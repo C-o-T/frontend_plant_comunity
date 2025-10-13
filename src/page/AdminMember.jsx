@@ -273,47 +273,76 @@ const AdminMember = () => {
       </table>
 
       {/* 상세 정보 모달 */}
-      <Modal 
-        title="회원 상세정보" 
+      <Modal
+        title="회원 상세정보"
         isOpen={showModal}
         onClose={handleCloseModal}
         size="600px"
       >
-        <div>
-          <p>아이디: {selectedMember?.memId}</p>
-          <p>이름: {selectedMember?.memName}</p>
-          <p>이메일: {selectedMember?.memEmail}</p>
-          <p>전화번호: {selectedMember?.memTell}</p>
-          <p>주소: {selectedMember?.memAddr}</p>
-          <p>등급: {selectedMember?.memGrade}</p>
-          <p>상태: {
-            selectedMember?.memStatus === 'ACTIVE' ? '활성' : 
-            selectedMember?.memStatus === 'DELETED' ? '삭제됨' : 
-            selectedMember?.memStatus === 'SUSPENDED' ? '정지됨' : 
-            selectedMember?.memStatus
-          }</p>
-          <p>가입일: {selectedMember && new Date(selectedMember.joinDate).toLocaleDateString()}</p>
-          <Button title="닫기" onClick={handleCloseModal} />
-          {selectedMember?.memStatus === 'ACTIVE' && (
-            <Button 
-              title="삭제" 
-              onClick={() => {
-                handleCloseModal();
-                handleDeleteMember(selectedMember.memId);
-              }} 
-              color="danger"
-            />
-          )}
-          {selectedMember?.memStatus === 'DELETED' && (
-            <Button 
-              title="복구" 
-              onClick={() => {
-                handleCloseModal();
-                handleRestoreMember(selectedMember.memId);
-              }} 
-              color="success"
-            />
-          )}
+        <div className={styles.modalContent}>
+          <div className={styles.detailRow}>
+            <p className={styles.detailLabel}>아이디</p>
+            <p className={styles.detailValue}>{selectedMember?.memId}</p>
+          </div>
+          <div className={styles.detailRow}>
+            <p className={styles.detailLabel}>이름</p>
+            <p className={styles.detailValue}>{selectedMember?.memName}</p>
+          </div>
+          <div className={styles.detailRow}>
+            <p className={styles.detailLabel}>이메일</p>
+            <p className={styles.detailValue}>{selectedMember?.memEmail}</p>
+          </div>
+          <div className={styles.detailRow}>
+            <p className={styles.detailLabel}>전화번호</p>
+            <p className={styles.detailValue}>{selectedMember?.memTell}</p>
+          </div>
+          <div className={styles.detailRow}>
+            <p className={styles.detailLabel}>주소</p>
+            <p className={styles.detailValue}>{selectedMember?.memAddr}</p>
+          </div>
+          <div className={styles.detailRow}>
+            <p className={styles.detailLabel}>등급</p>
+            <p className={styles.detailValue}>{selectedMember?.memGrade}</p>
+          </div>
+          <div className={styles.detailRow}>
+            <p className={styles.detailLabel}>상태</p>
+            <p className={styles.detailValue}>
+              <span className={`${styles.memberStatus} ${styles[selectedMember?.memStatus?.toLowerCase()]}`}>
+                {selectedMember?.memStatus === 'ACTIVE' ? '활성' :
+                 selectedMember?.memStatus === 'DELETED' ? '삭제됨' :
+                 selectedMember?.memStatus === 'SUSPENDED' ? '정지됨' :
+                 selectedMember?.memStatus}
+              </span>
+            </p>
+          </div>
+          <div className={styles.detailRow}>
+            <p className={styles.detailLabel}>가입일</p>
+            <p className={styles.detailValue}>{selectedMember && new Date(selectedMember.joinDate).toLocaleDateString()}</p>
+          </div>
+
+          <div className={styles.modalActions}>
+            <Button title="닫기" onClick={handleCloseModal} />
+            {selectedMember?.memStatus === 'ACTIVE' && (
+              <Button
+                title="삭제"
+                onClick={() => {
+                  handleCloseModal();
+                  handleDeleteMember(selectedMember.memId);
+                }}
+                color="danger"
+              />
+            )}
+            {selectedMember?.memStatus === 'DELETED' && (
+              <Button
+                title="복구"
+                onClick={() => {
+                  handleCloseModal();
+                  handleRestoreMember(selectedMember.memId);
+                }}
+                color="success"
+              />
+            )}
+          </div>
         </div>
       </Modal>
     </div>

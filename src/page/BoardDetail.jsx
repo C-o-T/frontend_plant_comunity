@@ -69,10 +69,6 @@ const BoardDetail = () => {
   useEffect(()=>{
     // 조회수 증가
     axios
-    .put(`/api/boards/boardDetail/${boardNum}`)
-    .catch(error => console.log(error));
-
-    axios
     .get(`/api/boards/boardDetail/${boardNum}`)
     .then(response => {
       setBoardDetail(response.data);

@@ -109,31 +109,43 @@
   flex-wrap: wrap;
 }
 
-.detail {
-  padding: 20px;
+.modalContent {
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 16px;
 }
 
-.detail p {
-  margin: 15px 0;
+.detailRow {
   display: flex;
-  gap: 15px;
-  padding: 12px;
+  gap: 12px;
+  margin-bottom: 18px;
+  align-items: center;
+}
+
+.detailLabel {
+  width: 120px;
+  font-weight: 600;
+  color: #2e7d32;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.detailValue {
+  flex: 1;
+  margin: 0;
+  color: #424242;
+  font-size: 0.95rem;
+  padding: 10px 15px;
   background: #f8fdf8;
   border-radius: 8px;
-  border-left: 4px solid #66bb6a;
-}
-
-.detail strong {
-  min-width: 120px;
-  color: #2e7d32;
-  font-weight: 600;
+  border: 1px solid #e8f5e9;
 }
 
 .modalActions {
   display: flex;
   gap: 12px;
   justify-content: center;
-  margin-top: 24px;
+  margin-top: 30px;
   padding-top: 20px;
   border-top: 2px solid #e8f5e9;
 }
