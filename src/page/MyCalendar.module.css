@@ -11,8 +11,50 @@
   margin-bottom: 20px;
 }
 
+.toggle_section {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.toggle_button {
+  width: 168px;
+  padding: 6px;
+  background: white;
+  color: #4caf50;
+  border: 2px solid #4caf50;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1);
+  margin-top: 80px;
+  margin-bottom: -50px;
+}
+
+.toggle_button:hover {
+  background: #f1f8e9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+}
+
+.toggle_button.active {
+  background: linear-gradient(135deg, #66bb6a, #4caf50);
+  color: white;
+  border-color: #4caf50;
+}
+
+.toggle_button.active:hover {
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
 .calendar_div {
   width: 100%;
+  height: 700px;
+  margin-bottom: 20px;
 }
 
 /* Calendar specific styles */
@@ -84,5 +126,70 @@
   color: #1976d2 !important;
 }
 
+/* 선택 모달 스타일 */
+.choice_modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
 
+.choice_modal {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 280px;
+}
 
+.choice_modal h3 {
+  margin: 0 0 16px 0;
+  text-align: center;
+  color: #2e7d32;
+  font-size: 20px;
+}
+
+.choice_button {
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #66bb6a, #4caf50);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.choice_button:hover {
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.choice_button_cancel {
+  padding: 14px 24px;
+  background: #e0e0e0;
+  color: #616161;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 8px;
+}
+
+.choice_button_cancel:hover {
+  background: #bdbdbd;
+  transform: translateY(-2px);
+}
