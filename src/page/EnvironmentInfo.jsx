@@ -53,8 +53,8 @@ const EnvironmentInfo = () => {
     // 처음 마운트될 때 데이터 가져오기
     fetchSensorData();
 
-    // 1시간 마다 데이터 갱신
-    const interval = setInterval(fetchSensorData, TIME.HOUR);
+    // 1초마다 데이터 갱신
+    const interval = setInterval(fetchSensorData, TIME.SECOND);
 
     //sessionStorage 에서 받아온 memId 객체로 변환
     const memId = JSON.parse(loginInfo).memId
@@ -184,26 +184,85 @@ const EnvironmentInfo = () => {
           <option value="1month">최근 1달</option>
         </Select>
       </div>
+
       <div className={styles.graphs_container}>
+        {/* 온도 */}
         <div className={styles.graph_item}>
           <h3>온도</h3>
-          <Line data={temperatureData} options={chartOptions} />
+          <Line
+            data={temperatureData}
+            options={{
+              ...chartOptions,
+              scales: {
+                ...chartOptions.scales,
+                y: {
+                  beginAtZero: true,
+                  min: 0,
+                  max: 50, // ✅ 온도는 0~50℃
+                }
+              }
+            }}
+          />
         </div>
+
+        {/* 습도 */}
         <div className={styles.graph_item}>
           <h3>습도</h3>
-          <Line data={humidityData} options={chartOptions} />
+          <Line
+            data={humidityData}
+            options={{
+              ...chartOptions,
+              scales: {
+                ...chartOptions.scales,
+                y: {
+                  beginAtZero: true,
+                  min: 0,
+                  max: 100, // ✅ 습도는 0~100%
+                }
+              }
+            }}
+          />
         </div>
+
+        {/* 조도 */}
         <div className={styles.graph_item}>
           <h3>조도</h3>
-          <Bar data={illuminanceData} options={chartOptions} />
+          <Bar
+            data={illuminanceData}
+            options={{
+              ...chartOptions,
+              scales: {
+                ...chartOptions.scales,
+                y: {
+                  beginAtZero: true,
+                  min: 0, // ✅ 조도는 0부터, 최대는 자동
+                }
+              }
+            }}
+          />
         </div>
+
+        {/* 토양습도 */}
         <div className={styles.graph_item}>
           <h3>토양습도</h3>
-          <Line data={soilMoistureData} options={chartOptions} />
+          <Line
+            data={soilMoistureData}
+            options={{
+              ...chartOptions,
+              scales: {
+                ...chartOptions.scales,
+                y: {
+                  beginAtZero: true,
+                  min: 0,
+                  max: 100, // ✅ 토양습도는 0~100%
+                }
+              }
+            }}
+          />
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default EnvironmentInfo
