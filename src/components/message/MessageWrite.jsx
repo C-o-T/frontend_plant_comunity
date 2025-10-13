@@ -17,6 +17,10 @@ const MessageWrite = () => {
     content: ''
   });
 
+  // 다중 발송 관련 상태
+  const [sendMode, setSendMode] = useState('single'); // 'single', 'multiple', 'all'
+  const [selectedReceivers, setSelectedReceivers] = useState([]);
+
   // 자동완성 관련 상태
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -38,6 +42,7 @@ const MessageWrite = () => {
         title: location.state.title || '',
         content: ''
       });
+      setSendMode('single');
     }
   }, [location]);
 
@@ -49,7 +54,7 @@ const MessageWrite = () => {
     }));
 
     // receiverId 입력 시 자동완성
-    if (name === 'receiverId') {
+    if (name === 'receiverId' && sendMode !== 'all') {
       if (value.trim().length > 0) {
         searchMembers(value.trim());
       } else {
@@ -57,6 +62,18 @@ const MessageWrite = () => {
         setShowSuggestions(false);
       }
       setSelectedIndex(-1);
+    }
+  };
+
+  // 발송 모드 변경
+  const handleSendModeChange = (mode) => {
+    setSendMode(mode);
+    if (mode === 'all') {
+      setSelectedReceivers([]);
+      setFormData(prev => ({ ...prev, receiverId: '' }));
+      setShowSuggestions(false);
+    } else if (mode === 'single') {
+      setSelectedReceivers([]);
     }
   };
 
@@ -77,13 +94,26 @@ const MessageWrite = () => {
 
   // 추천 항목 선택
   const handleSelectSuggestion = (member) => {
-    setFormData(prev => ({
-      ...prev,
-      receiverId: member.memId
-    }));
+    if (sendMode === 'single') {
+      setFormData(prev => ({
+        ...prev,
+        receiverId: member.memId
+      }));
+    } else if (sendMode === 'multiple') {
+      // 이미 선택된 사람인지 확인
+      if (!selectedReceivers.find(r => r.memId === member.memId)) {
+        setSelectedReceivers(prev => [...prev, member]);
+      }
+      setFormData(prev => ({ ...prev, receiverId: '' }));
+    }
     setSuggestions([]);
     setShowSuggestions(false);
     setSelectedIndex(-1);
+  };
+
+  // 선택된 수신자 제거
+  const handleRemoveReceiver = (memId) => {
+    setSelectedReceivers(prev => prev.filter(r => r.memId !== memId));
   };
 
   // 키보드 네비게이션
@@ -110,8 +140,14 @@ const MessageWrite = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.receiverId.trim()) {
+    // 유효성 검사
+    if (sendMode === 'single' && !formData.receiverId.trim()) {
       alert('받는 사람 ID를 입력해주세요.');
+      return;
+    }
+
+    if (sendMode === 'multiple' && selectedReceivers.length === 0) {
+      alert('받는 사람을 선택해주세요.');
       return;
     }
 
@@ -126,7 +162,26 @@ const MessageWrite = () => {
     }
 
     try {
-      await axios.post(`/api/messages/${senderId}`, formData);
+      const requestData = {
+        title: formData.title,
+        content: formData.content
+      };
+
+      if (sendMode === 'all') {
+        requestData.sendToAll = true;
+        if (!window.confirm('전체 회원에게 쪽지를 발송하시겠습니까?')) {
+          return;
+        }
+      } else if (sendMode === 'multiple') {
+        requestData.receiverIds = selectedReceivers.map(r => r.memId);
+        if (!window.confirm(`${selectedReceivers.length}명에게 쪽지를 발송하시겠습니까?`)) {
+          return;
+        }
+      } else {
+        requestData.receiverId = formData.receiverId;
+      }
+
+      await axios.post(`/api/messages/${senderId}`, requestData);
       alert('쪽지가 전송되었습니다.');
       navigate('/messages');
     } catch (error) {
@@ -150,9 +205,41 @@ const MessageWrite = () => {
       </div>
 
       <form onSubmit={handleSubmit} className={styles.form}>
+        {/* 발송 모드 선택 */}
         <div className={styles.form_group}>
-          <label htmlFor="receiverId">받는 사람 ID *</label>
-          <div className={styles.autocomplete_wrapper}>
+          <label>발송 모드</label>
+          <div className={styles.send_mode_buttons}>
+            <button
+              type="button"
+              className={`${styles.mode_btn} ${sendMode === 'single' ? styles.active : ''}`}
+              onClick={() => handleSendModeChange('single')}
+            >
+              개별 발송
+            </button>
+            <button
+              type="button"
+              className={`${styles.mode_btn} ${sendMode === 'multiple' ? styles.active : ''}`}
+              onClick={() => handleSendModeChange('multiple')}
+            >
+              다중 발송
+            </button>
+            <button
+              type="button"
+              className={`${styles.mode_btn} ${sendMode === 'all' ? styles.active : ''}`}
+              onClick={() => handleSendModeChange('all')}
+            >
+              전체 발송
+            </button>
+          </div>
+        </div>
+
+        {/* 받는 사람 입력 (전체 발송이 아닐 때만 표시) */}
+        {sendMode !== 'all' && (
+          <div className={styles.form_group}>
+            <label htmlFor="receiverId">
+              받는 사람 ID * {sendMode === 'multiple' && '(검색 후 선택)'}
+            </label>
+            <div className={styles.autocomplete_wrapper}>
             <input
               type="text"
               id="receiverId"
@@ -191,6 +278,37 @@ const MessageWrite = () => {
             </span>
           )}
         </div>
+        )}
+
+        {/* 다중 발송 시 선택된 수신자 목록 */}
+        {sendMode === 'multiple' && selectedReceivers.length > 0 && (
+          <div className={styles.form_group}>
+            <label>선택된 수신자 ({selectedReceivers.length}명)</label>
+            <div className={styles.selected_receivers}>
+              {selectedReceivers.map(receiver => (
+                <div key={receiver.memId} className={styles.receiver_tag}>
+                  <span>{receiver.memId} ({receiver.memName})</span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveReceiver(receiver.memId)}
+                    className={styles.remove_btn}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 전체 발송 안내 메시지 */}
+        {sendMode === 'all' && (
+          <div className={styles.form_group}>
+            <div className={styles.all_send_notice}>
+              ⚠️ 전체 회원에게 쪽지가 발송됩니다.
+            </div>
+          </div>
+        )}
 
         <div className={styles.form_group}>
           <label htmlFor="title">제목 *</label>

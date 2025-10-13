@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import styles from './MessageList.module.css'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 const MessageList = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [tab, setTab] = useState('received'); // 'received' or 'sent'
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -21,12 +22,26 @@ const MessageList = () => {
     }
   }, [memberId, navigate]);
 
-  // 쪽지 목록 조회
+  // 쪽지 목록 조회 (페이지 이동 시마다 새로 조회)
   useEffect(() => {
     if (memberId) {
       fetchMessages();
     }
-  }, [tab, memberId]);
+  }, [tab, memberId, location.pathname]);
+
+  // 쪽지 읽음/삭제 이벤트 감지하여 목록 갱신
+  useEffect(() => {
+    const handleMessageUpdate = () => {
+      if (memberId) {
+        fetchMessages();
+      }
+    };
+    window.addEventListener('messageUpdated', handleMessageUpdate);
+
+    return () => {
+      window.removeEventListener('messageUpdated', handleMessageUpdate);
+    };
+  }, [memberId]);
 
   const fetchMessages = async () => {
     setLoading(true);
@@ -37,13 +52,23 @@ const MessageList = () => {
       const response = await axios.get(endpoint);
       // 응답이 배열인지 확인
       if (Array.isArray(response.data)) {
-        setMessages(response.data);
+        // 논리적 삭제된 쪽지 필터링
+        const filteredMessages = response.data.filter(msg => {
+          // 받은 쪽지함: deletedByReceiver가 false인 것만
+          if (tab === 'received') {
+            return msg.deletedByReceiver === false;
+          }
+          // 보낸 쪽지함: deletedBySender가 false인 것만
+          else {
+            return msg.deletedBySender === false;
+          }
+        });
+
+        setMessages(filteredMessages);
       } else {
-        console.error('응답이 배열이 아닙니다:', response.data);
         setMessages([]);
       }
     } catch (error) {
-      console.error('쪽지 목록 조회 실패:', error);
       setMessages([]);
       if (error.response?.status === 401) {
         alert('로그인이 필요합니다.');
@@ -60,7 +85,13 @@ const MessageList = () => {
     if (!window.confirm('쪽지를 삭제하시겠습니까?')) return;
 
     try {
-      await axios.delete(`/api/messages/${msgNum}/${memberId}`);
+      // 탭에 따라 다른 API 엔드포인트 사용
+      const deleteType = tab === 'received' ? 'receiver' : 'sender';
+      await axios.delete(`/api/messages/${msgNum}/${memberId}?deleteType=${deleteType}`);
+
+      // 쪽지 삭제 후 알람 업데이트 이벤트 발생
+      window.dispatchEvent(new Event('messageUpdated'));
+
       alert('쪽지가 삭제되었습니다.');
       fetchMessages();
     } catch (error) {
@@ -70,7 +101,13 @@ const MessageList = () => {
   };
 
   // 쪽지 상세 보기
-  const handleMessageClick = (msgNum) => {
+  const handleMessageClick = async (msgNum, read) => {
+    // 안 읽은 쪽지를 클릭한 경우, 읽음 처리 후 알람 업데이트
+    if (tab === 'received' && !read) {
+      // 읽음 처리는 MessageDetail에서 하지만, 여기서 미리 이벤트 발생
+      // (사용자가 바로 목록으로 돌아올 경우를 대비)
+      window.dispatchEvent(new Event('messageUpdated'));
+    }
     navigate(`/messages/${msgNum}`);
   };
 
@@ -114,12 +151,12 @@ const MessageList = () => {
           messages.map((message) => (
             <div
               key={message.msgNum}
-              className={`${styles.message_item} ${!message.isRead && tab === 'received' ? styles.unread : ''}`}
-              onClick={() => handleMessageClick(message.msgNum)}
+              className={`${styles.message_item} ${!message.read && tab === 'received' ? styles.unread : ''}`}
+              onClick={() => handleMessageClick(message.msgNum, message.read)}
             >
               <div className={styles.message_header}>
                 <div className={styles.left}>
-                  {!message.isRead && tab === 'received' && (
+                  {!message.read && tab === 'received' && (
                     <span className={styles.new_badge}>N</span>
                   )}
                   <span className={styles.name}>

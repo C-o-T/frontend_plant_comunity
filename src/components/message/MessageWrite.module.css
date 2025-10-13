@@ -178,9 +178,103 @@
   background: #bdbdbd;
 }
 
+/* 발송 모드 선택 버튼 */
+.send_mode_buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.mode_btn {
+  flex: 1;
+  padding: 12px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  color: #666;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mode_btn:hover {
+  border-color: #4caf50;
+  background: #f1f8f4;
+}
+
+.mode_btn.active {
+  border-color: #4caf50;
+  background: linear-gradient(135deg, #66bb6a, #4caf50);
+  color: white;
+}
+
+/* 선택된 수신자 목록 */
+.selected_receivers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  background: #f9f9f9;
+  min-height: 60px;
+}
+
+.receiver_tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #4caf50;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.receiver_tag span {
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+.remove_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: #f44336;
+  color: white;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.remove_btn:hover {
+  background: #d32f2f;
+  transform: scale(1.1);
+}
+
+/* 전체 발송 안내 */
+.all_send_notice {
+  padding: 16px;
+  background: #fff3e0;
+  border: 2px solid #ff9800;
+  border-radius: 8px;
+  color: #e65100;
+  font-weight: 600;
+  text-align: center;
+}
+
 @media (max-width: 768px) {
   .form {
     padding: 20px;
+  }
+
+  .send_mode_buttons {
+    flex-direction: column;
   }
 
   .actions {
