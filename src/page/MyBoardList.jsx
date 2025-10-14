@@ -58,7 +58,7 @@ const MyBoardList = () => {
               getWrite.map((write, i) => {
                 return (
                   <tr key={i}
-                    onClick={e => nav(`/board/${write.boardNum}`)}
+                    onClick={e => nav(`/board/detail/${write.boardNum}`)}
                   >
                     <td>{write.boardNum}</td>
                     <td>{write.title}</td>

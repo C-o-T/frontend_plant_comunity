@@ -5,13 +5,11 @@ import Select from '../common/Select';
 import Button from '../common/Button';
 import Title from '../common/Title';
 import styles from './MemberDetail.module.css'
-import MyPageSideLayout from '../layout/MyPageSideLayout';
 import { useNavigate } from 'react-router-dom';
 import { useDaumPostcodePopup } from 'react-daum-postcode'
 
 const MemberDetail = () => {
   const nav = useNavigate()
-  //로그인 한 회원의 정보를 받을 state 변수
   const [memberData, setMemberData] = useState({
     'memId' : '',
     'memPw' : '',
@@ -25,13 +23,13 @@ const MemberDetail = () => {
     'memBusinessName' :''
   });
 
-  //다음 주소록 팜업 생성 함수
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+
   const open = useDaumPostcodePopup('//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js');
 
-  //주소록 띄우기 함수
   const handlePost= () => {
     open({onComplete : (data) => {
-      //매개변수 data 안에 선택한 주소의 모든 정보가 객체형태로 들어있음
       setMemberData({
         ...memberData,
         'memAddr' : data.address
@@ -39,11 +37,7 @@ const MemberDetail = () => {
     }})
   }
 
-  //마운트 시 회원 정보 조회
   useEffect(() => {
-    //마이 페이지를 들어갔는데 로그인이 되어있지 않으면
-    //홈 화면으로 강제로 리턴
-    //로그인한 회원의 아이디를 받을 변수
     const loginInfo = sessionStorage.getItem('loginInfo')
     if(loginInfo === null){
       alert('로그인을 해주세요')
@@ -55,7 +49,6 @@ const MemberDetail = () => {
     axios.get(`/api/members/${memId}`)
     .then(res => {
       const data = res.data;
-      // memEmail을 firstEmail과 secondEmail로 분리
       let firstEmail = '';
       let secondEmail = '';
       if (data.memEmail) {
@@ -76,9 +69,7 @@ const MemberDetail = () => {
 
   }, []);
 
-  //값을 입력했을 때 변경할 함수
   const handleUpdateData = (e) => {
-    //이메일을 변경한 경우
     if (e.target.name === 'firstEmail' || e.target.name === 'secondEmail'){
       setMemberData({
         ...memberData,
@@ -91,7 +82,6 @@ const MemberDetail = () => {
       })
     }
     else {
-      //이메일을 제외한 다른 값을 변경 했을 경우
       setMemberData({
         ...memberData,
         [e.target.name] : e.target.value
@@ -99,30 +89,49 @@ const MemberDetail = () => {
     }
   }
 
-  //회원정보 수정 함수
   const handleUpdate = () => {
     axios.put(`/api/members/${memberData.memId}`, memberData)
     .then(res => {
       const updatedMember = res.data;
-      console.log(res.data)
       const loginInfo = JSON.parse(sessionStorage.getItem('loginInfo'));
       const newLoginInfo = {
         ...loginInfo,
         memAddr: updatedMember.memAddr,
       };
       sessionStorage.setItem('loginInfo', JSON.stringify(newLoginInfo));
+      setShowUpdateModal(false);
       alert('회원정보가 수정되었습니다.');
       nav('/');
     })
     .catch(e => {
       console.log(e);
       alert('회원정보 수정에 실패했습니다.');
+      setShowUpdateModal(false);
     })
+  }
+
+  const handleWithdraw = () => {
+    axios.put(`/api/members/${memberData.memId}/withdraw`)
+    .then(res => {
+      if (res.data.success) {
+        alert('회원 탈퇴가 완료되었습니다. 그동안 이용해주셔서 감사합니다.');
+        sessionStorage.removeItem('loginInfo');
+        nav('/');
+      } else {
+        alert(res.data.message || '회원 탈퇴에 실패했습니다.');
+      }
+    })
+    .catch(e => {
+      console.log(e);
+      alert('회원 탈퇴 중 오류가 발생했습니다.');
+    })
+    .finally(() => {
+      setShowWithdrawModal(false);
+    });
   }
 
   return (
     <div className={styles.container}>
-
       <div>
         <Title title="개인정보수정" />
         <table>
@@ -153,7 +162,7 @@ const MemberDetail = () => {
                   name = 'memAddr'
                   value = {memberData.memAddr || ''}
                   onChange = {(e) => {handleUpdateData(e)}}
-                  readOnly={true} //읽기전용
+                  readOnly={true}
                   onClick={()=>handlePost()}
                  />
                 <Button 
@@ -226,8 +235,73 @@ const MemberDetail = () => {
             </tr>
           </tbody>
         </table>
-        <Button title='수정' onClick={handleUpdate}/>
+        
+        <div className={styles.button_group}>
+          <Button 
+            title='수정' 
+            onClick={() => setShowUpdateModal(true)}
+          />
+          <Button 
+            title='회원 탈퇴' 
+            onClick={() => setShowWithdrawModal(true)}
+            className={styles.withdraw_btn}
+          />
+        </div>
       </div>
+
+      {/* 회원정보 수정 확인 모달 */}
+      {showUpdateModal && (
+        <div className={styles.modal_overlay} onClick={() => setShowUpdateModal(false)}>
+          <div className={styles.modal_content} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modal_icon}>✅</div>
+            <h2>회원정보 수정</h2>
+            <p className={styles.modal_warning}>
+              회원정보를 수정하시겠습니까?
+            </p>
+            <div className={styles.modal_buttons}>
+              <Button
+                title='취소'
+                onClick={() => setShowUpdateModal(false)}
+                size='120px'
+                className={styles.danger_btn}
+              />
+              <Button
+                title='수정하기'
+                onClick={handleUpdate}
+                size='120px'
+                
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 회원 탈퇴 확인 모달 */}
+      {showWithdrawModal && (
+        <div className={styles.modal_overlay} onClick={() => setShowWithdrawModal(false)}>
+          <div className={styles.modal_content} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modal_icon}>⚠️</div>
+            <h2>회원 탈퇴</h2>
+            <p className={styles.modal_warning}>
+              정말로 탈퇴하시겠습니까?<br/>
+              탈퇴 시 모든 정보가 삭제되며 복구할 수 없습니다.
+            </p>
+            <div className={styles.modal_buttons}>
+              <Button
+                title='취소'
+                onClick={() => setShowWithdrawModal(false)}
+                size='120px'
+              />
+              <Button
+                title='탈퇴하기'
+                onClick={handleWithdraw}
+                size='120px'
+                className={styles.danger_btn}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

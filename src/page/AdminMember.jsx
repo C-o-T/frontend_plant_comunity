@@ -42,6 +42,7 @@ const AdminMember = () => {
     
     axios.get(url)
       .then(res => {
+        console.log('회원 목록 조회 결과:', res.data);
         if (viewType === 'active') {
           setMembers(res.data);
         } else {
@@ -49,7 +50,7 @@ const AdminMember = () => {
         }
       })
       .catch(e => {
-        console.log(e);
+        console.error('회원 목록 조회 오류:', e);
         alert('회원 목록 조회에 실패했습니다.');
       });
   };
@@ -157,6 +158,19 @@ const AdminMember = () => {
     setSelectedMember(null);
   };
 
+  // 회원 상태 표시 함수
+  const getStatusDisplay = (status) => {
+    if (status === 'WITHDRAWN') {
+      return <span className={styles.status_withdrawn}>회원 탈퇴</span>;
+    } else if (status === 'DELETED') {
+      return <span className={styles.status_deleted}>관리자 삭제</span>;
+    } else if (status === 'SUSPENDED') {
+      return <span className={styles.status_suspended}>정지됨</span>;
+    } else {
+      return <span className={styles.status_active}>활성</span>;
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -178,7 +192,7 @@ const AdminMember = () => {
           className={`${styles.tabButton} ${viewType === 'deleted' ? styles.active : ''}`}
           onClick={() => handleViewTypeChange('deleted')}
         >
-          삭제된 회원
+          삭제/탈퇴 회원
         </button>
       </div>
       
@@ -225,15 +239,10 @@ const AdminMember = () => {
                 <td>{member.memId}</td>
                 <td>{member.memName}</td>
                 <td>{member.memTell}</td>
-                <td>{member.memEmail}</td>
-                <td>{new Date(member.joinDate).toLocaleDateString()}</td>
+                <td>{member.memEmail || '-'}</td>
+                <td>{member.joinDate ? new Date(member.joinDate).toLocaleDateString() : '-'}</td>
                 <td>
-                  <span className={`${styles.memberStatus} ${styles[member.memStatus?.toLowerCase()]}`}>
-                    {member.memStatus === 'ACTIVE' ? '활성' : 
-                     member.memStatus === 'DELETED' ? '삭제됨' : 
-                     member.memStatus === 'SUSPENDED' ? '정지됨' : 
-                     member.memStatus}
-                  </span>
+                  {getStatusDisplay(member.memStatus)}
                 </td>
                 <td>
                   <div className={styles.actionButtons}>
@@ -250,7 +259,7 @@ const AdminMember = () => {
                         size="small"
                       />
                     )}
-                    {member.memStatus === 'DELETED' && (
+                    {(member.memStatus === 'DELETED' || member.memStatus === 'WITHDRAWN') && (
                       <Button
                         title="복구"
                         onClick={() => handleRestoreMember(member.memId)}
@@ -265,7 +274,7 @@ const AdminMember = () => {
           ) : (
             <tr>
               <td colSpan="7" style={{textAlign: 'center', padding: '20px'}}>
-                {viewType === 'active' ? '조회된 회원이 없습니다.' : '삭제된 회원이 없습니다.'}
+                {viewType === 'active' ? '조회된 회원이 없습니다.' : '삭제/탈퇴된 회원이 없습니다.'}
               </td>
             </tr>
           )}
@@ -290,7 +299,7 @@ const AdminMember = () => {
           </div>
           <div className={styles.detailRow}>
             <p className={styles.detailLabel}>이메일</p>
-            <p className={styles.detailValue}>{selectedMember?.memEmail}</p>
+            <p className={styles.detailValue}>{selectedMember?.memEmail || '-'}</p>
           </div>
           <div className={styles.detailRow}>
             <p className={styles.detailLabel}>전화번호</p>
@@ -298,26 +307,23 @@ const AdminMember = () => {
           </div>
           <div className={styles.detailRow}>
             <p className={styles.detailLabel}>주소</p>
-            <p className={styles.detailValue}>{selectedMember?.memAddr}</p>
+            <p className={styles.detailValue}>{selectedMember?.memAddr || '-'}</p>
           </div>
           <div className={styles.detailRow}>
-            <p className={styles.detailLabel}>등급</p>
-            <p className={styles.detailValue}>{selectedMember?.memGrade}</p>
+            <p className={styles.detailLabel}>사업자번호</p>
+            <p className={styles.detailValue}>{selectedMember?.memBusinessNum || '-'}</p>
           </div>
           <div className={styles.detailRow}>
             <p className={styles.detailLabel}>상태</p>
             <p className={styles.detailValue}>
-              <span className={`${styles.memberStatus} ${styles[selectedMember?.memStatus?.toLowerCase()]}`}>
-                {selectedMember?.memStatus === 'ACTIVE' ? '활성' :
-                 selectedMember?.memStatus === 'DELETED' ? '삭제됨' :
-                 selectedMember?.memStatus === 'SUSPENDED' ? '정지됨' :
-                 selectedMember?.memStatus}
-              </span>
+              {getStatusDisplay(selectedMember?.memStatus)}
             </p>
           </div>
           <div className={styles.detailRow}>
             <p className={styles.detailLabel}>가입일</p>
-            <p className={styles.detailValue}>{selectedMember && new Date(selectedMember.joinDate).toLocaleDateString()}</p>
+            <p className={styles.detailValue}>
+              {selectedMember?.joinDate ? new Date(selectedMember.joinDate).toLocaleDateString() : '-'}
+            </p>
           </div>
 
           <div className={styles.modalActions}>
@@ -332,7 +338,7 @@ const AdminMember = () => {
                 color="danger"
               />
             )}
-            {selectedMember?.memStatus === 'DELETED' && (
+            {(selectedMember?.memStatus === 'DELETED' || selectedMember?.memStatus === 'WITHDRAWN') && (
               <Button
                 title="복구"
                 onClick={() => {

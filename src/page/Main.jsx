@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import styles from './Main.module.css'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import CalendarPage from './MyCalendar';
 import smartFarmImage from '../assets/images/smart-farm.jpg';
 
 const Main = () => {
@@ -10,7 +9,6 @@ const Main = () => {
 
   //인기글 조회를 위한 state 변수
   const [popularBoardList, setPopularBoardList] = useState([]);
-
 
   //마운트 시 인기글 리스트 조회
   useEffect(() => {
@@ -60,45 +58,57 @@ const Main = () => {
       {/* 오른쪽: 인기글 */}
       <div className={styles.right_section}>
         <div className={styles.popular_section}>
-          <h2>🔥 인기글</h2>
-          <div className={styles.table_wrapper}>
-            <table className={styles.popular_table}>
-              <thead>
-                <tr>
-                  <td>카테고리</td>
-                  <td>제목</td>
-                  <td>작성자</td>
-                  <td>조회수</td>
-                  <td>좋아요</td>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  popularBoardList.length === 0
-                  ?
-                  <tr>
-                    <td colSpan={5} className={styles.empty_message}>
-                      작성된 게시글이 없습니다.
-                    </td>
-                  </tr>
-                  :
-                  popularBoardList.map((write, i) => {
-                    return (
-                      <tr key={i}
-                        onClick={e => nav(`/board/detail/${write.boardNum}`)}
-                        className={styles.table_row}
-                      >
-                        <td>{write.categoryDTO.cateName}</td>
-                        <td className={styles.title_cell}>{write.title}</td>
-                        <td>{write.memId}</td>
-                        <td>{write.readCnt}</td>
-                        <td>{write.likeCnt}</td>
-                      </tr>
-                    )
-                  })
-                }
-              </tbody>
-            </table>
+          <div className={styles.popular_header}>
+            <h2>🔥 인기글</h2>
+            <button 
+              className={styles.more_btn}
+              onClick={() => nav('/board')}
+            >
+              더보기 →
+            </button>
+          </div>
+          
+          <div className={styles.popular_list}>
+            {
+              popularBoardList.length === 0
+              ?
+              <div className={styles.empty_state}>
+                <span className={styles.empty_icon}>📝</span>
+                <p>작성된 게시글이 없습니다.</p>
+              </div>
+              :
+              popularBoardList.map((write, i) => {
+                return (
+                  <div 
+                    key={i}
+                    className={styles.popular_card}
+                    onClick={() => nav(`/board/detail/${write.boardNum}`)}
+                  >
+                    <div className={styles.card_header}>
+                      <span className={styles.category_badge}>
+                        {write.categoryDTO.cateName}
+                      </span>
+                      <div className={styles.card_stats}>
+                        <span className={styles.stat_item}>
+                          👁️ {write.readCnt}
+                        </span>
+                        <span className={styles.stat_item}>
+                          ❤️ {write.likeCnt}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <h3 className={styles.card_title}>{write.title}</h3>
+                    
+                    <div className={styles.card_footer}>
+                      <span className={styles.author}>
+                        👤 {write.memId}
+                      </span>
+                    </div>
+                  </div>
+                )
+              })
+            }
           </div>
         </div>
       </div>
