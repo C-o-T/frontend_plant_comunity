@@ -33,6 +33,19 @@ const MyPlantInfo = () => {
     setSelectedPlant(plant);
   }
 
+  // 센서 데이터와 로그 데이터 가져오는 함수
+  const fetchSensorAndLogData = () => {
+    // 최신 환경 데이터 조회
+    axios.get('/api/sensor/last')
+      .then(res => setLastSensorData(res.data))
+      .catch(e => console.log(e));
+
+    // 로그 리스트 조회
+    axios.get('/api/logs')
+      .then(res => setLogList(res.data))
+      .catch(e => console.log(e));
+  };
+
   //마운트시 식물 정보 조회 및 최근 환경데이터 조회
   useEffect(() => {
     //마이팜 페이지를 들어갔는데 로그인이 되어있지 않으면
@@ -49,15 +62,14 @@ const MyPlantInfo = () => {
     .then(res => setPlantList(res.data))
     .catch(e => console.log(e))
 
-    //최신 환경 데이터 조회
-    axios.get('/api/sensor/last')
-    .then(res => setLastSensorData(res.data))
-    .catch(e => console.log(e));
+    // 처음 마운트될 때 센서 데이터 및 로그 가져오기
+    fetchSensorAndLogData();
 
-    //로그 리스트 조회
-    axios.get('/api/logs')
-    .then(res => setLogList(res.data))
-    .catch(e => console.log(e))
+    // 1초마다 센서 데이터 및 로그 갱신
+    const interval = setInterval(fetchSensorAndLogData, 1000);
+
+    // 언마운트 시 interval 제거
+    return () => clearInterval(interval);
   }, []);
 
   // 현재 환경이 적정 범위에 속하는지 확인하는 함수

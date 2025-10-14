@@ -111,7 +111,7 @@
   margin: 0;
 }
 
-/* (∏ 9X */
+/* (ÔøΩ 9X */
 .chart_section {
   background: #ffffff;
   border-radius: 12px;
@@ -271,7 +271,7 @@
   border-radius: 4px;
 }
 
-/* Select § §¿| */
+/* Select ÔøΩ ÔøΩÔøΩ| */
 select {
   width: 100%;
   padding: 0.9rem;
@@ -321,7 +321,7 @@ select option {
   margin: 0;
 }
 
-/* Q êx */
+/* Q ÔøΩx */
 @media (max-width: 1024px) {
   .content {
     grid-template-columns: 1fr;
@@ -355,7 +355,7 @@ select option {
   }
 }
 
-/* `»TtX ®¸ */
+/* `ÔøΩTtX ÔøΩÔøΩ */
 @keyframes fadeIn {
   from {
     opacity: 0;

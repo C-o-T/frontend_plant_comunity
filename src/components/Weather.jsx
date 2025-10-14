@@ -190,8 +190,8 @@ const Weather = () => {
                   <i className="bi bi-wind"></i>
                 </div>
                 <div className={styles.detail_info}>
-                  <div className={styles.detail_label}>바람</div>
-                  <div className={styles.detail_value}>{weather.current.wind_speed_10m}m/s</div>
+                  <div className={styles.detail_label}>풍속</div>
+                  <div className={styles.detail_value}>{weather.current.wind_speed_10m}<span>m/s</span></div>
                 </div>
               </div>
             </div>

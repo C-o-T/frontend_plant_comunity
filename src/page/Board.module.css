@@ -4,8 +4,7 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
-  background: linear-gradient(135deg, #fffee8 0%, #f5fde8 100%);
+  padding: 40px 20px;
   min-height: 100vh;
 }
 
@@ -14,8 +13,9 @@
   margin-bottom: 30px;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(97, 189, 72, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   padding: 15px;
+  border: 1px solid #e8f5e9;
 }
 
 .menu ul {
@@ -29,21 +29,26 @@
 .menu li {
   flex: 1;
   text-align: center;
-  padding: 18px 25px;
-  background: linear-gradient(135deg, #81c784 0%, #66bb6a 100%);
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #66bb6a, #4caf50);
   color: white;
   font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.15);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
 }
 
 .menu li:hover {
-  background: linear-gradient(135deg, #a5d6a7 0%, #81c784 100%);
-  color: white;
+  background: linear-gradient(135deg, #4caf50, #388e3c);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.menu li:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
 }
 
 /* 카테고리 검색 섹션 */

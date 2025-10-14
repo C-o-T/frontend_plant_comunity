@@ -70,6 +70,38 @@ const UpdateBoard = () => {
       });
    }
 
+   //Quill 에디터에 paste 이벤트 리스너 등록
+   useEffect(() => {
+      if (quillRef.current) {
+         const editor = quillRef.current.getEditor();
+         const editorContainer = editor.root;
+
+         editorContainer.addEventListener('paste', handlePaste);
+
+         return () => {
+            editorContainer.removeEventListener('paste', handlePaste);
+         };
+      }
+   }, []);
+
+   //붙여넣기 핸들러
+   const handlePaste = async (e) => {
+      const clipboardData = e.clipboardData || window.clipboardData;
+      const items = clipboardData.items;
+      const imageFiles = [];
+
+      for (let i = 0; i < items.length; i++) {
+         if (items[i].type.indexOf('image') !== -1) {
+            e.preventDefault();
+            imageFiles.push(items[i].getAsFile());
+         }
+      }
+
+      if (imageFiles.length > 0) {
+         await uploadImages(imageFiles);
+      }
+   };
+
    console.log(updateBoard.content.length)
    console.log(updateBoard.content)
 
@@ -94,30 +126,34 @@ const UpdateBoard = () => {
       }, 0)
    };
 
-   const handleFileChange = async(e) => {
-      const files = Array.from(e.target.files)
-      if(!files.length) return;
-      console.log(files)
-      const formData = new FormData();
+   // 공통 이미지 업로드 함수
+   const uploadImages = async (files) => {
+      if(!files || files.length === 0) return;
 
-      if(files && files.length > 0){
-         files.forEach((file) => {
-            formData.append('img', file);
-         })
-      }
-      try{
+      const formData = new FormData();
+      files.forEach(file => formData.append('img', file));
+
+      try {
          const response = await axios.post('/api/boards/upload/img', formData, fileConfig);
          const imageUrls = response.data;
          const editor = quillRef.current.getEditor();
+
          imageUrls.forEach(url => {
             const range = editor.getSelection(true);
             editor.insertEmbed(range.index, 'image', url);
             editor.setSelection(range.index + 1);
-         })
+         });
+
          setImg(prev => [...prev, ...files.map((file, i) => ({file, url: imageUrls[i]}))]);
-      }catch(error){
+      } catch(error) {
          console.log('이미지 업로드 실패 : ', error);
       }
+   };
+
+   // 파일 선택 핸들러
+   const handleFileChange = async(e) => {
+      const files = Array.from(e.target.files);
+      await uploadImages(files);
       e.target.value = '';
    }
 
@@ -134,6 +170,9 @@ const UpdateBoard = () => {
          handlers: {
             image: handleImgIcon
          }
+      },
+      clipboard: {
+         matchVisual: false
       }
    }), []);
 
