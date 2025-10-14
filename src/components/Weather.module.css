@@ -114,6 +114,10 @@
   text-align: center;
 }
 
+.detail_value > span{
+  font-size: 0.8rem;
+}
+
 .detail_label {
   font-size: 12px;
   color: #888;

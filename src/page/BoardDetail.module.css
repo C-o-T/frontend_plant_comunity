@@ -247,20 +247,50 @@
   line-height: 1.5;
 }
 
-.reply_button {
+.comment_actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.reply_button,
+.edit_button,
+.delete_button {
   background: none;
   border: none;
-  color: #66bb6a;
   font-size: 0.85rem;
   cursor: pointer;
   padding: 5px 10px;
   border-radius: 4px;
   transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.reply_button {
+  color: #66bb6a;
 }
 
 .reply_button:hover {
   background: #f1f8f4;
   color: #2e7d32;
+}
+
+.edit_button {
+  color: #4caf50;
+}
+
+.edit_button:hover {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.delete_button {
+  color: #ff6b6b;
+}
+
+.delete_button:hover {
+  background: #ffebee;
+  color: #d32f2f;
 }
 
 .reply_form {
@@ -310,4 +340,43 @@
 
 .reply_item:last-child {
   border-bottom: none;
+}
+
+.edit_form {
+  margin-top: 10px;
+  padding: 10px;
+  background: #fffef7;
+  border-radius: 8px;
+  border: 1px solid #ffe082;
+}
+
+.edit_form textarea {
+  width: 100%;
+  border: 1px solid #ffcc80;
+  border-radius: 8px;
+  color: #555;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+  resize: none;
+  font-family: inherit;
+  min-height: 60px;
+  box-sizing: border-box;
+}
+
+.edit_form textarea:focus {
+  outline: none;
+  border-color: #ffb74d;
+  box-shadow: 0 0 0 3px rgba(255, 183, 77, 0.1);
+}
+
+.edit_form textarea:hover {
+  border-color: #ffa726;
+}
+
+.edit_buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  justify-content: flex-end;
 }

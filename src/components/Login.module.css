@@ -9,7 +9,6 @@
 .display_div {
   display: flex;
   gap: 8px;
-  align-items: center;
 }
 
 .display_div > p:first-child {

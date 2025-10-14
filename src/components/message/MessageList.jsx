@@ -29,7 +29,7 @@ const MessageList = () => {
     }
   }, [tab, memberId, location.pathname]);
 
-  // 쪽지 읽음/삭제 이벤트 감지하여 목록 갱신
+  // 쪽지 읽음/삭제 이벤트 감지하여 목록 갱신 + 1초마다 자동 갱신
   useEffect(() => {
     const handleMessageUpdate = () => {
       if (memberId) {
@@ -38,10 +38,18 @@ const MessageList = () => {
     };
     window.addEventListener('messageUpdated', handleMessageUpdate);
 
+    // 1초마다 쪽지 목록 자동 갱신
+    const interval = setInterval(() => {
+      if (memberId) {
+        fetchMessages();
+      }
+    }, 1000);
+
     return () => {
+      clearInterval(interval);
       window.removeEventListener('messageUpdated', handleMessageUpdate);
     };
-  }, [memberId]);
+  }, [memberId, tab]);
 
   const fetchMessages = async () => {
     setLoading(true);
