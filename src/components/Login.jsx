@@ -47,58 +47,38 @@ const Login = ({isOpenLogin, onClose}) => {
       return;
     }
     
-    // 먼저 회원 상태 확인
-    axios.get(`/api/members/status/${loginData.memId}`)
-      .then(statusRes => {
-        if (statusRes.data.success) {
-          // 회원 상태에 따른 처리
-          if (statusRes.data.status === 'DELETED') {
-            setLoginError('삭제된 계정입니다. 관리자에게 문의해주세요.');
-            return;
-          } else if (statusRes.data.status === 'SUSPENDED') {
-            setLoginError('정지된 계정입니다. 관리자에게 문의해주세요.');
-            return;
+    // 로그인 시도 (member-mapper.xml의 login 쿼리가 이미 ACTIVE 체크함)
+    axios.get('/api/members/login', {params:loginData})
+      .then(res => {
+        if (res.data) {
+          // 로그인 성공
+          alert (`${res.data.memName}님 반갑습니다.`)
+          
+          //로그인한 아이디, 이름, 권한, 주소 정보를 갖는 객체 생성
+          const loginInfo = {
+            'memId' : res.data.memId,
+            'memName' : res.data.memName,
+            'memGrade' : res.data.memGrade,
+            'memAddr' : res.data.memAddr || ''
           }
           
-          // 회원이 활성 상태인 경우 로그인 진행
-          axios.get('/api/members/login', {params:loginData})
-            .then(res => {
-              if (res.data) {
-                alert (`${res.data.memName}님 반갑습니다.`)
-                //로그인한 아이디, 이름, 권한, 주소 정보를 갖는 객체 생성
-                const loginInfo = {
-                  'memId' : res.data.memId,
-                  'memName' : res.data.memName,
-                  'memGrade' : res.data.memGrade,
-                  'memAddr' : res.data.memAddr || ''
-                }
-                //로그인한 유저의 정보를 sessionStorage에 저장
-                sessionStorage.setItem('loginInfo', JSON.stringify(loginInfo));
+          //로그인한 유저의 정보를 sessionStorage에 저장
+          sessionStorage.setItem('loginInfo', JSON.stringify(loginInfo));
 
-                if (res.data.memGrade === 'BUSINESS') {
-                  nav('/myfarm/my-plant-info')
-                  onClose()
-                  resetLoginData();
-                } else if (res.data.memGrade === 'ADMIN') {
-                  nav('/admin/qna')
-                  onClose()
-                  resetLoginData();
-                } else {
-                  nav('/board')
-                  onClose()
-                  resetLoginData();
-                }
-              } else {
-                setLoginError('아이디 또는 비밀번호가 잘못 입력되었습니다.');
-              }
-            })
-            .catch(e => {
-              console.log(e);
-              setLoginError('로그인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
-            });
+          // 권한에 따른 페이지 이동
+          if (res.data.memGrade === 'BUSINESS') {
+            nav('/myfarm/my-plant-info')
+          } else if (res.data.memGrade === 'ADMIN') {
+            nav('/admin/qna')
+          } else {
+            nav('/board')
+          }
+          
+          onClose()
+          resetLoginData();
         } else {
-          // 회원이 존재하지 않는 경우
-          setLoginError('아이디 또는 비밀번호가 잘못 입력되었습니다.');
+          // 로그인 실패 (아이디/비밀번호 불일치 또는 비활성 계정)
+          setLoginError('아이디 또는 비밀번호가 잘못 입력되었습니다.\n탈퇴/삭제된 계정은 로그인할 수 없습니다.');
         }
       })
       .catch(e => {

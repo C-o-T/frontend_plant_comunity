@@ -99,7 +99,7 @@ const Header = () => {
                   첨단 기술로 재배하는 건강한 허브, 함께 나누는 재배 노하우
                 </p>
                 <div className={styles.banner_feature}>
-                  <span className={styles.feature_icon}>🌱</span>
+                  
                   <span className={styles.feature_text}>자동화된 최적의 재배 환경</span>
                 </div>
               </div>
