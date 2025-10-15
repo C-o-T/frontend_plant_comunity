@@ -38,7 +38,7 @@ const MessageAlarm = () => {
     window.addEventListener('messageUpdated', handleMessageUpdate);
 
     // 1초마다 갱신
-    const interval = setInterval(fetchUnreadCount, 1515000);
+    const interval = setInterval(fetchUnreadCount, 1000);
 
     return () => {
       clearInterval(interval);
