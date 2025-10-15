@@ -43,7 +43,7 @@ const MessageList = () => {
       if (memberId) {
         fetchMessages();
       }
-    }, 1000);
+    }, 100000);
 
     return () => {
       clearInterval(interval);

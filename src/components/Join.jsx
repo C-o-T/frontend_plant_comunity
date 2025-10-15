@@ -94,7 +94,7 @@ const Join = ({isOpenJoin, onClose}) => {
 
   // ID 중복확인을 했을 때 실행할 함수
   const checkId = () => {
-    axios.get(`/api/members/id/${joinData.memId}`)
+    axios.get(`/api/members/checkId/${joinData.memId}`)
     .then(
       res=>{
         //console.log(res.data)
@@ -115,7 +115,7 @@ const Join = ({isOpenJoin, onClose}) => {
 
   // Tell 중복확인을 했을 때 실행할 함수
   const checkTell = () => {
-    axios.get(`/api/members/tell/${joinData.memTell}`)
+    axios.get(`/api/members/checkTell/${joinData.memTell}`)
     .then(
       res=>{
         //console.log(res.data)
@@ -136,7 +136,7 @@ const Join = ({isOpenJoin, onClose}) => {
 
   //사업자번호 중복확인을 했을 때 실행할 함수
   const checkNum = () => {
-    axios.get(`/api/members/bn/${joinData.memBusinessNum}`)
+    axios.get(`/api/members/checkBusinessNum/${joinData.memBusinessNum}`)
     .then(res=>{
       if (res.data === 0) {
         alert('회원 가입 가능한 사업자번호입니다.')
@@ -145,7 +145,7 @@ const Join = ({isOpenJoin, onClose}) => {
           memBusinessNum : true
         }) // 회원가입 버튼 활성화
       } else {
-        alert('가입한 적 있는 사업자번호 입니다.')
+        alert('중복된 사업자 번호입니다.')
       }
     }
       
