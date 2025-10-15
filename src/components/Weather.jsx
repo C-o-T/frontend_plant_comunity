@@ -28,7 +28,7 @@ const Weather = () => {
       console.log('4. 백엔드 API 호출 시작:', userAddress);
       
       // ✅ axios로 백엔드 호출
-      axios.get('http://localhost:8080/api/weather/geocode', {
+      axios.get('http://192.168.30.97:8080/api/weather/geocode', {
         params: {
           address: userAddress
         }
