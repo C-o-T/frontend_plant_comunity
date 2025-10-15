@@ -110,6 +110,23 @@
   flex-wrap: wrap;
 }
 
+.searchBox select {
+  height: 38px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+.searchBox input {
+  height: 38px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+.searchBox button{
+  margin-top: 10px;
+}
+
 /* 테이블 스타일 */
 .table {
   width: 100%;
