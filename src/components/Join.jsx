@@ -356,8 +356,6 @@ const Join = ({isOpenJoin, onClose}) => {
               value={joinData.memPw}
               onChange={(e)=>{
                 handleJoin(e)
-              }}
-              onBlur={e=>{
                 handleBlur(e)
                 setErrorMsg({
                   ...errorMsg,
@@ -374,8 +372,6 @@ const Join = ({isOpenJoin, onClose}) => {
               value={joinData.memPwConfirm}
               onChange={(e)=>{
                 handleJoin(e)
-              }}
-              onBlur={e=>{
                 handleBlur(e)
                 setErrorMsg({
                   ...errorMsg,

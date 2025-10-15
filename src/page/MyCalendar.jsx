@@ -343,15 +343,17 @@ const MyCalendar = () => {
       </div>
 
       {/* 뷰 모드 토글 버튼 (순환) */}
-      <div className={styles.toggle_section}>
-        <button
-          className={styles.toggle_button}
-          onClick={cycleViewMode}
-        >
-          {viewMode === 'all' && '📅 전체 보기'}
-          {viewMode === 'diary' && '✏️ 일기만 보기'}
-          {viewMode === 'watering' && '💧 물주기만 보기'}
-        </button>
+      <div>
+        <span className={styles.toggle_section} >
+          <button
+            className={styles.toggle_button}
+            onClick={cycleViewMode}
+          >
+            {viewMode === 'all' && '📅 전체 보기'}
+            {viewMode === 'diary' && '✏️ 일기만 보기'}
+            {viewMode === 'watering' && '💧 물주기만 보기'}
+          </button>
+        </span>
       </div>
 
       {/* 캘린더 */}

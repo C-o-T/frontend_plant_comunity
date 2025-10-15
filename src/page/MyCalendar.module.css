@@ -14,8 +14,8 @@
 .toggle_section {
   width: 100%;
   display: flex;
+  margin-right: 0px;
   justify-content: flex-end;
-  margin-bottom: -34px;
   position: relative;
   z-index: 10;
 }
@@ -32,8 +32,10 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1);
-  position: relative;
+  position: absolute;
   z-index: 10;
+  top: 0px;
+  right: 0px;
 }
 
 .toggle_button:hover {

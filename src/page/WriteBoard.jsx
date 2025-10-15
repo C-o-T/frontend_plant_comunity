@@ -106,6 +106,7 @@ const WriteBoard = () => {
       try {
          const response = await axios.post('/api/boards/upload/img', formData, fileConfig);
          const imageUrls = response.data;
+         console.log('111', imageUrls);
          const editor = quillRef.current.getEditor();
 
          imageUrls.forEach(url => {
@@ -209,7 +210,7 @@ const WriteBoard = () => {
          <ReactQuill ref={quillRef} theme='snow' value={insertBoard.content} onChange={e => handleContentChange(e)}
          modules={modules}
          formats={formats}
-         style={{height : '300px'}}
+         style={{height : '500px'}}
             />
       </div>
     </div>
