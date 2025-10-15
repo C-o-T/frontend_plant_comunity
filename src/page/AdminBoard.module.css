@@ -46,6 +46,20 @@
   gap: 12px;
   margin-bottom: 20px;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+.searchBox input {
+  height: 38px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+}
+
+.searchBox select {
+  height: 38px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  box-sizing: border-box;
 }
 
 .optionBox {
@@ -60,6 +74,20 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.sortBox select {
+  height: 38px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+.pageSizeBox select {
+  height: 38px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  box-sizing: border-box;
 }
 
 .sortBox label,

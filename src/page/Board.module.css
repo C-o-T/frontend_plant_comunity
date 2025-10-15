@@ -64,6 +64,13 @@
   border: 2px solid #e8f5e9;
 }
 
+.category select {
+  height: 38px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
 .category > div:first-child {
   font-weight: 600;
   color: #2e7d32;

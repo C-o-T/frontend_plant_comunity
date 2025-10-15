@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../common/Button';
 import styles from './BoardDetail.module.css';
+import dayjs from 'dayjs';
 
 const BoardDetail = () => {
   //게시글 상세 보기 저장 변수
@@ -266,7 +267,7 @@ const BoardDetail = () => {
         </div>
         <div className={styles.meta_info}>
           <span>작성자: {boardDetail.memId}</span>
-          <span>작성일: {boardDetail.createDate}</span>
+          <span>작성일: {dayjs(boardDetail.createDate).format('YYYY-MM-DD HH:MM:ss')}</span>
           <span>조회수: {boardDetail.readCnt}</span>
         </div>
       </div>

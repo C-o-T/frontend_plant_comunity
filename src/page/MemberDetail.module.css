@@ -35,6 +35,17 @@
   gap: 10px;
 }
 
+/* 이메일 입력 영역 스타일 */
+.container table tr td input[name="firstEmail"] {
+  min-width: 150px;
+  min-height: 38px;
+}
+
+.container table tr td select[name="secondEmail"] {
+  min-width: 130px;
+  margin-left: 10px;
+}
+
 /* 버튼 그룹 - 통일된 디자인 */
 .button_group {
   display: flex;

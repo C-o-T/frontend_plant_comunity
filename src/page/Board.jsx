@@ -197,7 +197,11 @@ const Board = () => {
         </div>
         <Input value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)}/>
         <Button title='검색' onClick={handleSearch}/>
-        <Button title = '초기화' onClick={() => setSelectedCateNum("")}/>
+        <Button title = '초기화' onClick={() => {
+          setSelectedCateNum("");
+          setSearchType("");
+          setSearchKeyword("");
+        }}/>
       </div>
       <div className = {styles.board}>
         <div>

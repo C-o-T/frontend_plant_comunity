@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styles from './MessageList.module.css'
 import axios from 'axios'
 import { useNavigate, useLocation } from 'react-router-dom'
+import dayjs from 'dayjs'
 
 const MessageList = () => {
   const navigate = useNavigate();
@@ -175,7 +176,7 @@ const MessageList = () => {
                   </span>
                 </div>
                 <div className={styles.right}>
-                  <span className={styles.date}>{message.createdAt}</span>
+                  <span className={styles.date}>{dayjs(message.createdAt).format('YYYY-MM-DD HH:MM:ss')}</span>
                   <button
                     className={styles.delete_btn}
                     onClick={(e) => handleDelete(message.msgNum, e)}

@@ -70,7 +70,9 @@ const EnvironmentInfo = () => {
 
     switch(timeRange) {
       case '1day':
-        filterTime = now.getTime() - TIME.DAY;
+        // 오늘 00시 00분 00초 기준
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+        filterTime = today.getTime();
         break;
       case '1week':
         filterTime = now.getTime() - (TIME.DAY * 7);
@@ -79,7 +81,8 @@ const EnvironmentInfo = () => {
         filterTime = now.getTime() - (TIME.DAY * 30);
         break;
       default:
-        filterTime = now.getTime() - TIME.DAY;
+        const defaultToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+        filterTime = defaultToday.getTime();
     }
 
     return sensorData.filter(d => new Date(d.sensorTime).getTime() >= filterTime);
@@ -90,8 +93,100 @@ const EnvironmentInfo = () => {
     new Date(b.sensorTime) - new Date(a.sensorTime)
   );
 
+  // 기간별 데이터 그룹화 및 평균 계산 함수 (원본 데이터도 함께 저장)
+  const getAggregatedData = () => {
+    if (sortedData.length === 0) return [];
+
+    // 1일: 1시간 단위 평균
+    if (timeRange === '1day') {
+      const hourlyData = {};
+
+      sortedData.forEach(d => {
+        const date = new Date(d.sensorTime);
+        const hourKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${date.getHours()}`;
+
+        if (!hourlyData[hourKey]) {
+          hourlyData[hourKey] = {
+            sensorTime: new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), 0, 0),
+            temperature: [],
+            humidity: [],
+            illuminance: [],
+            soilMoisture: []
+          };
+        }
+
+        hourlyData[hourKey].temperature.push(d.temperature);
+        hourlyData[hourKey].humidity.push(d.humidity);
+        hourlyData[hourKey].illuminance.push(d.illuminance);
+        hourlyData[hourKey].soilMoisture.push(d.soilMoisture);
+      });
+
+      // 평균 계산 + 원본 데이터 저장
+      return Object.values(hourlyData).map(group => ({
+        sensorTime: group.sensorTime,
+        temperature: group.temperature.reduce((a, b) => a + b, 0) / group.temperature.length,
+        humidity: group.humidity.reduce((a, b) => a + b, 0) / group.humidity.length,
+        illuminance: group.illuminance.reduce((a, b) => a + b, 0) / group.illuminance.length,
+        soilMoisture: group.soilMoisture.reduce((a, b) => a + b, 0) / group.soilMoisture.length,
+        // 원본 데이터 배열도 함께 저장
+        rawData: {
+          temperature: group.temperature,
+          humidity: group.humidity,
+          illuminance: group.illuminance,
+          soilMoisture: group.soilMoisture
+        }
+      }));
+    }
+
+    // 1주일 또는 1달: 1일 단위 평균
+    else if (timeRange === '1week' || timeRange === '1month') {
+      const dailyData = {};
+
+      sortedData.forEach(d => {
+        const date = new Date(d.sensorTime);
+        const dayKey = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+
+        if (!dailyData[dayKey]) {
+          dailyData[dayKey] = {
+            sensorTime: new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0),
+            temperature: [],
+            humidity: [],
+            illuminance: [],
+            soilMoisture: []
+          };
+        }
+
+        dailyData[dayKey].temperature.push(d.temperature);
+        dailyData[dayKey].humidity.push(d.humidity);
+        dailyData[dayKey].illuminance.push(d.illuminance);
+        dailyData[dayKey].soilMoisture.push(d.soilMoisture);
+      });
+
+      // 평균 계산 + 원본 데이터 저장
+      return Object.values(dailyData).map(group => ({
+        sensorTime: group.sensorTime,
+        temperature: group.temperature.reduce((a, b) => a + b, 0) / group.temperature.length,
+        humidity: group.humidity.reduce((a, b) => a + b, 0) / group.humidity.length,
+        illuminance: group.illuminance.reduce((a, b) => a + b, 0) / group.illuminance.length,
+        soilMoisture: group.soilMoisture.reduce((a, b) => a + b, 0) / group.soilMoisture.length,
+        // 원본 데이터 배열도 함께 저장
+        rawData: {
+          temperature: group.temperature,
+          humidity: group.humidity,
+          illuminance: group.illuminance,
+          soilMoisture: group.soilMoisture
+        }
+      }));
+    }
+
+    return sortedData;
+  };
+
+  // 집계된 데이터 사용
+  const aggregatedData = getAggregatedData();
+
   // 각 센서별 차트 데이터 구성
-  const labels = sortedData.map(d => {
+  const labels = aggregatedData.map(d => {
     const date = new Date(d.sensorTime);
     // 기간에 따라 다른 포맷 사용
     if (timeRange === '1day') {
@@ -108,7 +203,7 @@ const EnvironmentInfo = () => {
     labels,
     datasets: [{
       label: '온도 (℃)',
-      data: sortedData.map(d => d.temperature),
+      data: aggregatedData.map(d => d.temperature),
       borderColor: 'rgb(255, 99, 132)',
       backgroundColor: 'rgba(255, 99, 132, 0.3)',
       fill: true,
@@ -121,7 +216,7 @@ const EnvironmentInfo = () => {
     labels,
     datasets: [{
       label: '습도 (%)',
-      data: sortedData.map(d => d.humidity),
+      data: aggregatedData.map(d => d.humidity),
       borderColor: 'rgb(75, 192, 192)',
       backgroundColor: 'rgba(75, 192, 192, 0.3)',
       fill: true,
@@ -134,7 +229,7 @@ const EnvironmentInfo = () => {
     labels,
     datasets: [{
       label: '조도 (Lux)',
-      data: sortedData.map(d => d.illuminance),
+      data: aggregatedData.map(d => d.illuminance),
       backgroundColor: 'rgba(255, 206, 86, 0.7)',
       borderColor: 'rgb(255, 206, 86)',
       borderWidth: 1
@@ -146,7 +241,7 @@ const EnvironmentInfo = () => {
     labels,
     datasets: [{
       label: '토양습도 (%)',
-      data: sortedData.map(d => d.soilMoisture),
+      data: aggregatedData.map(d => d.soilMoisture),
       borderColor: 'rgba(139, 69, 19, 1)',
       backgroundColor: 'rgba(139, 69, 19, 0.3)',
       fill: true,
@@ -158,6 +253,11 @@ const EnvironmentInfo = () => {
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: true,
+    interaction: {
+      mode: 'index',  // 마우스 X축 위치의 모든 데이터셋 표시
+      intersect: false,  // 점에 정확히 안 올려도 표시
+      axis: 'x'  // X축 기준으로 가장 가까운 데이터 찾기
+    },
     scales: {
       x: {
         ticks: {
@@ -173,13 +273,13 @@ const EnvironmentInfo = () => {
   return (
     <div className={styles.graph_div}>
       <div className={styles.header}>
-        <h2>환경 데이터</h2>
+        <h2>환경 데이터(평균값)</h2>
         <Select
           size="150px"
           value={timeRange}
           onChange={(e) => setTimeRange(e.target.value)}
         >
-          <option value="1day">오늘</option>
+          <option value="1day">금일</option>
           <option value="1week">최근 1주일</option>
           <option value="1month">최근 1달</option>
         </Select>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styles from './MessageDetail.module.css'
 import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
+import dayjs from 'dayjs'
 
 const MessageDetail = () => {
   const navigate = useNavigate();
@@ -108,7 +109,7 @@ const MessageDetail = () => {
             <span className={styles.sender}>
               보낸 사람: <strong>{message.senderName}</strong> ({message.senderId})
             </span>
-            <span className={styles.date}>{message.createdAt}</span>
+            <span className={styles.date}>{dayjs(message.createdAt).format('YYYY-MM-DD HH:MM:ss')}</span>
           </div>
         </div>
         <div className={styles.message_body}>

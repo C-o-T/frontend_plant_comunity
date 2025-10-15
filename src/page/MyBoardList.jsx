@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Title from '../common/Title';
 import styles from './MyBoardList.module.css';
+import dayjs from 'dayjs'
 
 const MyBoardList = () => {
   const nav = useNavigate()
@@ -63,7 +64,7 @@ const MyBoardList = () => {
                     <td>{write.boardNum}</td>
                     <td>{write.title}</td>
                     <td>{write.memId}</td>
-                    <td>{write.createDate}</td>
+                    <td>{dayjs(write.createDate).format('YYYY-MM-DD HH:MM:ss')}</td>
                     <td>{write.readCnt}</td>
                     <td>{write.likeCnt}</td>
                   </tr>
